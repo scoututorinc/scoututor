@@ -16,6 +16,8 @@
   },
   "prettier": {
     "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none",
     "printWidth": 100
   },
   "lint-staged": {
@@ -24,9 +26,13 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/react": "1.1.2",
+    "@emotion/react": "11.1.4",
+    "@emotion/styled": "11.0.0",
     "@prisma/client": "3.3.0",
     "blitz": "0.41.1",
     "final-form": "4.20.4",
+    "framer-motion": "3.2.0",
     "react": "alpha",
     "react-dom": "alpha",
     "react-final-form": "6.5.7",
