@@ -4,7 +4,6 @@ import { LoginForm } from 'app/auth/components/LoginForm'
 
 const LoginPage: BlitzPage = () => {
   const router = useRouter()
-
   return (
     <div>
       <LoginForm
