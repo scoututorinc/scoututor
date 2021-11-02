@@ -1,6 +1,6 @@
-import resetPassword from "./resetPassword"
-import db from "db"
-import { hash256, SecurePassword } from "blitz"
+import resetPassword from './resetPassword'
+import db from 'db'
+import { hash256, SecurePassword } from 'blitz'
 
 beforeEach(async () => {
   await db.$reset()
@@ -8,17 +8,17 @@ beforeEach(async () => {
 
 const mockCtx: any = {
   session: {
-    $create: jest.fn,
-  },
+    $create: jest.fn
+  }
 }
 
-describe("resetPassword mutation", () => {
-  it("works correctly", async () => {
+describe('resetPassword mutation', () => {
+  it('works correctly', async () => {
     expect(true).toBe(true)
 
     // Create test user
-    const goodToken = "randomPasswordResetToken"
-    const expiredToken = "expiredRandomPasswordResetToken"
+    const goodToken = 'randomPasswordResetToken'
+    const expiredToken = 'expiredRandomPasswordResetToken'
     const future = new Date()
     future.setHours(future.getHours() + 4)
     const past = new Date()
@@ -26,33 +26,33 @@ describe("resetPassword mutation", () => {
 
     const user = await db.user.create({
       data: {
-        email: "user@example.com",
+        email: 'user@example.com',
         tokens: {
           // Create old token to ensure it's deleted
           create: [
             {
-              type: "RESET_PASSWORD",
+              type: 'RESET_PASSWORD',
               hashedToken: hash256(expiredToken),
               expiresAt: past,
-              sentTo: "user@example.com",
+              sentTo: 'user@example.com'
             },
             {
-              type: "RESET_PASSWORD",
+              type: 'RESET_PASSWORD',
               hashedToken: hash256(goodToken),
               expiresAt: future,
-              sentTo: "user@example.com",
-            },
-          ],
-        },
+              sentTo: 'user@example.com'
+            }
+          ]
+        }
       },
-      include: { tokens: true },
+      include: { tokens: true }
     })
 
-    const newPassword = "newPassword"
+    const newPassword = 'newPassword'
 
     // Non-existent token
     await expect(
-      resetPassword({ token: "no-token", password: "", passwordConfirmation: "" }, mockCtx)
+      resetPassword({ token: 'no-token', password: '', passwordConfirmation: '' }, mockCtx)
     ).rejects.toThrowError()
 
     // Expired token
