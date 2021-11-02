@@ -1,9 +1,0 @@
-version: '3'
-services:
-  db:
-    image: 'postgres:13'
-    container_name: 'scout_postgres'
-    environment:
-      POSTGRES_PASSWORD: 'pass123'
-    ports:
-      - '54320:5432'
