@@ -7,6 +7,7 @@ import { Signup } from 'app/auth/validations'
 import {
   Flex,
   Box,
+  Center,
   Stack,
   HStack,
   VStack,
@@ -32,30 +33,14 @@ export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
   const [value, setValue] = React.useState('student')
   return (
-    <Box borderWidth="2px" borderColor="teal.400" width="30%" rounded={6}>
-      {/* <h1>Create an Account</h1>
-
-      <Form
-        submitText="Create Account"
-        schema={Signup}
-        initialValues={{ email: "", password: "" }}
-        onSubmit={async (values) => {
-          try {
-            await signupMutation(values)
-            props.onSuccess?.()
-          } catch (error: any) {
-            if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-              // This error comes from Prisma
-              return { email: "This email is already being used" }
-            } else {
-              return { [FORM_ERROR]: error.toString() }
-            }
-          }
-        }}
-      >
-        <LabeledTextField name="email" label="Email" placeholder="Email" />
-        <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
-      </Form> */}
+    <Box
+      borderWidth="2px"
+      borderColor="teal.400"
+      width={{ base: '90%', md: '80%', lg: '40%' }}
+      rounded={6}
+      mt={{ base: '100px', lg: '0px' }}
+      mb={{ base: '50px', lg: '0px' }}
+    >
       <Flex alignItems="center" justifyContent="center" direction="column">
         <HStack spacing={6} p={10}>
           <Image src="/images/signup.png" alt="signup" maxWidth="100px" />
@@ -102,22 +87,26 @@ export const SignupForm = (props: SignupFormProps) => {
               </InputGroup>
             </HStack>
           </VStack>
-          <RadioGroup value={value} p={8}>
-            <Stack direction="row">
-              <Radio value="student" colorScheme="teal">
-                Student
-              </Radio>
-              <Radio value="tutor" colorScheme="teal">
-                Tutor
-              </Radio>
-            </Stack>
-          </RadioGroup>
-          <HStack spacing={4} p={6}>
-            <Button variant="outline">Cancel</Button>
-            <Button type="submit" colorScheme="teal">
-              Confirm
-            </Button>
-          </HStack>
+          <Center>
+            <RadioGroup value={value} p={10}>
+              <Stack direction="row">
+                <Radio value="student" colorScheme="teal">
+                  Student
+                </Radio>
+                <Radio value="tutor" colorScheme="teal">
+                  Tutor
+                </Radio>
+              </Stack>
+            </RadioGroup>
+          </Center>
+          <Center>
+            <HStack spacing={4} p={6}>
+              <Button variant="outline">Cancel</Button>
+              <Button type="submit" colorScheme="teal">
+                Confirm
+              </Button>
+            </HStack>
+          </Center>
         </Form>
       </Flex>
     </Box>
