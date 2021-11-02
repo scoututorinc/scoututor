@@ -102,7 +102,7 @@ export const SignupForm = (props: SignupFormProps) => {
               </InputGroup>
             </HStack>
           </VStack>
-          <RadioGroup onChange={setValue} value={value} p={8}>
+          <RadioGroup value={value} p={8}>
             <Stack direction="row">
               <Radio value="student" colorScheme="teal">
                 Student
