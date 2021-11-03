@@ -18,17 +18,22 @@ model User {
   updatedAt      DateTime @updatedAt
   name           String?
   email          String   @unique
+  profilePicture String
   hashedPassword String?
   role           Role     @default(USER)
 
   coursesCreated  Course[]
   coursesEnrolled CourseMembership[]
 
+  posts    Post[]
+  comments Comment[]
+
   chats    Chat[]
   messages Message[]
 
   tokens   Token[]
   sessions Session[]
+  Reply    Reply[]
 }
 
 model Course {
@@ -39,22 +44,25 @@ model Course {
   description   String
   icon          String
   previewImages String[]
-  author        User     @relation(fields: [authorId], references: [id])
-  authorId      Int
   hourlyRate    Int
 
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
   usersEnrolled CourseMembership[]
+
+  posts Post[]
 }
 
 model CourseMembership {
   id             Int             @id @default(autoincrement())
+  enrolledAt     DateTime        @default(now())
   user           User            @relation(fields: [userId], references: [id])
   userId         Int
   course         Course          @relation(fields: [courseId], references: [id])
   courseId       Int
   weeklyHours    Int
   weeklySchedule WeeklySession[]
-  enrolledAt     DateTime        @default(now())
 }
 
 model WeeklySession {
@@ -81,6 +89,49 @@ model Message {
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String
+  files       String[]
+
+  comments Comment[]
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+
+  replies Reply[]
+
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
 }
 
 model Session {
