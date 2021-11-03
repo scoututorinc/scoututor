@@ -1,3 +1,6 @@
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/600.css'
+
 import {
   AppProps,
   ErrorBoundary,
@@ -8,14 +11,14 @@ import {
   useQueryErrorResetBoundary
 } from 'blitz'
 import LoginForm from 'app/auth/components/LoginForm'
-
 import { ChakraProvider } from '@chakra-ui/react'
+import Theme from '../theme/Fonts'
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={Theme}>
       <ErrorBoundary
         FallbackComponent={RootErrorFallback}
         onReset={useQueryErrorResetBoundary().reset}
