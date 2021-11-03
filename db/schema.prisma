@@ -24,7 +24,8 @@ model User {
   coursesCreated  Course[]
   coursesEnrolled CourseMembership[]
 
-  chats Chat[]
+  chats    Chat[]
+  messages Message[]
 
   tokens   Token[]
   sessions Session[]
@@ -66,8 +67,20 @@ model WeeklySession {
 }
 
 model Chat {
-  id    Int    @id @default(autoincrement())
-  users User[] @relation(references: [id])
+  id       Int       @id @default(autoincrement())
+  users    User[]    @relation(references: [id])
+  messages Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  chatId Int
+  chat   Chat @relation(fields: [chatId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Session {
