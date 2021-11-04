@@ -1,9 +1,19 @@
 import { Link, BlitzPage, useMutation, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import logout from 'app/auth/mutations/logout'
-import Navbar from '../core/components/Navbar'
-import { Flex, Image, VStack, HStack, Heading, Text, Icon, Center, Button } from '@chakra-ui/react'
+import {
+  Flex,
+  Box,
+  Image,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Icon,
+  Center,
+  Button
+} from '@chakra-ui/react'
 import { Search2Icon } from '@chakra-ui/icons'
 import { BsLightning } from 'react-icons/bs'
 import { FaReact } from 'react-icons/fa'
@@ -54,15 +64,14 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <div>
-      <Navbar />
+    <Box>
       <Flex
         alignItems="center"
         justifyContent="space-around"
         direction={{ base: 'column', xl: 'row' }}
         pl="10%"
         pr="10%"
-        pt="100px"
+        pt={{ base: '100px', sm: '50px' }}
       >
         <Image
           src="images/knowledge.png"
@@ -93,11 +102,11 @@ const Home: BlitzPage = () => {
           <Button variant="outline">Sign in</Button>
         </HStack>
       </Center>
-    </div>
+    </Box>
   )
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.getLayout = (page) => <LoggedOutLayout title="Home">{page}</LoggedOutLayout>
 
 export default Home
