@@ -34,7 +34,8 @@ export const LoginForm = (props: LoginFormProps) => {
       borderColor="teal.400"
       width={{ base: '90%', md: '80%', lg: '40%' }}
       rounded={6}
-      m="auto"
+      mt={{ base: '150px', lg: '0px' }}
+      mx="auto"
     >
       <Flex alignItems="center" justifyContent="center" direction="column">
         <HStack spacing={6} p={10}>

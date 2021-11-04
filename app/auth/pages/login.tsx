@@ -1,7 +1,5 @@
 import { useRouter, BlitzPage } from 'blitz'
-import { Center } from '@chakra-ui/react'
 import { LoginForm } from 'app/auth/components/LoginForm'
-import Navbar from '../../core/components/Navbar'
 import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 
 const LoginPage: BlitzPage = () => {
