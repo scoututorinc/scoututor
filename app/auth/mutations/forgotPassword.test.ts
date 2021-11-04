@@ -24,6 +24,9 @@ describe('forgotPassword mutation', () => {
     const user = await db.user.create({
       data: {
         email: 'user@example.com',
+        name: 'Jose Antunes',
+        hashedPassword: 'XKCD123',
+        profilePicture: 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png',
         tokens: {
           // Create old token to ensure it's deleted
           create: {

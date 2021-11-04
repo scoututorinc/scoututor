@@ -30,12 +30,12 @@
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
     "@fontsource/inter": "4.5.0",
-    "@prisma/client": "3.3.0",
+    "@prisma/client": "3.4.0",
     "blitz": "0.41.1",
     "final-form": "4.20.4",
     "framer-motion": "3.2.0",
-    "react": "18.0.0-alpha-00ced1e2b-20211102",
-    "react-dom": "18.0.0-alpha-00ced1e2b-20211102",
+    "react": "alpha",
+    "react-dom": "alpha",
     "react-final-form": "6.5.7",
     "zod": "3.11.4"
   },
@@ -49,7 +49,7 @@
     "prettier-plugin-prisma": "0.15.0",
     "pretty-quick": "3.1.1",
     "preview-email": "3.0.5",
-    "prisma": "3.3.0",
+    "prisma": "3.4.0",
     "typescript": "~4.3"
   },
   "private": true

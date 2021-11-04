@@ -4,7 +4,9 @@ const password = z.string().min(10).max(100)
 
 export const Signup = z.object({
   email: z.string().email(),
-  password
+  name: z.string(),
+  profilePicture: z.string().url(),
+  password: z.string().min(8)
 })
 
 export const Login = z.object({

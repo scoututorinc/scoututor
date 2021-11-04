@@ -16,13 +16,163 @@ model User {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  name           String?
+  name           String
   email          String   @unique
-  hashedPassword String?
+  profilePicture String
+  hashedPassword String
   role           Role     @default(USER)
 
-  tokens   Token[]
-  sessions Session[]
+  coursesCreated  Course[]
+  coursesEnrolled CourseMembership[]
+
+  posts    Post[]
+  comments Comment[]
+
+  chats    Chat[]
+  messages Message[]
+
+  tokens                   Token[]
+  sessions                 Session[]
+  Reply                    Reply[]
+  CourseApplication        CourseApplication[]
+  courseApplicationMessage courseApplicationMessage[]
+}
+
+model Course {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String   @unique
+  description   String
+  icon          String
+  previewImages String[]
+  hourlyRate    Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  applications  CourseApplication[]
+  usersEnrolled CourseMembership[]
+
+  posts Post[]
+}
+
+model CourseMembership {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  weeklyHours    Int
+  weeklySchedule String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+}
+
+// model WeeklySession {
+//   id        Int      @id @default(autoincrement())
+//   day       WeekDay
+//   startTime DateTime @db.Time
+//   endTime   DateTime @db.Time
+
+//   courseMembershipId Int
+//   courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
+// }
+
+model CourseApplication {
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now())
+  description       String
+  availableSchedule String
+
+  status   CourseApplicationStatus    @default(PENDING)
+  messages courseApplicationMessage[]
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+
+  applicantId Int
+  applicant   User @relation(fields: [applicantId], references: [id])
+}
+
+// model AvailableSession {
+//   id        Int      @id @default(autoincrement())
+//   day       WeekDay
+//   startTime DateTime @db.Time
+//   endTime   DateTime @db.Time
+
+//   courseApplication   CourseApplication? @relation(fields: [courseApplicationId], references: [id])
+//   courseApplicationId Int?
+// }
+
+model courseApplicationMessage {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+
+  courseApplicationId Int
+  courseApplication   CourseApplication @relation(fields: [courseApplicationId], references: [id])
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+}
+
+model Chat {
+  id         Int       @id @default(autoincrement())
+  lastActive DateTime
+  users      User[]    @relation(references: [id])
+  messages   Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+
+  chatId Int
+  chat   Chat @relation(fields: [chatId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String
+  files       String[]
+  comments    Comment[]
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+  replies   Reply[]
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
 }
 
 model Session {
@@ -62,4 +212,18 @@ enum Role {
 
 enum TokenType {
   RESET_PASSWORD
+}
+
+enum WeekDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum CourseApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
