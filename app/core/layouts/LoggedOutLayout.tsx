@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { Head } from 'blitz'
-import { Box, Flex, Center } from '@chakra-ui/react'
+import { BlitzLayout, Head } from 'blitz'
+import { Box, Center } from '@chakra-ui/react'
 import Navbar from 'app/core/components/Navbar'
 
 type LoggedOutLayoutProps = {
@@ -8,7 +8,7 @@ type LoggedOutLayoutProps = {
   children: ReactNode
 }
 
-const LoggedOutLayout = ({ title, children }: LoggedOutLayoutProps) => {
+const LoggedOutLayout: BlitzLayout<LoggedOutLayoutProps> = ({ title, children }) => {
   return (
     <>
       <Head>
@@ -23,4 +23,5 @@ const LoggedOutLayout = ({ title, children }: LoggedOutLayoutProps) => {
   )
 }
 
+LoggedOutLayout.redirectAuthenticatedTo = '/'
 export default LoggedOutLayout
