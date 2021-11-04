@@ -17,7 +17,7 @@ const LoggedOutLayout = ({ title, children }: LoggedOutLayoutProps) => {
       </Head>
       <Box height="100vh">
         <Navbar />
-        {children}
+        <Center>{children}</Center>
       </Box>
     </>
   )
