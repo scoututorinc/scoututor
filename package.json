@@ -31,11 +31,7 @@
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
     "@fontsource/inter": "4.5.0",
-<<<<<<< HEAD
     "@prisma/client": "3.4.0",
-=======
-    "@prisma/client": "3.3.0",
->>>>>>> 94490f4 (:art: Updates the fonts and introduces layouts)
     "blitz": "0.41.1",
     "final-form": "4.20.4",
     "framer-motion": "3.2.0",
