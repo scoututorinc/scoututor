@@ -3,7 +3,18 @@ import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import logout from 'app/auth/mutations/logout'
 import Navbar from '../core/components/Navbar'
-import { Flex, Image, VStack, HStack, Heading, Text, Icon, Center, Button } from '@chakra-ui/react'
+import {
+  Flex,
+  Box,
+  Image,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Icon,
+  Center,
+  Button
+} from '@chakra-ui/react'
 import { Search2Icon } from '@chakra-ui/icons'
 import { BsLightning } from 'react-icons/bs'
 import { FaReact } from 'react-icons/fa'
@@ -54,7 +65,7 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <div>
+    <Box>
       <Navbar />
       <Flex
         alignItems="center"
@@ -93,7 +104,7 @@ const Home: BlitzPage = () => {
           <Button variant="outline">Sign in</Button>
         </HStack>
       </Center>
-    </div>
+    </Box>
   )
 }
 
