@@ -1,6 +1,6 @@
 import { useRouter, BlitzPage, Routes } from 'blitz'
 import { Center } from '@chakra-ui/react'
-import Layout from 'app/core/layouts/Layout'
+import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import { SignupForm } from 'app/auth/components/SignupForm'
 import Navbar from '../../core/components/Navbar'
 
@@ -18,6 +18,6 @@ const SignupPage: BlitzPage = () => {
 }
 
 SignupPage.redirectAuthenticatedTo = '/'
-SignupPage.getLayout = (page) => <Layout title="Sign Up">{page}</Layout>
+SignupPage.getLayout = (page) => <LoggedOutLayout title="Sign Up">{page}</LoggedOutLayout>
 
 export default SignupPage
