@@ -1,22 +1,26 @@
 import { ReactNode } from 'react'
 import { Head } from 'blitz'
+import { Box, Flex, Center } from '@chakra-ui/react'
+import Navbar from 'app/core/components/Navbar'
 
-type LayoutProps = {
+type LoggedOutLayoutProps = {
   title?: string
   children: ReactNode
 }
 
-const Layout = ({ title, children }: LayoutProps) => {
+const LoggedOutLayout = ({ title, children }: LoggedOutLayoutProps) => {
   return (
     <>
       <Head>
         <title>{title || 'blitz-chakra'}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      {children}
+      <Box height="100vh">
+        <Navbar />
+        {children}
+      </Box>
     </>
   )
 }
 
-export default Layout
+export default LoggedOutLayout

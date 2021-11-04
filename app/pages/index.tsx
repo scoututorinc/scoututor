@@ -1,8 +1,7 @@
 import { Link, BlitzPage, useMutation, Routes } from 'blitz'
-import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import logout from 'app/auth/mutations/logout'
-import Navbar from '../core/components/Navbar'
 import {
   Flex,
   Box,
@@ -66,7 +65,6 @@ const UserInfo = () => {
 const Home: BlitzPage = () => {
   return (
     <Box>
-      <Navbar />
       <Flex
         alignItems="center"
         justifyContent="space-around"

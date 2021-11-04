@@ -1,13 +1,18 @@
 import { useRouter, BlitzPage, Routes } from 'blitz'
+import { Center } from '@chakra-ui/react'
 import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import { SignupForm } from 'app/auth/components/SignupForm'
+import Navbar from '../../core/components/Navbar'
 
 const SignupPage: BlitzPage = () => {
   const router = useRouter()
 
   return (
     <div>
-      <SignupForm onSuccess={() => router.push(Routes.Home())} />
+      <Navbar />
+      <Center>
+        <SignupForm onSuccess={() => router.push(Routes.Home())} />
+      </Center>
     </div>
   )
 }
