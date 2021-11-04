@@ -1,0 +1,200 @@
+Enum "Role" {
+  "USER"
+  "ADMIN"
+}
+
+Enum "TokenType" {
+  "RESET_PASSWORD"
+}
+
+Enum "WeekDay" {
+  "MONDAY"
+  "TUESDAY"
+  "WEDNESDAY"
+  "THURSDAY"
+  "FRIDAY"
+}
+
+Enum "CourseApplicationStatus" {
+  "PENDING"
+  "ACCEPTED"
+  "REJECTED"
+}
+
+Table "User" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "updatedAt" timestamp(3) [not null]
+  "name" TEXT [not null]
+  "email" TEXT [not null]
+  "profilePicture" TEXT [not null]
+  "hashedPassword" TEXT [not null]
+  "role" Role [not null, default: `E'USER'`]
+
+Indexes {
+  email [unique, name: "User_email_key"]
+}
+}
+
+Table "Course" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "updatedAt" timestamp(3) [not null]
+  "name" TEXT [not null]
+  "description" TEXT [not null]
+  "icon" TEXT [not null]
+  "previewImages" "TEXT[]"
+  "hourlyRate" INTEGER [not null]
+  "authorId" INTEGER [not null]
+
+Indexes {
+  name [unique, name: "Course_name_key"]
+}
+}
+
+Table "CourseMembership" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "weeklyHours" INTEGER [not null]
+  "weeklySchedule" TEXT [not null]
+  "userId" INTEGER [not null]
+  "courseId" INTEGER [not null]
+}
+
+Table "CourseApplication" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "description" TEXT [not null]
+  "availableSchedule" TEXT [not null]
+  "status" CourseApplicationStatus [not null, default: `E'PENDING'`]
+  "courseId" INTEGER [not null]
+  "applicantId" INTEGER [not null]
+}
+
+Table "courseApplicationMessage" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "content" TEXT [not null]
+  "courseApplicationId" INTEGER [not null]
+  "authorId" INTEGER [not null]
+}
+
+Table "Chat" {
+  "id" int [pk, not null, increment]
+  "lastActive" timestamp(3) [not null]
+}
+
+Table "Message" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "content" TEXT [not null]
+  "chatId" INTEGER [not null]
+  "userId" INTEGER [not null]
+}
+
+Table "Post" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "updatedAt" timestamp(3) [not null]
+  "title" TEXT [not null]
+  "description" TEXT [not null]
+  "files" "TEXT[]"
+  "courseId" INTEGER [not null]
+  "authorId" INTEGER [not null]
+}
+
+Table "Comment" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "content" TEXT [not null]
+  "postId" INTEGER [not null]
+  "authorId" INTEGER [not null]
+}
+
+Table "Reply" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "content" TEXT [not null]
+  "commentId" INTEGER [not null]
+  "authorId" INTEGER [not null]
+}
+
+Table "Session" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "updatedAt" timestamp(3) [not null]
+  "expiresAt" timestamp(3)
+  "handle" TEXT [not null]
+  "hashedSessionToken" TEXT
+  "antiCSRFToken" TEXT
+  "publicData" TEXT
+  "privateData" TEXT
+  "userId" INTEGER
+
+Indexes {
+  handle [unique, name: "Session_handle_key"]
+}
+}
+
+Table "Token" {
+  "id" int [pk, not null, increment]
+  "createdAt" timestamp(3) [not null, default: `CURRENT_TIMESTAMP`]
+  "updatedAt" timestamp(3) [not null]
+  "hashedToken" TEXT [not null]
+  "type" TokenType [not null]
+  "expiresAt" timestamp(3) [not null]
+  "sentTo" TEXT [not null]
+  "userId" INTEGER [not null]
+
+Indexes {
+  (hashedToken, type) [unique, name: "Token_hashedToken_type_key"]
+}
+}
+
+Table "_ChatToUser" {
+  "A" INTEGER [not null]
+  "B" INTEGER [not null]
+
+Indexes {
+  (A, B) [unique, name: "_ChatToUser_AB_unique"]
+  B [name: "_ChatToUser_B_index"]
+}
+}
+
+Ref:"User"."id" < "Course"."authorId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "CourseMembership"."userId" [update: cascade, delete: restrict]
+
+Ref:"Course"."id" < "CourseMembership"."courseId" [update: cascade, delete: restrict]
+
+Ref:"Course"."id" < "CourseApplication"."courseId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "CourseApplication"."applicantId" [update: cascade, delete: restrict]
+
+Ref:"CourseApplication"."id" < "courseApplicationMessage"."courseApplicationId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "courseApplicationMessage"."userId" [update: cascade, delete: restrict]
+
+Ref:"Chat"."id" < "Message"."chatId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "Message"."userId" [update: cascade, delete: restrict]
+
+Ref:"Course"."id" < "Post"."courseId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "Post"."authorId" [update: cascade, delete: restrict]
+
+Ref:"Post"."id" < "Comment"."postId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "Comment"."authorId" [update: cascade, delete: restrict]
+
+Ref:"Comment"."id" < "Reply"."commentId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "Reply"."authorId" [update: cascade, delete: restrict]
+
+Ref:"User"."id" < "Session"."userId" [update: cascade, delete: set null]
+
+Ref:"User"."id" < "Token"."userId" [update: cascade, delete: restrict]
+
+Ref:"Chat"."id" < "_ChatToUser"."A" [update: cascade, delete: cascade]
+
+Ref:"User"."id" < "_ChatToUser"."B" [update: cascade, delete: cascade]

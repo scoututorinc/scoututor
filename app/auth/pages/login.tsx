@@ -6,7 +6,6 @@ import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 
 const LoginPage: BlitzPage = () => {
   const router = useRouter()
-
   return (
     <LoginForm
       onSuccess={() => {
