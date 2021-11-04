@@ -1,10 +1,23 @@
-import { Suspense } from 'react'
-import { Image, Link, BlitzPage, useMutation, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
+import { Link, BlitzPage, useMutation, Routes } from 'blitz'
+import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import logout from 'app/auth/mutations/logout'
-import logo from 'public/logo.png'
-
+import Navbar from '../core/components/Navbar'
+import {
+  Flex,
+  Box,
+  Image,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Icon,
+  Center,
+  Button
+} from '@chakra-ui/react'
+import { Search2Icon } from '@chakra-ui/icons'
+import { BsLightning } from 'react-icons/bs'
+import { FaReact } from 'react-icons/fa'
 /*
  * This file is just for a pleasant getting started page for your new app.
  * You can delete everything in here and start from scratch if you like.
@@ -52,221 +65,50 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <div className="container">
-      <main>
-        <div className="logo">
-          <Image src={logo} alt="blitzjs" />
-        </div>
-        <p>
-          <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
-        </p>
-        <div className="buttons" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-          <Suspense fallback="Loading...">
-            <UserInfo />
-          </Suspense>
-        </div>
-        <p>
-          <strong>
-            To add a new model to your app, <br />
-            run the following in your terminal:
-          </strong>
-        </p>
-        <pre>
-          <code>blitz generate all project name:string</code>
-        </pre>
-        <div style={{ marginBottom: '1rem' }}>(And select Yes to run prisma migrate)</div>
-        <div>
-          <p>
-            Then <strong>restart the server</strong>
-          </p>
-          <pre>
-            <code>Ctrl + c</code>
-          </pre>
-          <pre>
-            <code>blitz dev</code>
-          </pre>
-          <p>
-            and go to{' '}
-            <Link href="/projects">
-              <a>/projects</a>
-            </Link>
-          </p>
-        </div>
-        <div className="buttons" style={{ marginTop: '5rem' }}>
-          <a
-            className="button"
-            href="https://blitzjs.com/docs/getting-started?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-          <a
-            className="button-outline"
-            href="https://github.com/blitz-js/blitz"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Github Repo
-          </a>
-          <a
-            className="button-outline"
-            href="https://discord.blitzjs.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Discord Community
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://blitzjs.com?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by Blitz.js
-        </a>
-      </footer>
-
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;700&display=swap');
-
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-            Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        }
-
-        * {
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          box-sizing: border-box;
-        }
-        .container {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main p {
-          font-size: 1.2rem;
-        }
-
-        p {
-          text-align: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 60px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #45009d;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer a {
-          color: #f4f4f4;
-          text-decoration: none;
-        }
-
-        .logo {
-          margin-bottom: 2rem;
-        }
-
-        .logo img {
-          width: 300px;
-        }
-
-        .buttons {
-          display: grid;
-          grid-auto-flow: column;
-          grid-gap: 0.5rem;
-        }
-        .button {
-          font-size: 1rem;
-          background-color: #6700eb;
-          padding: 1rem 2rem;
-          color: #f4f4f4;
-          text-align: center;
-        }
-
-        .button.small {
-          padding: 0.5rem 1rem;
-        }
-
-        .button:hover {
-          background-color: #45009d;
-        }
-
-        .button-outline {
-          border: 2px solid #6700eb;
-          padding: 1rem 2rem;
-          color: #6700eb;
-          text-align: center;
-        }
-
-        .button-outline:hover {
-          border-color: #45009d;
-          color: #45009d;
-        }
-
-        pre {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          text-align: center;
-        }
-        code {
-          font-size: 0.9rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-            Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-    </div>
+    <Box>
+      <Navbar />
+      <Flex
+        alignItems="center"
+        justifyContent="space-around"
+        direction={{ base: 'column', xl: 'row' }}
+        pl="10%"
+        pr="10%"
+        pt={{ base: '100px', sm: '50px' }}
+      >
+        <Image
+          src="images/knowledge.png"
+          alt="knowledge"
+          maxHeight="25%"
+          maxWidth={{ sm: '40%', xl: '30%' }}
+          mb={{ lg: '50px' }}
+        />
+        <VStack spacing={4} align="stretch" mt={{ base: '70px', lg: '0px' }}>
+          <Heading pb={6}>Let`s build knowledge together</Heading>
+          <HStack spacing={4}>
+            <Search2Icon color="gray.700" />
+            <Text fontSize="xl">Find a tutor that suits you</Text>
+          </HStack>
+          <HStack spacing={4}>
+            <Icon as={BsLightning} color="gray.700" />
+            <Text fontSize="xl">Learn at your pace</Text>
+          </HStack>
+          <HStack spacing={4}>
+            <Icon as={FaReact} color="gray.700" />
+            <Text fontSize="xl">Share your learning</Text>
+          </HStack>
+        </VStack>
+      </Flex>
+      <Center pt="50px" pb="40px">
+        <HStack spacing={6}>
+          <Button colorScheme="teal">Join us</Button>
+          <Button variant="outline">Sign in</Button>
+        </HStack>
+      </Center>
+    </Box>
   )
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.getLayout = (page) => <LoggedOutLayout title="Home">{page}</LoggedOutLayout>
 
 export default Home

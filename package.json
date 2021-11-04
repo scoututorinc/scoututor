@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/icons": "1.0.16",
     "@chakra-ui/react": "1.1.2",
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
@@ -34,9 +35,10 @@
     "blitz": "0.41.1",
     "final-form": "4.20.4",
     "framer-motion": "3.2.0",
-    "react": "alpha",
-    "react-dom": "alpha",
+    "react": "18.0.0-alpha-ebf9ae857-20211101",
+    "react-dom": "18.0.0-alpha-ebf9ae857-20211101",
     "react-final-form": "6.5.7",
+    "react-icons": "4.3.1",
     "zod": "3.11.4"
   },
   "devDependencies": {
