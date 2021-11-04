@@ -78,7 +78,7 @@ export const LoginForm = (props: LoginFormProps) => {
                 <Input type="password" placeholder="Password" focusBorderColor="teal.400"></Input>
               </InputGroup>
             </HStack>
-            <Checkbox colorScheme="teal" defaultIsChecked>
+            <Checkbox colorScheme="teal" defaultChecked>
               Remember me
             </Checkbox>
             <ChakraLink color="teal.400" href="">
