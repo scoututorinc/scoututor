@@ -7,14 +7,7 @@ import Navbar from '../../core/components/Navbar'
 const SignupPage: BlitzPage = () => {
   const router = useRouter()
 
-  return (
-    <div>
-      <Navbar />
-      <Center>
-        <SignupForm onSuccess={() => router.push(Routes.Home())} />
-      </Center>
-    </div>
-  )
+  return <SignupForm onSuccess={() => router.push(Routes.Home())} />
 }
 
 SignupPage.redirectAuthenticatedTo = '/'
