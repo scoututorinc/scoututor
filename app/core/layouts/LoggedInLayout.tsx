@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Head } from 'blitz'
+import { Head, BlitzLayout } from 'blitz'
 import { Flex } from '@chakra-ui/react'
 import Sidebar from 'app/core/components/Sidebar'
 
@@ -8,7 +8,7 @@ type LoggedInLayoutProps = {
   children: ReactNode
 }
 
-const LoggedInLayout = ({ title, children }: LoggedInLayoutProps) => {
+const LoggedInLayout: BlitzLayout<LoggedInLayoutProps> = ({ title, children }) => {
   return (
     <>
       <Head>
@@ -23,4 +23,5 @@ const LoggedInLayout = ({ title, children }: LoggedInLayoutProps) => {
   )
 }
 
+LoggedInLayout.authenticate = true
 export default LoggedInLayout
