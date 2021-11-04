@@ -1,8 +1,9 @@
 import type { BlitzPage } from 'blitz'
+import { FC } from 'react'
 import { Box, Flex, Image, HStack, Input, Button } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 
-const Navbar: BlitzPage = () => {
+const Navbar: FC = () => {
   return (
     <Box borderWidth={{ base: 'none', lg: '1px' }} mb="50px">
       <Flex
