@@ -65,47 +65,26 @@ export const SignupForm = (props: SignupFormProps) => {
         >
           <VStack spacing={6} p={10}>
             <VStack spacing={4}>
-              <LabeledTextField name="name" label="Name" placeholder="Full Name" type="text" />
-              <LabeledTextField name="email" label="Email" placeholder="Email" />
+              <LabeledTextField
+                name="name"
+                label="Name"
+                placeholder="Full Name"
+                type="text"
+                icon={BsFillPersonFill}
+              />
+              <LabeledTextField
+                name="email"
+                label="Email"
+                placeholder="Email"
+                icon={AiOutlineMail}
+              />
               <LabeledTextField
                 name="password"
                 label="Password"
                 placeholder="Password"
                 type="password"
+                icon={RiLockPasswordFill}
               />
-              {/* <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={BsFillPersonFill} color="teal.400" />
-                </InputLeftElement>
-                <Input
-                  name="name"
-                  type="text"
-                  placeholder="Full Name"
-                  focusBorderColor="teal.400"
-                />
-              </InputGroup>
-            </HStack>
-            <HStack spacing={4}>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={AiOutlineMail} color="teal.400" />
-                </InputLeftElement>
-                <Input name="email" type="email" placeholder="Email" focusBorderColor="teal.400" />
-              </InputGroup>
-            </HStack>
-            <HStack spacing={4}>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={RiLockPasswordFill} color="teal.400" />
-                </InputLeftElement>
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  focusBorderColor="teal.400"
-                />
-              </InputGroup>
-            </HStack>*/}
             </VStack>
           </VStack>
           <Center>

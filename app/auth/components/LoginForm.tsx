@@ -62,39 +62,22 @@ export const LoginForm = (props: LoginFormProps) => {
           }}
         >
           <VStack spacing={6} p={10}>
-            <HStack spacing={4}>
-              <LabeledTextField name="email" type="email" label="Email" placeholder="Email" />
+            <VStack spacing={4}>
+              <LabeledTextField
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="Email"
+                icon={AiOutlineMail}
+              />
               <LabeledTextField
                 name="password"
                 label="Password"
                 placeholder="Password"
                 type="password"
+                icon={RiLockPasswordFill}
               />
-              {/* <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={AiOutlineMail} color="teal.400" />
-                </InputLeftElement>
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  focusBorderColor="teal.400"
-                ></Input>
-              </InputGroup>
-            </HStack>
-            <HStack spacing={4}>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={RiLockPasswordFill} color="teal.400" />
-                </InputLeftElement>
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  focusBorderColor="teal.400"
-                ></Input>
-              </InputGroup> */}
-            </HStack>
+            </VStack>
             <Checkbox colorScheme="teal" defaultChecked>
               Remember me
             </Checkbox>
