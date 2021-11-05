@@ -47,7 +47,6 @@ export const SignupForm = (props: SignupFormProps) => {
           <Heading>Sign Up</Heading>
         </HStack>
         <Form
-          submitText="Create Account"
           schema={Signup}
           initialValues={{ name: '', email: '', password: '' }}
           onSubmit={async (values) => {

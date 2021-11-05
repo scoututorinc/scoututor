@@ -43,7 +43,6 @@ export const LoginForm = (props: LoginFormProps) => {
           <Heading>Log In</Heading>
         </HStack>
         <Form
-          submitText="Log In"
           schema={Login}
           initialValues={{ email: '', password: '' }}
           onSubmit={async (values) => {
