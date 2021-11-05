@@ -10,9 +10,8 @@ import {
   Input,
   Divider
 } from '@chakra-ui/react'
-import Sidebar from '../core/components/Sidebar'
 import { SearchIcon } from '@chakra-ui/icons'
-import Post from '../core/components/Post'
+import Post from 'app/core/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 
 const MainFeed: BlitzPage = () => {
@@ -66,6 +65,5 @@ const MainFeed: BlitzPage = () => {
   )
 }
 
-// MainFeed.authenticate = { redirectTo: '/login' }
 MainFeed.getLayout = (page) => <LoggedInLayout title="Main Feed">{page}</LoggedInLayout>
 export default MainFeed

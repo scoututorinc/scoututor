@@ -10,7 +10,6 @@ const SignupPage: BlitzPage = () => {
   return <SignupForm onSuccess={() => router.push(Routes.Home())} />
 }
 
-SignupPage.redirectAuthenticatedTo = '/'
 SignupPage.getLayout = (page) => <LoggedOutLayout title="Sign Up">{page}</LoggedOutLayout>
 
 export default SignupPage
