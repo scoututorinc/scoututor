@@ -18,24 +18,26 @@ model User {
   updatedAt      DateTime @updatedAt
   name           String
   email          String   @unique
-  profilePicture String
-  hashedPassword String
+  profilePicture String?
+  hashedPassword String?
   role           Role     @default(USER)
 
   coursesCreated  Course[]
   coursesEnrolled CourseMembership[]
 
+  courseApplication        CourseApplication[]
+  courseApplicationMessage courseApplicationMessage[]
+  courseReview             CourseReview[]
+
   posts    Post[]
   comments Comment[]
+  replies  Reply[]
 
   chats    Chat[]
   messages Message[]
 
-  tokens                   Token[]
-  sessions                 Session[]
-  Reply                    Reply[]
-  CourseApplication        CourseApplication[]
-  courseApplicationMessage courseApplicationMessage[]
+  tokens   Token[]
+  sessions Session[]
 }
 
 model Course {
@@ -54,7 +56,8 @@ model Course {
   applications  CourseApplication[]
   usersEnrolled CourseMembership[]
 
-  posts Post[]
+  posts   Post[]
+  reviews CourseReview[]
 }
 
 model CourseMembership {
@@ -117,6 +120,21 @@ model courseApplicationMessage {
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
+}
+
+model CourseReview {
+  createdAt DateTime @default(now())
+
+  rating  Int
+  content String
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+
+  @@id([courseId, authorId])
 }
 
 model Chat {
