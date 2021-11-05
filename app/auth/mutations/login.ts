@@ -6,6 +6,7 @@ import { Role } from 'types'
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
   const email = rawEmail.toLowerCase().trim()
   const password = rawPassword.trim()
+
   const user = await db.user.findFirst({ where: { email } })
   if (!user) throw new AuthenticationError()
 

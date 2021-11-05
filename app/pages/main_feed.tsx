@@ -18,7 +18,7 @@ const MainFeed: BlitzPage = () => {
   const currently_enrolled_courses = ['Mathematics', 'Geography', 'Graphic Design']
 
   return (
-    <Flex direction="column" w="100%" p={10}>
+    <Flex direction="column" w="100%" h="100%" overflow-y="scroll" overflow-x="hidden" p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent="space-between">
         <VStack spacing={2}>
           <Heading>This is what is happening</Heading>
@@ -28,7 +28,7 @@ const MainFeed: BlitzPage = () => {
         <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
           <Input focusBorderColor="teal.400" type="text" placeholder="What are you looking for?" />
           <Button colorScheme="teal">
-            <SearchIcon colorScheme="gray.700" />
+            <SearchIcon color="gray.700" />
           </Button>
         </HStack>
       </Flex>

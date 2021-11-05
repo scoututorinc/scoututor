@@ -29,7 +29,7 @@ const Navbar: FC = () => {
             placeholder="What do you need help with?"
           />
           <Button colorScheme="teal">
-            <SearchIcon colorScheme="gray.700" />
+            <SearchIcon color="gray.700" />
           </Button>
         </HStack>
         <HStack spacing={6} margin={{ base: '10px', lg: '0px' }}>

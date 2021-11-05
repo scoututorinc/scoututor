@@ -15,7 +15,7 @@ const LoggedInLayout: BlitzLayout<LoggedInLayoutProps> = ({ title, children }) =
         <title>{title || 'blitz-chakra'}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Flex>
+      <Flex height="100vh" overflow-y="hidden">
         <Sidebar />
         {children}
       </Flex>

@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { useMutation } from 'blitz'
 import { LabeledTextField } from 'app/core/components/LabeledTextField'
 import { Form, FORM_ERROR } from 'app/core/components/Form'
@@ -31,7 +31,7 @@ type SignupFormProps = {
 
 export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
-  const [value, setValue] = React.useState('student')
+  const [value, setValue] = useState('student')
   return (
     <Box
       borderWidth="2px"
@@ -47,6 +47,9 @@ export const SignupForm = (props: SignupFormProps) => {
           <Heading>Sign Up</Heading>
         </HStack>
         <Form
+          submitText="Create Account"
+          schema={Signup}
+          initialValues={{ name: '', email: '', password: '' }}
           onSubmit={async (values) => {
             try {
               await signupMutation(values)
@@ -62,12 +65,25 @@ export const SignupForm = (props: SignupFormProps) => {
           }}
         >
           <VStack spacing={6} p={10}>
-            <HStack spacing={4}>
-              <InputGroup>
+            <VStack spacing={4}>
+              <LabeledTextField name="name" label="Name" placeholder="Full Name" type="text" />
+              <LabeledTextField name="email" label="Email" placeholder="Email" />
+              <LabeledTextField
+                name="password"
+                label="Password"
+                placeholder="Password"
+                type="password"
+              />
+              {/* <InputGroup>
                 <InputLeftElement pointerEvents="none">
                   <Icon as={BsFillPersonFill} color="teal.400" />
                 </InputLeftElement>
-                <Input type="text" placeholder="Full Name" focusBorderColor="teal.400" />
+                <Input
+                  name="name"
+                  type="text"
+                  placeholder="Full Name"
+                  focusBorderColor="teal.400"
+                />
               </InputGroup>
             </HStack>
             <HStack spacing={4}>
@@ -75,7 +91,7 @@ export const SignupForm = (props: SignupFormProps) => {
                 <InputLeftElement pointerEvents="none">
                   <Icon as={AiOutlineMail} color="teal.400" />
                 </InputLeftElement>
-                <Input type="email" placeholder="Email" focusBorderColor="teal.400"></Input>
+                <Input name="email" type="email" placeholder="Email" focusBorderColor="teal.400" />
               </InputGroup>
             </HStack>
             <HStack spacing={4}>
@@ -83,9 +99,15 @@ export const SignupForm = (props: SignupFormProps) => {
                 <InputLeftElement pointerEvents="none">
                   <Icon as={RiLockPasswordFill} color="teal.400" />
                 </InputLeftElement>
-                <Input type="password" placeholder="Password" focusBorderColor="teal.400"></Input>
+                <Input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  focusBorderColor="teal.400"
+                />
               </InputGroup>
-            </HStack>
+            </HStack>*/}
+            </VStack>
           </VStack>
           <Center>
             <RadioGroup value={value} p={10}>
