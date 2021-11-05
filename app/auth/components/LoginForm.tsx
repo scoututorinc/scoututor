@@ -63,11 +63,23 @@ export const LoginForm = (props: LoginFormProps) => {
         >
           <VStack spacing={6} p={10}>
             <HStack spacing={4}>
-              <InputGroup>
+              <LabeledTextField name="email" type="email" label="Email" placeholder="Email" />
+              <LabeledTextField
+                name="password"
+                label="Password"
+                placeholder="Password"
+                type="password"
+              />
+              {/* <InputGroup>
                 <InputLeftElement pointerEvents="none">
                   <Icon as={AiOutlineMail} color="teal.400" />
                 </InputLeftElement>
-                <Input type="email" placeholder="Email" focusBorderColor="teal.400"></Input>
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  focusBorderColor="teal.400"
+                ></Input>
               </InputGroup>
             </HStack>
             <HStack spacing={4}>
@@ -75,8 +87,13 @@ export const LoginForm = (props: LoginFormProps) => {
                 <InputLeftElement pointerEvents="none">
                   <Icon as={RiLockPasswordFill} color="teal.400" />
                 </InputLeftElement>
-                <Input type="password" placeholder="Password" focusBorderColor="teal.400"></Input>
-              </InputGroup>
+                <Input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  focusBorderColor="teal.400"
+                ></Input>
+              </InputGroup> */}
             </HStack>
             <Checkbox colorScheme="teal" defaultChecked>
               Remember me
