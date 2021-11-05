@@ -15,8 +15,6 @@ import Post from 'app/core/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 
 const MainFeed: BlitzPage = () => {
-  const sess = useSession()
-  console.log('sess :>> ', sess)
   const currently_enrolled_courses = ['Mathematics', 'Geography', 'Graphic Design']
 
   return (
