@@ -1,5 +1,3 @@
-// import db from "./index"
-
 import { SecurePassword } from 'blitz'
 import db from 'db'
 

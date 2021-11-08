@@ -28,7 +28,7 @@ describe('resetPassword mutation', () => {
       data: {
         email: 'user@example.com',
         name: 'Jose Antunes',
-        hashedPassword: 'XKCD123',
+        hashedPassword: await SecurePassword.hash('XKCD123'),
         profilePicture: 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png',
         tokens: {
           // Create old token to ensure it's deleted

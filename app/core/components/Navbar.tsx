@@ -1,4 +1,3 @@
-import type { BlitzPage } from 'blitz'
 import { FC } from 'react'
 import { Box, Flex, Image, HStack, Input, Button } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
@@ -29,7 +28,7 @@ const Navbar: FC = () => {
             placeholder="What do you need help with?"
           />
           <Button colorScheme="teal">
-            <SearchIcon color="gray.700" />
+            <SearchIcon />
           </Button>
         </HStack>
         <HStack spacing={6} margin={{ base: '10px', lg: '0px' }}>

@@ -4,7 +4,6 @@ import { useField, UseFieldConfig } from 'react-final-form'
 import { Input, InputLeftElement, InputGroup } from '@chakra-ui/input'
 import { Icon } from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
-import { AiOutlineMail } from 'react-icons/ai'
 import { IconType } from 'react-icons'
 
 export interface LabeledTextFieldProps extends ComponentPropsWithoutRef<typeof Input> {
@@ -21,7 +20,7 @@ export interface LabeledTextFieldProps extends ComponentPropsWithoutRef<typeof I
 }
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  ({ name, label, outerProps, icon, fieldProps, labelProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting }
@@ -38,7 +37,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         <FormLabel {...labelProps}>
           <InputGroup>
             <InputLeftElement>
-              <Icon as={props.icon} color="teal.400" />
+              <Icon as={icon} color="teal.400" />
             </InputLeftElement>
             <Input
               {...input}

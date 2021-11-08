@@ -10,10 +10,6 @@ import {
   VStack,
   Image,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
   Button,
   Link as ChakraLink,
   Checkbox
