@@ -1,4 +1,4 @@
-import { AuthenticationError, Link, useMutation, Routes } from 'blitz'
+import { AuthenticationError, useMutation } from 'blitz'
 import { LabeledTextField } from 'app/core/components/LabeledTextField'
 import { Form, FORM_ERROR } from 'app/core/components/Form'
 import login from 'app/auth/mutations/login'
@@ -8,7 +8,7 @@ import {
   Flex,
   HStack,
   VStack,
-  Image,
+  Img,
   Heading,
   Button,
   Link as ChakraLink,
@@ -35,7 +35,7 @@ export const LoginForm = (props: LoginFormProps) => {
     >
       <Flex alignItems="center" justifyContent="center" direction="column">
         <HStack spacing={6} p={10}>
-          <Image src="/images/signup.png" alt="login" maxWidth="100px" />
+          <Img src="/images/signup.png" alt="login" maxWidth="100px" />
           <Heading>Log In</Heading>
         </HStack>
         <Form

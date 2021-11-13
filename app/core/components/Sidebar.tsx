@@ -1,10 +1,11 @@
-import { useMutation, Router, Routes } from 'blitz'
+import { Routes, useMutation, useRouter, Image as BlitzImage } from 'blitz'
 import logout from 'app/auth/mutations/logout'
 import { FC } from 'react'
 
-import { Flex, VStack, Image, Heading, Spacer } from '@chakra-ui/react'
+import { Flex, VStack, Img, Heading, Spacer, Link } from '@chakra-ui/react'
 
 const Sidebar: FC = () => {
+  const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
   const items = {
@@ -48,11 +49,13 @@ const Sidebar: FC = () => {
       alignItems="space-between"
     >
       <VStack mt={10} mb={15}>
-        <Image src="/images/sidebar/logo_no_text.png" alt="scoututor" maxWidth="75%" />
+        <Img src="/images/sidebar/logo_no_text.png" alt="scoututor" maxWidth="75%" />
         {items.upper_items.map((item) => (
           <VStack key={item.icon_text} pt={5}>
-            <Image src={item.image_src} alt={item.image_alt} maxWidth="50%" />
-            <Heading size="xs">{item.icon_text}</Heading>
+            <Link display="flex" flexDirection="column" alignItems="center">
+              <Img src={item.image_src} alt={item.image_alt} maxWidth="50%" />
+              <Heading size="xs">{item.icon_text}</Heading>
+            </Link>
           </VStack>
         ))}
       </VStack>
@@ -60,15 +63,18 @@ const Sidebar: FC = () => {
       <VStack mb={10}>
         {items.lower_items.map((item) => (
           <VStack key={item.icon_text} pt={5}>
-            <Image
-              src={item.image_src}
-              alt={item.image_alt}
-              onClick={async () => {
-                await logoutMutation()
-                Router.push(Routes.Home())
-              }}
-            />
-            <Heading size="xs">{item.icon_text}</Heading>
+            <Link display="flex" flexDirection="column" alignItems="center">
+              <Img
+                src={item.image_src}
+                alt={item.image_alt}
+                maxWidth="50%"
+                onClick={async () => {
+                  await router.push(Routes.Home())
+                  await logoutMutation()
+                }}
+              />
+              <Heading size="xs">{item.icon_text}</Heading>
+            </Link>
           </VStack>
         ))}
       </VStack>

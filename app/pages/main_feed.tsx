@@ -65,5 +65,6 @@ const MainFeed: BlitzPage = () => {
   )
 }
 
+MainFeed.suppressFirstRenderFlicker = true
 MainFeed.getLayout = (page) => <LoggedInLayout title="Main Feed">{page}</LoggedInLayout>
 export default MainFeed

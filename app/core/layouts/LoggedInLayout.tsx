@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Head, BlitzLayout } from 'blitz'
+import { Head, BlitzLayout, Routes } from 'blitz'
 import { Flex } from '@chakra-ui/react'
 import Sidebar from 'app/core/components/Sidebar'
 
@@ -23,5 +23,5 @@ const LoggedInLayout: BlitzLayout<LoggedInLayoutProps> = ({ title, children }) =
   )
 }
 
-LoggedInLayout.authenticate = true
+LoggedInLayout.authenticate = { redirectTo: Routes.LoginPage() }
 export default LoggedInLayout

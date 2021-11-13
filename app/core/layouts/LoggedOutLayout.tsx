@@ -23,5 +23,7 @@ const LoggedOutLayout: BlitzLayout<LoggedOutLayoutProps> = ({ title, children })
   )
 }
 
-LoggedOutLayout.redirectAuthenticatedTo = Routes.MainFeed()
+//TODO: This redirect causes issues on the auth flow, if we do a dynamic (user/no user) navbar, this page feels natural
+//TODO: Maybe allow users logged in to view this page, likely needs a DynamicLayout
+// LoggedOutLayout.redirectAuthenticatedTo = Routes.MainFeed()
 export default LoggedOutLayout

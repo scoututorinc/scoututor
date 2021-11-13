@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Box, Flex, Image, HStack, Input, Button } from '@chakra-ui/react'
+import { Box, Flex, Img, HStack, Input, Button } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 
 const Navbar: FC = () => {
@@ -13,7 +13,7 @@ const Navbar: FC = () => {
         pl={10}
         pr={10}
       >
-        <Image
+        <Img
           src="images/scoututor.png"
           alt="scoututor"
           maxHeight="80%"
