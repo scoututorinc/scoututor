@@ -1,25 +1,36 @@
 import { SecurePassword } from 'blitz'
-import db from 'db'
+import db, { Prisma } from 'db'
+// import { Prisma } from '@prisma/client'
+import faker from 'faker'
+faker.locale = 'pt_PT'
 
-/*
- * This seed function is executed when you run `blitz db seed`.
- *
- * Probably you want to use a library like https://chancejs.com
- * or https://github.com/Marak/Faker.js to easily generate
- * realistic data.
- */
+const range = (n: number) => [...new Array(n).keys()]
+
 const seed = async () => {
-  await db.user.create({
-    data: {
-      name: 'Jose',
-      email: 'jose@gmail.com',
-      hashedPassword: await SecurePassword.hash('pass1234567')
-    }
+  await db.user.deleteMany({})
+  const users: Prisma.UserCreateInput[] = []
+
+  users.push({
+    name: 'Jose Cardoso',
+    email: 'jose@gmail.com',
+    profilePicture: faker.image.animals(),
+    hashedPassword: await SecurePassword.hash('passpass123')
   })
 
-  // for (let i = 0; i < 5; i++) {
-  //   await db.project.create({ data: { name: "Project " + i } })
-  // }
+  for (const _ in range(5)) {
+    const firstName = faker.name.firstName(1)
+    const lastName = faker.name.lastName(1)
+    users.push({
+      name: `${firstName} ${lastName}`,
+      email: faker.internet.email(firstName, lastName),
+      profilePicture: faker.image.animals(),
+      hashedPassword: await SecurePassword.hash('passpass123')
+    })
+  }
+
+  await db.user.createMany({
+    data: users
+  })
 }
 
 export default seed
