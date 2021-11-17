@@ -1,4 +1,2 @@
 sudo service docker start
 sudo docker start scout_postgres
-blitz db seed
-blitz dev

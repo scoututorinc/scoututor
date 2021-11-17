@@ -1,26 +1,24 @@
-import { Link, BlitzPage, useMutation, Routes } from 'blitz'
-import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
-import logout from 'app/auth/mutations/logout'
+import { Link as BlitzLink, BlitzPage, useMutation, Routes } from 'blitz'
 import {
   Flex,
   Box,
-  Image,
+  Img,
   VStack,
   HStack,
   Heading,
   Text,
   Icon,
   Center,
-  Button
+  Button,
+  Link
 } from '@chakra-ui/react'
 import { Search2Icon } from '@chakra-ui/icons'
 import { BsLightning } from 'react-icons/bs'
 import { FaReact } from 'react-icons/fa'
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
+
+import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import logout from 'app/auth/mutations/logout'
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -47,15 +45,11 @@ const UserInfo = () => {
   } else {
     return (
       <>
-        <Link href={Routes.SignupPage()}>
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
+        <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
+          <strong>Sign Up</strong>
         </Link>
-        <Link href={Routes.LoginPage()}>
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
+        <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
+          <strong>Login</strong>
         </Link>
       </>
     )
@@ -73,8 +67,8 @@ const Home: BlitzPage = () => {
         pr="10%"
         pt={{ base: '100px', sm: '50px' }}
       >
-        <Image
-          src="images/knowledge.png"
+        <Img
+          src="/images/knowledge.png"
           alt="knowledge"
           maxHeight="25%"
           maxWidth={{ sm: '40%', xl: '30%' }}
@@ -98,8 +92,12 @@ const Home: BlitzPage = () => {
       </Flex>
       <Center pt="50px" pb="40px">
         <HStack spacing={6}>
-          <Button colorScheme="teal">Join us</Button>
-          <Button variant="outline">Sign in</Button>
+          <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
+            <Button colorScheme="teal">Join us</Button>
+          </Link>
+          <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
+            <Button variant="outline">Sign in</Button>
+          </Link>
         </HStack>
       </Center>
     </Box>

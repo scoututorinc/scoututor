@@ -5,7 +5,7 @@ import {
   VStack,
   Stack,
   Button,
-  Image,
+  Img,
   Spacer,
   Heading,
   Text,
@@ -34,7 +34,7 @@ const Post: FC = () => {
       <Box borderWidth="1px" rounded={6} p={4} width="100%">
         <Flex direction={{ base: 'column', md: 'row' }} mb={4}>
           <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems="center">
-            <Image src="/images/knowledge.png" alt="tutor" borderRadius="full" maxWidth="60px" />
+            <Img src="/images/knowledge.png" alt="tutor" borderRadius="full" maxWidth="60px" />
             <Heading size="sm">
               {post.author} - {post.course}
             </Heading>

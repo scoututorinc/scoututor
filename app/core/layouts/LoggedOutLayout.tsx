@@ -13,9 +13,9 @@ const LoggedOutLayout: BlitzLayout<LoggedOutLayoutProps> = ({ title, children })
     <>
       <Head>
         <title>{title || 'blitz-chakra'}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Box height="100vh">
+      <Box height='100vh'>
         <Navbar />
         <Center>{children}</Center>
       </Box>
@@ -23,5 +23,8 @@ const LoggedOutLayout: BlitzLayout<LoggedOutLayoutProps> = ({ title, children })
   )
 }
 
+//TODO: Dynamic Layout
+//TODO: This redirect causes issues on the auth flow, if we do a dynamic (user/no user) navbar, this page feels natural
+//TODO: Maybe allow users logged in to view this page, likely needs a DynamicLayout
 LoggedOutLayout.redirectAuthenticatedTo = Routes.MainFeed()
 export default LoggedOutLayout

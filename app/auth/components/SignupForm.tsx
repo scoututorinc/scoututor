@@ -11,12 +11,8 @@ import {
   Stack,
   HStack,
   VStack,
-  Image,
+  Img,
   Heading,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-  Input,
   Button,
   Radio,
   RadioGroup
@@ -43,7 +39,7 @@ export const SignupForm = (props: SignupFormProps) => {
     >
       <Flex alignItems="center" justifyContent="center" direction="column">
         <HStack spacing={6} p={10}>
-          <Image src="/images/signup.png" alt="signup" maxWidth="100px" />
+          <Img src="/images/signup.png" alt="signup" maxWidth="100px" />
           <Heading>Sign Up</Heading>
         </HStack>
         <Form

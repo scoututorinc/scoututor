@@ -1,4 +1,4 @@
-import { useRouter, BlitzPage } from 'blitz'
+import { useRouter, BlitzPage, Routes } from 'blitz'
 import { LoginForm } from 'app/auth/components/LoginForm'
 import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
 
@@ -7,7 +7,9 @@ const LoginPage: BlitzPage = () => {
   return (
     <LoginForm
       onSuccess={() => {
-        const next = router.query.next ? decodeURIComponent(router.query.next as string) : '/'
+        const next = router.query.next
+          ? decodeURIComponent(router.query.next as string)
+          : Routes.MainFeed()
         router.push(next)
       }}
     />
