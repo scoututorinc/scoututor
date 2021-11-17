@@ -1,7 +1,7 @@
 import { BlitzPage, useRouterQuery, Link, useMutation, Routes } from 'blitz'
 import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
-import { LabeledTextField } from 'app/core/components/LabeledTextField'
-import { Form, FORM_ERROR } from 'app/core/components/Form'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
 import { ResetPassword } from 'app/auth/validations'
 import resetPassword from 'app/auth/mutations/resetPassword'
 
@@ -22,7 +22,7 @@ const ResetPasswordPage: BlitzPage = () => {
         </div>
       ) : (
         <Form
-          submitText="Reset Password"
+          submitText='Reset Password'
           schema={ResetPassword}
           initialValues={{ password: '', passwordConfirmation: '', token: query.token as string }}
           onSubmit={async (values) => {
@@ -41,11 +41,11 @@ const ResetPasswordPage: BlitzPage = () => {
             }
           }}
         >
-          <LabeledTextField name="password" label="New Password" type="password" />
+          <LabeledTextField name='password' label='New Password' type='password' />
           <LabeledTextField
-            name="passwordConfirmation"
-            label="Confirm New Password"
-            type="password"
+            name='passwordConfirmation'
+            label='Confirm New Password'
+            type='password'
           />
         </Form>
       )}
@@ -54,7 +54,7 @@ const ResetPasswordPage: BlitzPage = () => {
 }
 
 ResetPasswordPage.getLayout = (page) => (
-  <LoggedOutLayout title="Reset Your Password">{page}</LoggedOutLayout>
+  <LoggedOutLayout title='Reset Your Password'>{page}</LoggedOutLayout>
 )
 
 export default ResetPasswordPage

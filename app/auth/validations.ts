@@ -4,7 +4,7 @@ const password = z.string().min(10).max(100)
 
 export const Signup = z.object({
   email: z.string().email(),
-  name: z.string(),
+  name: z.string().min(5),
   profilePicture: z.string().url().optional(),
   password
 })
@@ -26,7 +26,7 @@ export const ResetPassword = z
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords don't match",
-    path: ['passwordConfirmation'] // set the path of the error
+    path: ['passwordConfirmation']
   })
 
 export const ChangePassword = z.object({
