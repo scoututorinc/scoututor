@@ -10,17 +10,23 @@ interface CourseReviewProps {
 }
 
 const CourseReview: FC = (props) => {
+  const author = 'José Ramos'
+  const review =
+    'I was tutored by Bring Your Own Laptop and absolutely loved the experience. ' +
+    'The level of support provided is absolutely incredible. I can absolutely ' +
+    'guarantee you: no doubt of yours will go by unattended.'
+
   return (
     <Box borderWidth='1px' borderRadius='md' p={4} width={{ base: '100%', md: '80%' }} mb={6}>
       <Flex direction='row' justifyContent='space-between' pb={1}>
         <Heading as='h6' size='xs'>
-          {(props as CourseReviewProps).author}
+          {author}
         </Heading>
         <Icon as={BsCheckCircleFill} color='teal.400'></Icon>
       </Flex>
       <Divider />
       <Text fontWeight='bold' pt={2}>
-        {(props as CourseReviewProps).review}
+        {review}
       </Text>
     </Box>
   )

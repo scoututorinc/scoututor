@@ -37,18 +37,8 @@ const CourseView: BlitzPage = () => {
           maxWidth={{ base: '100%', md: '25%' }}
         >
           <CourseTeacher />
-          <CourseReview
-            author='José Ramos'
-            review='I was tutored by Bring Your Own Laptop and absolutely loved the experience. The level
-              of support provided is absolutely incredible. I can absolutely guarantee you: no doubt
-              of yours will go by unattended.'
-          />
-          <CourseReview
-            author='Gabriela Ramos'
-            review='I utilized this service for about 2 months. I can assure you that I wouldn`t have
-              learned as much as I did, hadn`t I been helped by Bring Your Own Laptop. The way he
-              makes complex concepts simpler is simply remarkable.'
-          />
+          <CourseReview />
+          <CourseReview />
           {is_enrolled && (
             <VStack spacing={4} width='90%'>
               <Button colorScheme='teal' width='80%'>
