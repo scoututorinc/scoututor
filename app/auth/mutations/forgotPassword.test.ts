@@ -1,4 +1,4 @@
-import { hash256, Ctx } from 'blitz'
+import { hash256, Ctx, SecurePassword } from 'blitz'
 import forgotPassword from './forgotPassword'
 import db from 'db'
 import previewEmail from 'preview-email'
@@ -21,11 +21,12 @@ describe('forgotPassword mutation', () => {
 
   it('works correctly', async () => {
     // Create test user
+    await db.user.deleteMany({ where: { email: 'user@example.com' } })
     const user = await db.user.create({
       data: {
         email: 'user@example.com',
         name: 'Jose Antunes',
-        hashedPassword: 'XKCD123',
+        hashedPassword: await SecurePassword.hash('XKCD123'),
         profilePicture: 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png',
         tokens: {
           // Create old token to ensure it's deleted

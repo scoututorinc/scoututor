@@ -50,7 +50,7 @@ model Course {
   previewImages String[]
   hourlyRate    Int
 
-  author   User @relation(fields: [authorId], references: [id])
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
 
   applications  CourseApplication[]
@@ -94,10 +94,10 @@ model CourseApplication {
   messages courseApplicationMessage[]
 
   courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   applicantId Int
-  applicant   User @relation(fields: [applicantId], references: [id])
+  applicant   User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
 }
 
 // model AvailableSession {
@@ -116,7 +116,7 @@ model courseApplicationMessage {
   content   String
 
   courseApplicationId Int
-  courseApplication   CourseApplication @relation(fields: [courseApplicationId], references: [id])
+  courseApplication   CourseApplication @relation(fields: [courseApplicationId], references: [id], onDelete: Cascade)
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
@@ -129,7 +129,7 @@ model CourseReview {
   content String
 
   courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
@@ -150,7 +150,7 @@ model Message {
   content   String
 
   chatId Int
-  chat   Chat @relation(fields: [chatId], references: [id])
+  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
@@ -166,7 +166,7 @@ model Post {
   comments    Comment[]
 
   courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
@@ -177,7 +177,7 @@ model Comment {
   createdAt DateTime @default(now())
   content   String
   replies   Reply[]
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
@@ -187,7 +187,7 @@ model Reply {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   content   String
-  comment   Comment  @relation(fields: [commentId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId Int
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
@@ -204,7 +204,7 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User? @relation(fields: [userId], references: [id])
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int?
 }
 
@@ -217,7 +217,7 @@ model Token {
   expiresAt   DateTime
   sentTo      String
 
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
   @@unique([hashedToken, type])
