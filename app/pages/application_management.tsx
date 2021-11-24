@@ -19,7 +19,7 @@ import { AiFillMessage } from 'react-icons/ai'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import Application from 'app/core/components/Application'
 
-const ApplicationManagment: BlitzPage = () => {
+const ApplicationManagement: BlitzPage = () => {
   return (
     <Flex
       direction='column'
@@ -36,11 +36,11 @@ const ApplicationManagment: BlitzPage = () => {
           <BreadcrumbLink href=''>Graphical Design by Bring Your own Laptop</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href=''>Application managment</BreadcrumbLink>
+          <BreadcrumbLink href=''>Application management</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
       <VStack spacing={4} mb={6} alignItems='start'>
-        <Heading size='lg'>Applications managment</Heading>
+        <Heading size='lg'>Applications management</Heading>
         <Divider />
       </VStack>
       <VStack spacing={4}>
@@ -51,8 +51,8 @@ const ApplicationManagment: BlitzPage = () => {
   )
 }
 
-ApplicationManagment.suppressFirstRenderFlicker = true
-ApplicationManagment.getLayout = (page) => (
-  <LoggedInLayout title='Application managment'>{page}</LoggedInLayout>
+ApplicationManagement.suppressFirstRenderFlicker = true
+ApplicationManagement.getLayout = (page) => (
+  <LoggedInLayout title='Application management'>{page}</LoggedInLayout>
 )
-export default ApplicationManagment
+export default ApplicationManagement

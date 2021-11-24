@@ -55,8 +55,8 @@ const Application: FC = () => {
           </Text>
         </VStack>
         <HStack justifyContent='center' mb={6}>
-          <Button colorScheme='red'>Decline</Button>
           <Button colorScheme='teal'>Accept</Button>
+          <Button colorScheme='red'>Decline</Button>
         </HStack>
         <HStack justifyContent='center' mb={2}>
           <Icon as={AiFillMessage}></Icon>
