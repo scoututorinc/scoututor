@@ -1,14 +1,13 @@
-import { ReactNode, PropsWithoutRef } from 'react'
+import React, { ReactNode, PropsWithoutRef } from 'react'
 import { Form as FinalForm, FormProps as FinalFormProps } from 'react-final-form'
 import { z } from 'zod'
 import { validateZodSchema } from 'blitz'
+import { Box } from '@chakra-ui/react'
 export { FORM_ERROR } from 'final-form'
 
 export interface FormProps<S extends z.ZodType<any, any>>
-  extends Omit<PropsWithoutRef<JSX.IntrinsicElements['form']>, 'onSubmit'> {
-  /** All your form fields */
+  extends Omit<PropsWithoutRef<typeof Box>, 'onSubmit'> {
   children?: ReactNode
-  /** Text to display in the submit button */
   submitText?: string
   schema?: S
   onSubmit: FinalFormProps<z.infer<S>>['onSubmit']
@@ -29,22 +28,22 @@ export function Form<S extends z.ZodType<any, any>>({
       validate={validateZodSchema(schema)}
       onSubmit={onSubmit}
       // debug={console.log}
-      render={({ handleSubmit, submitting, submitError }) => (
-        <form onSubmit={handleSubmit} {...props}>
+      render={({ handleSubmit, submitting, submitError, values }) => (
+        <Box as='form' p={4} onSubmit={handleSubmit} {...props}>
           {children}
 
           {submitError && (
-            <div role="alert" style={{ color: 'red' }}>
+            <div role='alert' style={{ color: 'red' }}>
               {submitError}
             </div>
           )}
 
           {submitText && (
-            <button type="submit" disabled={submitting}>
+            <button type='submit' disabled={submitting}>
               {submitText}
             </button>
           )}
-        </form>
+        </Box>
       )}
     />
   )

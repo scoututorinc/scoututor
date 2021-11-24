@@ -1,5 +1,6 @@
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from 'react'
 import { useField, UseFieldConfig } from 'react-final-form'
+import { useId } from '@reach/auto-id'
 
 import { Input, InputLeftElement, InputGroup } from '@chakra-ui/input'
 import { Icon } from '@chakra-ui/react'
@@ -30,26 +31,28 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       ...fieldProps
     })
 
+    const id = useId() + 'name'
+
     const normalizedError = Array.isArray(error) ? error.join(', ') : error || submitError
 
     return (
       <FormControl {...outerProps}>
         <FormLabel {...labelProps}>
-          <InputGroup>
+          <InputGroup id={id}>
             <InputLeftElement>
-              <Icon as={icon} color="teal.400" />
+              <Icon as={icon} color='teal.400' />
             </InputLeftElement>
             <Input
               {...input}
               disabled={submitting}
               {...props}
               ref={ref}
-              focusBorderColor="teal.400"
+              focusBorderColor='teal.400'
             />
           </InputGroup>
         </FormLabel>
         {touched && normalizedError && (
-          <div role="alert" style={{ color: 'red' }}>
+          <div role='alert' style={{ color: 'red' }}>
             {normalizedError}
           </div>
         )}
@@ -57,5 +60,3 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     )
   }
 )
-
-export default LabeledTextField
