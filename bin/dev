@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "❗ Please make sure that docker is running on your machine"
+
+# Start the database container in case it is not running
+sudo docker start scout_postgres
+
+# Start the application in development mode
+blitz dev

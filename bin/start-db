@@ -1,2 +1,0 @@
-sudo service docker start
-sudo docker start scout_postgres

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "❗ Please make sure that docker is running on your machine"
+
+# Run the Prisma Studio debug tool
+blitz prisma studio

@@ -16,14 +16,27 @@ project on their local machine for development or testing purposes.
 You need the following software in order to run the project on your local
 machine:
 
-* Node.js 12.0
-* Blitz.js
+- Node.js 12.0
+- Blitz.js
 
 You can install **Node.js** by visiting their
-[website](https://nodejs.org/en/download/).  Once you have it installed you can
+[website](https://nodejs.org/en/download/). Once you have it installed you can
 install **Blitz.js** by running `npm install -g blitz --legacy-peer-deps`.
 
 ## 🔨 Development
+
+### Development environment setup
+
+First of all you should install the necessary dependencies by running:
+
+`npm install`
+
+Then you must create the container that contains the database, perform the
+migrations and populate the database with necessary information by running:
+
+`bin/start-app`
+
+### Development commands
 
 Once you start the development server you can head to http://localhost:3000 to
 see the result.
@@ -68,5 +81,5 @@ Run project tests:
 
 ## 🔗 References
 
-* [Get started with Blitz](https://blitzjs.com/docs/get-started)
-* [Next.js - Getting Started](https://nextjs.org/docs/getting-started)
+- [Get started with Blitz](https://blitzjs.com/docs/get-started)
+- [Next.js - Getting Started](https://nextjs.org/docs/getting-started)
