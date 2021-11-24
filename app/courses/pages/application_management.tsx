@@ -17,7 +17,7 @@ import {
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { AiFillMessage } from 'react-icons/ai'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import Application from 'app/core/components/Application'
+import Application from 'app/courses/components/Application'
 
 const ApplicationManagement: BlitzPage = () => {
   return (

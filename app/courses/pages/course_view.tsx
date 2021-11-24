@@ -12,9 +12,9 @@ import {
   Button
 } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import CourseReview from 'app/core/components/CourseReview'
-import CourseDescription from 'app/core/components/CourseDescription'
-import CourseTeacher from 'app/core/components/CourseTeacher'
+import CourseReview from 'app/courses/components/CourseReview'
+import CourseDescription from 'app/courses/components/CourseDescription'
+import CourseTeacher from 'app/courses/components/CourseTeacher'
 
 const CourseView: BlitzPage = () => {
   const is_enrolled = false
