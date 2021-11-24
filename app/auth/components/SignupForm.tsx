@@ -78,14 +78,6 @@ export const SignupForm = (props: SignupFormProps) => {
             </VStack>
           </VStack>
           <Center>
-            <LabeledRadioGroup name='radiovalue' label='Who are you?' type='string'>
-              <Stack spacing={4} direction='row'>
-                <LabeledRadioField name='type' label='Student' value='student' colorScheme='teal' />
-                <LabeledRadioField name='type' label='Tutor' value='tutor' colorScheme='teal' />
-              </Stack>
-            </LabeledRadioGroup>
-          </Center>
-          <Center>
             <HStack spacing={4} p={6}>
               <Button variant='outline'>Cancel</Button>
               <Button type='submit' colorScheme='teal'>

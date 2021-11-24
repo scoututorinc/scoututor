@@ -46,19 +46,19 @@ export interface SelectFieldProps extends ComponentPropsWithoutRef<typeof Radio>
   label: string
 }
 
-export const LabeledRadioField = ({ name, value, label, ...props }) => {
+export const LabeledRadioField = ({ value, label, ...props }) => {
   return (
-    <Radio name={name} value={value} {...props}>
+    <Radio value={value} {...props}>
       {label}
     </Radio>
   )
 }
 
 //? How to use
-/* <LabeledRadioGroup name='radiovalue' label='Pick a number' type='string'>
+/* <LabeledRadioGroup name='number' label='Pick a number' type='string'>
   <Stack spacing={4} direction='column'>
-    <LabeledRadioField name='radiovalue' label='uno' value='uno'/>
-    <LabeledRadioField name='radiovalue' label='dos' value='dos'/>
-    <LabeledRadioField name='radiovalue' label='tres' value='tres'/>
+    <LabeledRadioField label='uno' value='uno'/>
+    <LabeledRadioField label='dos' value='dos'/>
+    <LabeledRadioField label='tres' value='tres'/>
   </Stack>
 </LabeledRadioGroup> */

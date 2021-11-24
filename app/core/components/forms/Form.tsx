@@ -43,9 +43,6 @@ export function Form<S extends z.ZodType<any, any>>({
               {submitText}
             </button>
           )}
-          <Box as='pre' my={10}>
-            {JSON.stringify(values, null, 2)}
-          </Box>
         </Box>
       )}
     />
