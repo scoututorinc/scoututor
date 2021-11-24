@@ -11,9 +11,6 @@ import {
   Text,
   Button
 } from '@chakra-ui/react'
-import { FaLinkedin, FaMedal, FaCheck, FaEuroSign } from 'react-icons/fa'
-import { MdLocationPin } from 'react-icons/md'
-import { BsCheckCircleFill } from 'react-icons/bs'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/core/components/CourseReview'
 import CourseDescription from 'app/core/components/CourseDescription'
