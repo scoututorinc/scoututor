@@ -31,7 +31,7 @@ First of all you should install the necessary dependencies by running:
 
 `npm install`
 
-Then, you must create the container that contains the database, perform the
+Then you must create the container that contains the database, perform the
 migrations and populate the database with necessary information by running:
 
 `bin/start-app`
