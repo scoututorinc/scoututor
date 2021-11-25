@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { ChevronRightIcon } from '@chakra-ui/icons'
+import { CourseApplicationForm } from 'app/courses/components/CourseApplicationForm'
 
 const CourseApplication: BlitzPage = () => {
   return (
@@ -29,12 +30,9 @@ const CourseApplication: BlitzPage = () => {
         <Heading>Graphical Design by Bring Your Own Laptop Application</Heading>
         <Divider />
       </VStack>
-      <Box borderWidth='2px' borderColor='teal' rounded={6} width='70%'>
-        <HStack spacing={4} justifyContent='center'>
-          <Img src='/images/knowledge.png' alt='application' maxWidth='100px' />
-          <Heading size='lg'>Application</Heading>
-        </HStack>
-      </Box>
+      <Flex width='100%' justifyContent='center'>
+        <CourseApplicationForm />
+      </Flex>
     </Flex>
   )
 }

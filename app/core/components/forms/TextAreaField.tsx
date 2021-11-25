@@ -2,8 +2,8 @@ import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from 'react'
 import { useField, UseFieldConfig } from 'react-final-form'
 import { useId } from '@reach/auto-id'
 
-import { Input, InputGroup } from '@chakra-ui/input'
-import { Textarea } from '@chakra-ui/react'
+import { InputGroup } from '@chakra-ui/input'
+import { Textarea, Heading, VStack } from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 
 export interface TextAreaProps extends ComponentPropsWithoutRef<typeof Textarea> {
@@ -35,13 +35,16 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <FormControl id={id} {...outerProps}>
         <FormLabel {...labelProps}>
           <InputGroup>
-            <Textarea
-              {...input}
-              disabled={submitting}
-              {...props}
-              ref={ref}
-              focusBorderColor='teal.400'
-            />
+            <VStack spacing={1} alignItems='start' width='100%'>
+              <Heading size='sm'>{label}</Heading>
+              <Textarea
+                {...input}
+                disabled={submitting}
+                {...props}
+                ref={ref}
+                focusBorderColor='teal.400'
+              />
+            </VStack>
           </InputGroup>
         </FormLabel>
         {touched && normalizedError && (

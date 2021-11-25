@@ -9,7 +9,6 @@ import signup from 'app/auth/mutations/signup'
 import { Signup } from 'app/auth/validations'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
-import { LabeledRadioGroup, LabeledRadioField } from 'app/core/components/forms/LabeledRadioGroup'
 
 type SignupFormProps = {
   onSuccess?: () => void
