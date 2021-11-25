@@ -31,23 +31,23 @@ const Post: FC = () => {
 
   return (
     <VStack spacing={4} mt={4}>
-      <Box borderWidth="1px" rounded={6} p={4} width="100%">
+      <Box borderWidth='1px' rounded={6} p={4} width='100%'>
         <Flex direction={{ base: 'column', md: 'row' }} mb={4}>
-          <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems="center">
-            <Img src="/images/knowledge.png" alt="tutor" borderRadius="full" maxWidth="60px" />
-            <Heading size="sm">
+          <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems='center'>
+            <Img src='/images/knowledge.png' alt='tutor' borderRadius='full' maxWidth='60px' />
+            <Heading size='sm'>
               {post.author} - {post.course}
             </Heading>
           </Stack>
           <Spacer />
           <Stack
             direction={{ base: 'column', md: 'row' }}
-            alignItems="center"
+            alignItems='center'
             spacing={4}
             pt={{ base: 4, md: 0 }}
           >
             <CalendarIcon />
-            <Heading size="sm">{post.date}</Heading>
+            <Heading size='sm'>{post.date}</Heading>
           </Stack>
         </Flex>
         <Text>{post.text}</Text>
@@ -58,8 +58,8 @@ const Post: FC = () => {
             </Button>
           ))}
         </Stack>
-        <Flex mt={4} justifyContent="center">
-          <Button leftIcon={<Icon as={BiMessageRoundedDetail} />} variant="ghost">
+        <Flex mt={4} justifyContent='center'>
+          <Button leftIcon={<Icon as={BiMessageRoundedDetail} />} variant='ghost'>
             Comment
           </Button>
         </Flex>
