@@ -14,7 +14,7 @@ import {
 
 import Form from 'app/core/components/forms/Form'
 import course_application from 'app/courses/mutations/course_application'
-import { TextAreaField } from 'app/core/components/forms/TextAreaField'
+import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 
 import { CourseApplication } from 'app/courses/validations'
 
@@ -48,18 +48,18 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
           }}
         >
           <VStack spacing={6} p={4} mb={2}>
-            <TextAreaField
+            <LabeledTextAreaField
               name='interest_manifestation_and_questions'
               label='Interest manifestation and questions'
               size='sm'
               type='text'
-            ></TextAreaField>
-            <TextAreaField
+            ></LabeledTextAreaField>
+            <LabeledTextAreaField
               name='availability'
               label='Availability'
               size='sm'
               type='text'
-            ></TextAreaField>
+            ></LabeledTextAreaField>
           </VStack>
           <HStack p={4} mb={2}>
             <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>

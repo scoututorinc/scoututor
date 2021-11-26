@@ -16,7 +16,7 @@ export interface TextAreaProps extends ComponentPropsWithoutRef<typeof Textarea>
   fieldProps?: UseFieldConfig<string>
 }
 
-export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProps>(
+export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
     const {
       input,
