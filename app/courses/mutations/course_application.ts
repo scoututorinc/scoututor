@@ -1,5 +1,4 @@
 import { resolver } from 'blitz'
-import db from 'db'
 import { CourseApplication } from 'app/courses/validations'
 
 export default resolver.pipe(

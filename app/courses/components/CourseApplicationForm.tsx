@@ -4,6 +4,7 @@ import {
   Flex,
   HStack,
   VStack,
+  Stack,
   Img,
   Heading,
   Text,
@@ -28,17 +29,23 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
   const [courseApplicationMutation] = useMutation(course_application)
 
   return (
-    <Box borderWidth='2px' borderColor='teal.400' rounded={6} width='70%'>
+    <Box borderWidth='2px' borderColor='teal.400' rounded={6} width={{ base: '90%', md: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' width='100%'>
-        <HStack spacing={6} padding={10} justifyContent='center'>
+        <Stack
+          direction={{ base: 'column', md: 'row' }}
+          spacing={6}
+          padding={10}
+          justifyContent='center'
+        >
           <Img src='images/knowledge.png' maxWidth='100px'></Img>
           <Heading>Application</Heading>
-        </HStack>
+        </Stack>
         <Form
           schema={CourseApplication}
           initialValues={{ interest_manifestation_and_questions: '', availability: '' }}
           onSubmit={async (values) => {
             try {
+              console.log(values)
               console.log('Tried to submit')
               // await courseApplicationMutation(values)
               props.onSucess?.()
