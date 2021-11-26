@@ -16,14 +16,14 @@ import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 import { CourseCreation } from 'app/courses/validations'
 import { RiErrorWarningFill } from 'react-icons/ri'
-import course_creation from 'app/courses/mutations/course_creation'
+import courseCreation from 'app/courses/mutations/courseCreation'
 
 type CourseCreationFormProps = {
   onSuccess?: () => void
 }
 
 export const CourseCreationForm = (props: CourseCreationFormProps) => {
-  const [courseCreationMutation] = useMutation(course_creation)
+  const [courseCreationMutation] = useMutation(courseCreation)
 
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
