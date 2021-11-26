@@ -1,16 +1,5 @@
 import { BlitzPage, useSession } from 'blitz'
-import {
-  Flex,
-  Box,
-  Heading,
-  Divider,
-  VStack,
-  HStack,
-  Img,
-  Icon,
-  Text,
-  Button
-} from '@chakra-ui/react'
+import { Flex, Heading, Divider, VStack, Button } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/courses/components/CourseReview'
 import CourseDescription from 'app/courses/components/CourseDescription'

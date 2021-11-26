@@ -3,7 +3,7 @@ import { useField, UseFieldConfig } from 'react-final-form'
 import { useId } from '@reach/auto-id'
 
 import { Input, InputLeftElement, InputGroup } from '@chakra-ui/input'
-import { Icon } from '@chakra-ui/react'
+import { Icon, VStack, Heading } from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 import { IconType } from 'react-icons'
 
@@ -39,16 +39,21 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       <FormControl {...outerProps}>
         <FormLabel {...labelProps}>
           <InputGroup id={id}>
-            <InputLeftElement>
-              <Icon as={icon} color='teal.400' />
-            </InputLeftElement>
-            <Input
-              {...input}
-              disabled={submitting}
-              {...props}
-              ref={ref}
-              focusBorderColor='teal.400'
-            />
+            <VStack spacing={1} alignItems='start' w='100%'>
+              {label && <Heading size='sm'>{label}</Heading>}
+              {icon && (
+                <InputLeftElement>
+                  <Icon as={icon} color='teal.400' />
+                </InputLeftElement>
+              )}
+              <Input
+                {...input}
+                disabled={submitting}
+                {...props}
+                ref={ref}
+                focusBorderColor='teal.400'
+              />
+            </VStack>
           </InputGroup>
         </FormLabel>
         {touched && normalizedError && (
