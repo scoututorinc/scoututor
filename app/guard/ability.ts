@@ -13,7 +13,6 @@ const Guard = GuardBuilder<ExtendedResourceTypes, ExtendedAbilityTypes>(
 		and gradually adding the necessary permissions
 
 		eg:
-		cannot("manage", "comment")
 		cannot("manage", "article")
 
 		can("read", "article")

@@ -2,10 +2,12 @@ import { resolver, SecurePassword } from 'blitz'
 import db from 'db'
 import { Signup } from 'app/auth/validations'
 import { Role } from 'types'
+import Guard from 'app/guard/ability'
 
-export default resolver.pipe(
-  resolver.zod(Signup),
-  async ({ email, name, profilePicture, password }, ctx) => {
+export default Guard.authorize(
+  'read',
+  'article',
+  resolver.pipe(resolver.zod(Signup), async ({ email, name, profilePicture, password }, ctx) => {
     const hashedPassword = await SecurePassword.hash(password.trim())
     const user = await db.user.create({
       data: {
@@ -20,5 +22,5 @@ export default resolver.pipe(
 
     await ctx.session.$create({ userId: user.id, role: user.role as Role })
     return user
-  }
+  })
 )
