@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 
 import Form from 'app/core/components/forms/Form'
-import course_application from 'app/courses/mutations/course_application'
+import course_application from 'app/courses/mutations/createCourseApplication'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 
 import { CourseApplication } from 'app/courses/validations'
@@ -42,7 +42,7 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
         </Stack>
         <Form
           schema={CourseApplication}
-          initialValues={{ interest_manifestation_and_questions: '', availability: '' }}
+          initialValues={{ description: '', availableSchedule: '' }}
           onSubmit={async (values) => {
             try {
               console.log(values)
