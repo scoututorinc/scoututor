@@ -19,7 +19,7 @@ const CourseTeacher = ({ name, profilePicture }: CourseTeacherProps) => {
         alt='teacher_picture'
         borderRadius='full'
         maxWidth='150px'
-        pb={5}
+        my={5}
       />
       <VStack spacing={4} alignItems='start' pb={5}>
         <HStack spacing={4}>
