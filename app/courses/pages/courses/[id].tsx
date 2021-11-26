@@ -1,18 +1,29 @@
-import { BlitzPage, useSession } from 'blitz'
-import { Flex, Heading, Divider, VStack, Button } from '@chakra-ui/react'
+import { BlitzPage, useQuery, useParam } from 'blitz'
+import { Flex, Heading, Divider, VStack, Button, Box } from '@chakra-ui/react'
+
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/courses/components/CourseReview'
 import CourseDescription from 'app/courses/components/CourseDescription'
 import CourseTeacher from 'app/courses/components/CourseTeacher'
+import getCourse from 'app/courses/queries/getCourse'
+
+const paramToInt = (param: string | string[] | undefined) => {
+  if (typeof param == 'string') return parseInt(param)
+  else return -1
+}
 
 const CourseView: BlitzPage = () => {
+  const courseId = useParam('id')
+  const [course, status] = useQuery(getCourse, paramToInt(courseId), {
+    suspense: false
+  })
   const is_enrolled = false
-  const is_teacher = false
+  const is_teacher = true
 
-  return (
+  return status.isError == false && course ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>
-        <Heading>Graphical Design by Bring Your Own Laptop</Heading>
+        <Heading>{course.name}</Heading>
         <Divider />
       </VStack>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
@@ -20,9 +31,9 @@ const CourseView: BlitzPage = () => {
           direction='column'
           justifyContent='center'
           alignItems='center'
-          maxWidth={{ base: '100%', md: '25%' }}
+          maxWidth={{ base: '100%', lg: '25%' }}
         >
-          <CourseTeacher />
+          <CourseTeacher {...course.author} />
           <CourseReview />
           <CourseReview />
           {is_enrolled && (
@@ -36,9 +47,11 @@ const CourseView: BlitzPage = () => {
             </VStack>
           )}
         </Flex>
-        <CourseDescription />
+        <CourseDescription description={course.description} hourlyRate={course.hourlyRate} />
       </Flex>
     </Flex>
+  ) : (
+    <p>Error :^(</p>
   )
 }
 

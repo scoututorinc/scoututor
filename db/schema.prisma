@@ -26,7 +26,7 @@ model User {
   coursesEnrolled CourseMembership[]
 
   courseApplication        CourseApplication[]
-  courseApplicationMessage courseApplicationMessage[]
+  courseApplicationMessage CourseApplicationMessage[]
   courseReview             CourseReview[]
 
   posts    Post[]
@@ -91,7 +91,7 @@ model CourseApplication {
   availableSchedule String
 
   status   CourseApplicationStatus    @default(PENDING)
-  messages courseApplicationMessage[]
+  messages CourseApplicationMessage[]
 
   courseId Int
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -110,7 +110,7 @@ model CourseApplication {
 //   courseApplicationId Int?
 // }
 
-model courseApplicationMessage {
+model CourseApplicationMessage {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   content   String
