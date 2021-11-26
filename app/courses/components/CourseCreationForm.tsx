@@ -60,7 +60,7 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
             <HStack spacing={4} mb={2}>
               <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
               <Text fontSize='md'>
-                If you don`t find the subject you`re looking for, please suggest it.
+                {"If you don't find the subject you're looking for, please suggest it"}
               </Text>
             </HStack>
             <LabeledTextAreaField
@@ -81,7 +81,7 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
               w='100%'
             >
               <Button variant='outline' w='50%'>
-                Return to courses page
+                Cancel
               </Button>
               <Button type='submit' colorScheme='teal' w='50%'>
                 Create course

@@ -37,25 +37,25 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
 
     return (
       <FormControl {...outerProps}>
-        <FormLabel {...labelProps}>
-          <InputGroup id={id}>
-            <VStack spacing={1} alignItems='start' w='100%'>
-              {label && <Heading size='sm'>{label}</Heading>}
-              {icon && (
-                <InputLeftElement>
-                  <Icon as={icon} color='teal.400' />
-                </InputLeftElement>
-              )}
-              <Input
-                {...input}
-                disabled={submitting}
-                {...props}
-                ref={ref}
-                focusBorderColor='teal.400'
-              />
-            </VStack>
-          </InputGroup>
+        <FormLabel {...labelProps} fontWeight='bold'>
+          {label}
         </FormLabel>
+        <InputGroup id={id}>
+          <VStack spacing={1} alignItems='start' w='100%'>
+            {icon && (
+              <InputLeftElement>
+                <Icon as={icon} color='teal.400' />
+              </InputLeftElement>
+            )}
+            <Input
+              {...input}
+              disabled={submitting}
+              {...props}
+              ref={ref}
+              focusBorderColor='teal.400'
+            />
+          </VStack>
+        </InputGroup>
         {touched && normalizedError && (
           <div role='alert' style={{ color: 'red' }}>
             {normalizedError}
