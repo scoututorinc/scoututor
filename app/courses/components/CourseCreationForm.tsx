@@ -14,16 +14,16 @@ import {
 import Form from 'app/core/components/forms/Form'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
-import { CourseCreation } from 'app/courses/validations'
+import { CreateCourseInput } from 'app/courses/validations'
 import { RiErrorWarningFill } from 'react-icons/ri'
-import courseCreation from 'app/courses/mutations/courseCreation'
+import createCourse from 'app/courses/mutations/createCourse'
 
 type CourseCreationFormProps = {
   onSuccess?: () => void
 }
 
 export const CourseCreationForm = (props: CourseCreationFormProps) => {
-  const [courseCreationMutation] = useMutation(courseCreation)
+  const [createCourseMutation] = useMutation(createCourse)
 
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
@@ -35,17 +35,17 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
           justifyContent='center'
           alignItems='center'
         >
-          <Img src='images/knowledge.png' maxWidth='100px'></Img>
+          <Img src='/images/knowledge.png' maxWidth='100px'></Img>
           <Heading>Create Course</Heading>
         </Stack>
         <Form
-          schema={CourseCreation}
-          initialValues={{ name: '', description: '', hourlyRate: 0 }}
+          schema={CreateCourseInput}
+          initialValues={{ title: '', description: '', hourlyRate: 0 }}
           onSubmit={async (values) => {
             try {
               console.log(values)
               console.log('Tried to create course')
-              // await courseCreationMutation(values)
+              await createCourseMutation(values)
             } catch (error: any) {
               console.log(error)
             }
@@ -91,7 +91,5 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
         </Form>
       </Flex>
     </Box>
-    // 253914421
-    // 253911140
   )
 }
