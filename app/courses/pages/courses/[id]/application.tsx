@@ -36,7 +36,7 @@ const CourseApplication: BlitzPage = () => {
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
           <BreadcrumbLink href=''>
-            {course.name} by {course.author.name}
+            {course.title} by {course.author.name}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -45,7 +45,7 @@ const CourseApplication: BlitzPage = () => {
       </Breadcrumb>
       <VStack spacing={2} alignItems='start' mb={6}>
         <Heading>
-          {course.name} by {course.author.name} Application
+          {course.title} by {course.author.name} Application
         </Heading>
         <Divider />
       </VStack>

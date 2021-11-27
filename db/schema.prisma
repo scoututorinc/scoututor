@@ -41,14 +41,18 @@ model User {
 }
 
 model Course {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  name          String   @unique
+  id            Int              @id @default(autoincrement())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  title         String           @unique
   description   String
-  icon          String
+  levels        KnowledgeLevel[]
+  methods       TeachingMethod[]
   previewImages String[]
   hourlyRate    Int
+
+  discipline     Discipline[]
+  knowledgeAreas KnowledgeArea[]
 
   author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
@@ -58,6 +62,28 @@ model Course {
 
   posts   Post[]
   reviews CourseReview[]
+}
+
+model Discipline {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+
+  knowledgeAreas KnowledgeArea[]
+  courses        Course[]
+
+}
+
+model KnowledgeArea {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+
+  diciplineId Int
+  discipline  Discipline @relation(fields: [diciplineId], references: [id], onDelete: Cascade)
+  courses     Course[]
 }
 
 model CourseMembership {
@@ -244,4 +270,21 @@ enum CourseApplicationStatus {
   PENDING
   ACCEPTED
   REJECTED
+}
+
+enum KnowledgeLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  FIRSTCYCLE
+  SECONDCYCLE
+  THIRDCYCLE
+  SECONDARY
+  BACHELOR
+  MASTER
+}
+
+enum TeachingMethod {
+  ONLINE
+  PRESENTIAL
 }

@@ -4,7 +4,7 @@ import { BlitzGuardMiddleware } from '@blitz-guard/core/dist/middleware'
 const config: BlitzConfig = {
   middleware: [
     sessionMiddleware({
-      cookiePrefix: 'blitz-chakra',
+      cookiePrefix: 'scoututor',
       isAuthorized: simpleRolesIsAuthorized
     }),
     BlitzGuardMiddleware({

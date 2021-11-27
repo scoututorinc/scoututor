@@ -1,9 +1,24 @@
 import { z } from 'zod'
 
 export const CreateCourseInput = z.object({
-  name: z.string(),
+  title: z.string(),
   description: z.string(),
-  icon: z.string(),
+  method: z.array(z.enum(['ONLINE', 'PRESENTIAL'])),
+  discipline: z.string(),
+  knowledgeAreas: z.array(z.string()).max(4),
+  knowledgeLevel: z.array(
+    z.enum([
+      'BEGINNER',
+      'INTERMEDIATE',
+      'ADVANCED',
+      'FIRSTCYCLE',
+      'SECONDCYCLE',
+      'THIRDCYCLE',
+      'SECONDARY',
+      'BACHELOR',
+      'MASTER'
+    ])
+  ),
   previewImages: z.array(z.string()),
   hourlyRate: z.number().int().min(4).max(25)
 })

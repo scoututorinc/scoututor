@@ -1,5 +1,12 @@
-import { BlitzPage, useQuery, useParam } from 'blitz'
-import { Flex, Heading, Divider, VStack, Button, Box } from '@chakra-ui/react'
+import {
+  BlitzPage,
+  useQuery,
+  useParam,
+  GetServerSideProps,
+  invokeWithMiddleware,
+  InferGetServerSidePropsType
+} from 'blitz'
+import { Flex, Heading, Divider, VStack, Button } from '@chakra-ui/react'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/courses/components/CourseReview'
@@ -7,20 +14,13 @@ import CourseDescription from 'app/courses/components/CourseDescription'
 import CourseTeacher from 'app/courses/components/CourseTeacher'
 import getCourse from 'app/courses/queries/getCourse'
 
-export const paramToInt = (param: string | string[] | undefined) => {
-  if (typeof param == 'string') return parseInt(param)
-  else return -1
-}
-
-const CourseView: BlitzPage = () => {
-  const courseId = useParam('id')
-  const [course, status] = useQuery(getCourse, paramToInt(courseId), {
-    suspense: false
-  })
+const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  course
+}) => {
   const is_enrolled = false
   const is_teacher = true
 
-  return status.isError == false && course ? (
+  return course ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>
         <Heading>{course.name}</Heading>
@@ -53,6 +53,18 @@ const CourseView: BlitzPage = () => {
   ) : (
     <p>Error :^(</p>
   )
+}
+
+const paramToInt = (param: string | string[] | undefined) => {
+  if (typeof param == 'string') return parseInt(param)
+  else return -1
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
+  return {
+    props: { course }
+  }
 }
 
 CourseView.suppressFirstRenderFlicker = true
