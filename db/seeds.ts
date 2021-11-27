@@ -50,9 +50,8 @@ async function createCourses(users: User[]) {
 
   for (const _ in range(20)) {
     courses.push({
-      name: faker.company.catchPhrase(),
+      title: faker.company.catchPhrase(),
       description: faker.lorem.paragraphs(3, '.'),
-      icon: faker.image.technics(),
       hourlyRate: randomInt(10, 20),
       previewImages: range(randomInt(1, 4)).map((_) => faker.image.business()),
       authorId: users[randomInt(1, 5)]?.id || 0

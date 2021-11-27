@@ -33,20 +33,19 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProp
 
     return (
       <FormControl id={id} {...outerProps}>
-        <FormLabel {...labelProps}>
-          <InputGroup>
-            <VStack spacing={1} alignItems='start' width='100%'>
-              <Heading size='sm'>{label}</Heading>
-              <Textarea
-                {...input}
-                disabled={submitting}
-                {...props}
-                ref={ref}
-                focusBorderColor='teal.400'
-              />
-            </VStack>
-          </InputGroup>
+        <FormLabel {...labelProps} fontWeight='bold'>
+          {label}
         </FormLabel>
+        <InputGroup>
+          <Textarea
+            {...input}
+            disabled={submitting}
+            {...props}
+            ref={ref}
+            focusBorderColor='teal.400'
+          />
+        </InputGroup>
+
         {touched && normalizedError && (
           <div role='alert' style={{ color: 'red' }}>
             {normalizedError}

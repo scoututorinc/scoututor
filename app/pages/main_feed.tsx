@@ -1,4 +1,4 @@
-import { BlitzPage, useSession } from 'blitz'
+import { BlitzPage, GetServerSideProps, useSession } from 'blitz'
 import {
   Flex,
   Spacer,
@@ -63,6 +63,10 @@ const MainFeed: BlitzPage = () => {
       <Post />
     </Flex>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} }
 }
 
 MainFeed.suppressFirstRenderFlicker = true
