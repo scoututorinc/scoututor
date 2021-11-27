@@ -16,7 +16,7 @@ const CoursesView: BlitzPage = () => {
       <UnorderedList>
         {courses.map((c) => (
           <ListItem key={c.id}>
-            <StyledLink href={Routes.CourseView({ id: c.id })}>{c.name}</StyledLink>
+            <StyledLink href={Routes.CourseView({ id: c.id })}>{c.title}</StyledLink>
           </ListItem>
         ))}
       </UnorderedList>

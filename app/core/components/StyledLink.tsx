@@ -11,3 +11,10 @@ export const StyledLink = ({ href, children, ...props }: StyledLinkProps) => {
     </BlitzLink>
   )
 }
+
+// Allows only 1 child
+{
+  /* <ChakraLink as={BlitzLink} href={href} {...props}>
+  {children}
+</ChakraLink> */
+}

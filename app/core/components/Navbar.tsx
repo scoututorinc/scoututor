@@ -1,39 +1,44 @@
+import { Link as BlitzLink, Routes } from 'blitz'
 import { FC } from 'react'
-import { Box, Flex, Img, HStack, Input, Button } from '@chakra-ui/react'
+import { Box, Flex, Img, HStack, Input, Button, Link } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 
 const Navbar: FC = () => {
   return (
-    <Box borderWidth={{ base: 'none', lg: '1px' }} mb="50px">
+    <Box borderWidth={{ base: 'none', lg: '1px' }} mb='50px'>
       <Flex
-        height="10vh"
-        alignItems="center"
-        justifyContent="space-between"
+        height='10vh'
+        alignItems='center'
+        justifyContent='space-between'
         direction={{ base: 'column', lg: 'row' }}
         pl={10}
         pr={10}
       >
         <Img
-          src="images/scoututor.png"
-          alt="scoututor"
-          maxHeight="80%"
-          maxWidth="20vh"
+          src='images/scoututor.png'
+          alt='scoututor'
+          maxHeight='80%'
+          maxWidth='20vh'
           margin={{ base: '10px', lg: '0px' }}
         />
         {/* TODO: If on mobile display we may not want to render this at all */}
         <HStack spacing={4} width={{ base: '90%', md: '40%' }} margin={{ base: '10px', lg: '0px' }}>
           <Input
-            focusBorderColor="teal.400"
-            type="text"
-            placeholder="What do you need help with?"
+            focusBorderColor='teal.400'
+            type='text'
+            placeholder='What do you need help with?'
           />
-          <Button colorScheme="teal">
+          <Button colorScheme='teal'>
             <SearchIcon />
           </Button>
         </HStack>
         <HStack spacing={6} margin={{ base: '10px', lg: '0px' }}>
-          <Button variant="outline">For universities</Button>
-          <Button colorScheme="teal">Join us</Button>
+          <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
+            <Button variant='outline'>Log In</Button>
+          </Link>
+          <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
+            <Button colorScheme='teal'>Sign Un</Button>
+          </Link>
         </HStack>
       </Flex>
     </Box>

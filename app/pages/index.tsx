@@ -28,7 +28,7 @@ const UserInfo = () => {
     return (
       <>
         <button
-          className="button small"
+          className='button small'
           onClick={async () => {
             await logoutMutation()
           }}
@@ -60,43 +60,43 @@ const Home: BlitzPage = () => {
   return (
     <Box>
       <Flex
-        alignItems="center"
-        justifyContent="space-around"
+        alignItems='center'
+        justifyContent='space-around'
         direction={{ base: 'column', xl: 'row' }}
-        pl="10%"
-        pr="10%"
+        pl='10%'
+        pr='10%'
         pt={{ base: '100px', sm: '50px' }}
       >
         <Img
-          src="/images/knowledge.png"
-          alt="knowledge"
-          maxHeight="25%"
+          src='/images/knowledge.png'
+          alt='knowledge'
+          maxHeight='25%'
           maxWidth={{ sm: '40%', xl: '30%' }}
           mb={{ lg: '50px' }}
         />
-        <VStack spacing={4} align="stretch" mt={{ base: '70px', lg: '0px' }}>
+        <VStack spacing={4} align='stretch' mt={{ base: '70px', lg: '0px' }}>
           <Heading pb={6}>Let`s build knowledge together</Heading>
           <HStack spacing={4}>
-            <Search2Icon color="gray.700" />
-            <Text fontSize="xl">Find a tutor that suits you</Text>
+            <Search2Icon color='gray.700' />
+            <Text fontSize='xl'>Find a tutor that suits you</Text>
           </HStack>
           <HStack spacing={4}>
-            <Icon as={BsLightning} color="gray.700" />
-            <Text fontSize="xl">Learn at your pace</Text>
+            <Icon as={BsLightning} color='gray.700' />
+            <Text fontSize='xl'>Learn at your pace</Text>
           </HStack>
           <HStack spacing={4}>
-            <Icon as={FaReact} color="gray.700" />
-            <Text fontSize="xl">Share your learning</Text>
+            <Icon as={FaReact} color='gray.700' />
+            <Text fontSize='xl'>Share your learning</Text>
           </HStack>
         </VStack>
       </Flex>
-      <Center pt="50px" pb="40px">
+      <Center pt='50px' pb='40px'>
         <HStack spacing={6}>
           <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
-            <Button colorScheme="teal">Join us</Button>
+            <Button colorScheme='teal'>Sign Un</Button>
           </Link>
           <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
-            <Button variant="outline">Sign in</Button>
+            <Button variant='outline'>Log In</Button>
           </Link>
         </HStack>
       </Center>
@@ -105,6 +105,6 @@ const Home: BlitzPage = () => {
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.getLayout = (page) => <LoggedOutLayout title="Home">{page}</LoggedOutLayout>
+Home.getLayout = (page) => <LoggedOutLayout title='Home'>{page}</LoggedOutLayout>
 
 export default Home
