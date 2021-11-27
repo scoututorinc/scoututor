@@ -7,7 +7,7 @@ import CourseDescription from 'app/courses/components/CourseDescription'
 import CourseTeacher from 'app/courses/components/CourseTeacher'
 import getCourse from 'app/courses/queries/getCourse'
 
-const paramToInt = (param: string | string[] | undefined) => {
+export const paramToInt = (param: string | string[] | undefined) => {
   if (typeof param == 'string') return parseInt(param)
   else return -1
 }
