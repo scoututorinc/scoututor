@@ -29,13 +29,14 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
   const [courseApplicationMutation] = useMutation(course_application)
 
   return (
-    <Box borderWidth='2px' borderColor='teal.400' rounded={6} width={{ base: '90%', md: '70%' }}>
+    <Box borderWidth='2px' borderColor='teal.400' rounded={6} width={{ base: '100%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' width='100%'>
         <Stack
           direction={{ base: 'column', md: 'row' }}
           spacing={6}
           padding={10}
           justifyContent='center'
+          alignItems='center'
         >
           <Img src='images/knowledge.png' maxWidth='100px'></Img>
           <Heading>Application</Heading>
@@ -75,12 +76,12 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
             </Text>
           </HStack>
           <Center>
-            <HStack spacing={4}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
               <Button variant='outline'>Return to course page</Button>
               <Button colorScheme='teal' type='submit'>
                 Submit application
               </Button>
-            </HStack>
+            </Stack>
           </Center>
         </Form>
       </Flex>
