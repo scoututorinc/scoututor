@@ -1,39 +1,60 @@
-import { BlitzPage, useSession } from 'blitz'
+import { BlitzPage, useQuery, useParam } from 'blitz'
 import {
   Flex,
-  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  HStack,
   VStack,
   Heading,
-  Divider,
-  Img
+  Divider
 } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { CourseApplicationForm } from 'app/courses/components/CourseApplicationForm'
+import getCourse from 'app/courses/queries/getCourse'
+
+export const paramToInt = (param: string | string[] | undefined) => {
+  if (typeof param == 'string') return parseInt(param)
+  else return -1
+}
 
 const CourseApplication: BlitzPage = () => {
-  return (
-    <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
+  const courseId = useParam('id')
+  const [course, status] = useQuery(getCourse, paramToInt(courseId), {
+    suspense: false
+  })
+
+  return status.isError == false && course ? (
+    <Flex
+      direction='column'
+      w='100%'
+      h='100%'
+      overflowY='scroll'
+      overflowX='hidden'
+      p={{ base: 4, lg: 10 }}
+    >
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
-          <BreadcrumbLink href=''>Graphical Design by Bring Your Own Laptop</BreadcrumbLink>
+          <BreadcrumbLink href=''>
+            {course.name} by {course.author.name}
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink href=''>Application</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
       <VStack spacing={2} alignItems='start' mb={6}>
-        <Heading>Graphical Design by Bring Your Own Laptop Application</Heading>
+        <Heading>
+          {course.name} by {course.author.name} Application
+        </Heading>
         <Divider />
       </VStack>
       <Flex width='100%' justifyContent='center'>
         <CourseApplicationForm />
       </Flex>
     </Flex>
+  ) : (
+    <p>Error :^(</p>
   )
 }
 
