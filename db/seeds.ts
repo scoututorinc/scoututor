@@ -1,5 +1,6 @@
 import { SecurePassword } from 'blitz'
-import db, { Course, Prisma, User } from 'db'
+import db, { Course, Discipline, Prisma, User } from 'db'
+
 import faker from 'faker'
 faker.locale = 'pt_PT'
 
@@ -10,9 +11,11 @@ const seed = async () => {
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
   await db.user.deleteMany({})
+  await db.discipline.deleteMany({})
 
+  const disciplines = await createDisciplines()
   const users = await createUsers()
-  const courses = await createCourses(users)
+  const courses = await createCourses(users, disciplines)
   await createCourseMemberships(users, courses)
   await createCourseApplications(users, courses)
 }
@@ -45,8 +48,25 @@ async function createUsers() {
   return await db.user.findMany({})
 }
 
-async function createCourses(users: User[]) {
-  const courses: Prisma.CourseCreateManyInput[] = []
+async function createDisciplines() {
+  const disciplines: Prisma.DisciplineCreateManyInput[] = []
+
+  for (const _ in range(20)) {
+    disciplines.push({
+      name: faker.commerce.department()
+    })
+  }
+
+  await db.discipline.createMany({
+    data: disciplines,
+    skipDuplicates: true
+  })
+
+  return await db.discipline.findMany({})
+}
+
+async function createCourses(users: User[], disciplines: Discipline[]) {
+  const courses: Prisma.CourseCreateInput[] = []
 
   for (const _ in range(20)) {
     courses.push({
@@ -54,14 +74,12 @@ async function createCourses(users: User[]) {
       description: faker.lorem.paragraphs(3, '.'),
       hourlyRate: randomInt(10, 20),
       previewImages: range(randomInt(1, 4)).map((_) => faker.image.business()),
-      authorId: users[randomInt(1, 5)]?.id || 0
+      author: { connect: { id: users[randomInt(1, 5)]?.id || 0 } },
+      discipline: { connect: { id: disciplines[randomInt(1, disciplines.length)]?.id || 0 } }
     })
   }
 
-  await db.course.createMany({
-    data: courses,
-    skipDuplicates: true
-  })
+  await Promise.all(courses.map((c) => db.course.create({ data: c })))
 
   return await db.course.findMany({})
 }

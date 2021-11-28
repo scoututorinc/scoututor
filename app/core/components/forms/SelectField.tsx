@@ -33,19 +33,21 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
 
     return (
       <FormControl id={id} {...outerProps}>
-        <FormLabel {...labelProps}>
-          <InputGroup>
-            <Select
-              id={id}
-              key={id}
-              {...input}
-              disabled={submitting}
-              {...props}
-              ref={ref}
-              focusBorderColor='teal.400'
-            />
-          </InputGroup>
+        <FormLabel {...labelProps} fontWeight='bold'>
+          {label}
         </FormLabel>
+        <InputGroup>
+          <Select
+            id={id}
+            key={id}
+            {...input}
+            disabled={submitting}
+            {...props}
+            ref={ref}
+            focusBorderColor='teal.400'
+          />
+        </InputGroup>
+
         {touched && normalizedError && (
           <div role='alert' style={{ color: 'red' }}>
             {normalizedError}

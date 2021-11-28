@@ -14,17 +14,18 @@ import {
 import Form from 'app/core/components/forms/Form'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
+import { SelectField } from 'app/core/components/forms/SelectField'
 import { CreateCourseInput } from 'app/courses/validations'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import createCourse from 'app/courses/mutations/createCourse'
 
 type CourseCreationFormProps = {
   onSuccess?: () => void
+  disciplines: string[]
 }
 
-export const CourseCreationForm = (props: CourseCreationFormProps) => {
+export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFormProps) => {
   const [createCourseMutation] = useMutation(createCourse)
-
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -53,9 +54,9 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
         >
           <VStack spacing={6} p={4} mb={2}>
             <LabeledTextField
-              label='Course subject'
-              name='name'
-              placeholder='Search the subject your course fits into'
+              label='Course title'
+              name='title'
+              placeholder='Give your course a title'
             />
             <HStack spacing={4} mb={2}>
               <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
@@ -65,14 +66,22 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
             </HStack>
             <LabeledTextAreaField
               label='Detailed description'
+              placeholder='Tell your students about your course'
               name='description'
-            ></LabeledTextAreaField>
+            />
             <LabeledTextField
               type='number'
               label='Hourly rate'
               name='hourlyRate'
               placeholder='Enter the hourly price your students must endure'
             />
+            <SelectField name='discipline' label='Discipline' placeholder='Select one'>
+              {disciplines.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </SelectField>
             <Stack
               direction={{ base: 'column', md: 'row' }}
               justifyContent='center'
