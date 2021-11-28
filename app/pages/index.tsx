@@ -93,7 +93,7 @@ const Home: BlitzPage = () => {
       <Center pt='50px' pb='40px'>
         <HStack spacing={6}>
           <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
-            <Button colorScheme='teal'>Sign Un</Button>
+            <Button colorScheme='teal'>Sign Up</Button>
           </Link>
           <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
             <Button variant='outline'>Log In</Button>

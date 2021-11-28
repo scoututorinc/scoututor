@@ -1,6 +1,6 @@
-import { useMutation } from 'blitz'
+import { Routes, useMutation } from 'blitz'
 import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
-import { Flex, Box, Center, Stack, HStack, VStack, Img, Heading, Button } from '@chakra-ui/react'
+import { Flex, Box, Center, HStack, VStack, Img, Heading, Button } from '@chakra-ui/react'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { AiOutlineMail } from 'react-icons/ai'
 import { RiLockPasswordFill } from 'react-icons/ri'
@@ -9,6 +9,7 @@ import signup from 'app/auth/mutations/signup'
 import { Signup } from 'app/auth/validations'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -78,7 +79,9 @@ export const SignupForm = (props: SignupFormProps) => {
           </VStack>
           <Center>
             <HStack spacing={4} p={6}>
-              <Button variant='outline'>Cancel</Button>
+              <StyledLink href={Routes.Home().pathname}>
+                <Button variant='outline'>Cancel</Button>
+              </StyledLink>
               <Button type='submit' colorScheme='teal'>
                 Confirm
               </Button>
