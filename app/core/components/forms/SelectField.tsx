@@ -7,13 +7,14 @@ export interface SelectFieldProps extends ComponentPropsWithoutRef<typeof Select
   name: string
   label: string
   type?: 'text' | 'number'
+  onChange: Function
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements['div']>
   labelProps?: ComponentPropsWithoutRef<'label'>
   fieldProps?: UseFieldConfig<string>
 }
 
 export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>(
-  ({ name, label, fieldProps, icon, outerProps, labelProps, ...props }, ref) => {
+  ({ name, label, fieldProps, onChange, icon, outerProps, labelProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting }
@@ -41,6 +42,10 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
             id={id}
             key={id}
             {...input}
+            onChange={(e) => {
+              onChange(e)
+              input.onChange(e)
+            }}
             disabled={submitting}
             {...props}
             ref={ref}

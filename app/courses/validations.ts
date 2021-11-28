@@ -5,7 +5,7 @@ export const CreateCourseInput = z.object({
   description: z.string(),
   method: z.array(z.enum(['ONLINE', 'PRESENTIAL'])),
   discipline: z.string(),
-  knowledgeAreas: z.array(z.string()).max(4),
+  knowledgeAreas: z.array(z.string()).min(1).max(4),
   knowledgeLevel: z.array(
     z.enum([
       'BEGINNER',

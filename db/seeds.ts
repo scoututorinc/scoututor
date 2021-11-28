@@ -11,9 +11,11 @@ const seed = async () => {
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
   await db.user.deleteMany({})
+  await db.knowledgeArea.deleteMany({})
   await db.discipline.deleteMany({})
 
   const disciplines = await createDisciplines()
+  const knowledgeAreas = await createKnowledgeAreas(disciplines)
   const users = await createUsers()
   const courses = await createCourses(users, disciplines)
   await createCourseMemberships(users, courses)
@@ -63,6 +65,26 @@ async function createDisciplines() {
   })
 
   return await db.discipline.findMany({})
+}
+
+async function createKnowledgeAreas(disciplines: Discipline[]) {
+  const knowledgeAreas: Prisma.KnowledgeAreaCreateManyInput[] = []
+
+  disciplines.forEach((d) => {
+    for (const _ in range(20)) {
+      knowledgeAreas.push({
+        name: faker.commerce.productMaterial(),
+        disciplineId: d.id
+      })
+    }
+  })
+
+  await db.knowledgeArea.createMany({
+    data: knowledgeAreas,
+    skipDuplicates: true
+  })
+
+  return await db.knowledgeArea.findMany({})
 }
 
 async function createCourses(users: User[], disciplines: Discipline[]) {

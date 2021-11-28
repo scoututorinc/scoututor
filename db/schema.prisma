@@ -79,11 +79,13 @@ model KnowledgeArea {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String   @unique
+  name      String
 
-  diciplineId Int
-  discipline  Discipline @relation(fields: [diciplineId], references: [id], onDelete: Cascade)
-  courses     Course[]
+  disciplineId Int
+  discipline   Discipline @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  courses      Course[]
+
+  @@unique([name, disciplineId])
 }
 
 model CourseMembership {

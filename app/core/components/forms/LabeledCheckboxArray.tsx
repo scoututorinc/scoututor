@@ -18,7 +18,9 @@ export const LabeledCheckboxArray = ({
   } = useField(name, { subscription: { touched: true, error: true } })
   return (
     <FormControl {...props} isInvalid={error && touched}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+      <FormLabel htmlFor={name} fontWeight='bold'>
+        {label}
+      </FormLabel>
       {children}
       <FormErrorMessage>{error}</FormErrorMessage>
     </FormControl>

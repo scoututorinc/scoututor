@@ -1,4 +1,5 @@
-import { useMutation } from 'blitz'
+import { useState } from 'react'
+import { useMutation, useQuery } from 'blitz'
 import {
   Flex,
   Box,
@@ -14,10 +15,16 @@ import {
 import Form from 'app/core/components/forms/Form'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
-import { SelectField } from 'app/core/components/forms/SelectField'
 import { CreateCourseInput } from 'app/courses/validations'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import createCourse from 'app/courses/mutations/createCourse'
+
+import { SelectField } from 'app/core/components/forms/SelectField'
+import {
+  LabeledCheckboxArray,
+  CheckboxArrayControl
+} from 'app/core/components/forms/LabeledCheckboxArray'
+import getKnowledgeAreas from 'app/courses/queries/getKnowledgeAreas'
 
 type CourseCreationFormProps = {
   onSuccess?: () => void
@@ -26,6 +33,13 @@ type CourseCreationFormProps = {
 
 export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFormProps) => {
   const [createCourseMutation] = useMutation(createCourse)
+
+  const [discipline, setDiscipline] = useState<string | null>(null)
+  const [knowledgeAreas] = useQuery(getKnowledgeAreas, discipline, {
+    enabled: !!discipline,
+    suspense: false
+  })
+
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -75,13 +89,33 @@ export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFor
               name='hourlyRate'
               placeholder='Enter the hourly price your students must endure'
             />
-            <SelectField name='discipline' label='Discipline' placeholder='Select one'>
+            <SelectField
+              name='discipline'
+              label='Discipline'
+              placeholder='Select one'
+              onChange={(e) => setDiscipline(e.target.value)}
+            >
               {disciplines.map((d) => (
                 <option key={d} value={d}>
                   {d}
                 </option>
               ))}
             </SelectField>
+            {/* TODO: When discipline changes, the array gets updated by form values don't, should clear when discipline changes */}
+            {discipline && (knowledgeAreas?.length || 0) > 0 && (
+              <LabeledCheckboxArray name='knowledgeAreas' label='Knowledge Areas' my={4}>
+                <Stack pl={6} mt={1} spacing={1}>
+                  {knowledgeAreas?.map((k) => (
+                    <CheckboxArrayControl
+                      name='knowledgeAreas'
+                      key={discipline + k.name}
+                      label={k.name}
+                      value={k.name}
+                    />
+                  ))}
+                </Stack>
+              </LabeledCheckboxArray>
+            )}
             <Stack
               direction={{ base: 'column', md: 'row' }}
               justifyContent='center'
@@ -98,6 +132,8 @@ export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFor
             </Stack>
           </VStack>
         </Form>
+        {JSON.stringify({ discipline, k: knowledgeAreas?.map((k) => k.name) })}
+        {JSON.stringify('ola')}
       </Flex>
     </Box>
   )
