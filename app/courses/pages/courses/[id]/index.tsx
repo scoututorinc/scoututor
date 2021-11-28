@@ -23,7 +23,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   return course ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>
-        <Heading>{course.name}</Heading>
+        <Heading>{course.title}</Heading>
         <Divider />
       </VStack>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
