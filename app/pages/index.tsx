@@ -16,7 +16,7 @@ import { Search2Icon } from '@chakra-ui/icons'
 import { BsLightning } from 'react-icons/bs'
 import { FaReact } from 'react-icons/fa'
 
-import LoggedOutLayout from 'app/core/layouts/LoggedOutLayout'
+import MixedLayout from 'app/core/layouts/MixedLayout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import logout from 'app/auth/mutations/logout'
 
@@ -105,6 +105,6 @@ const Home: BlitzPage = () => {
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.getLayout = (page) => <LoggedOutLayout title='Home'>{page}</LoggedOutLayout>
+Home.getLayout = (page) => <MixedLayout title='Home'>{page}</MixedLayout>
 
 export default Home
