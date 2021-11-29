@@ -38,7 +38,7 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
           justifyContent='center'
           alignItems='center'
         >
-          <Img src='images/knowledge.png' maxWidth='100px'></Img>
+          <Img src='/images/application.png' maxWidth='100px'></Img>
           <Heading>Application</Heading>
         </Stack>
         <Form

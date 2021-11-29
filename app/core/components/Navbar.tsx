@@ -41,7 +41,7 @@ const Navbar: FC = () => {
             <Button variant='outline'>Log In</Button>
           </Link>
           <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
-            <Button colorScheme='teal'>Sign Un</Button>
+            <Button colorScheme='teal'>Sign Up</Button>
           </Link>
         </HStack>
       </Flex>

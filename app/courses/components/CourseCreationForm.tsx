@@ -35,7 +35,7 @@ export const CourseCreationForm = (props: CourseCreationFormProps) => {
           justifyContent='center'
           alignItems='center'
         >
-          <Img src='/images/knowledge.png' maxWidth='100px'></Img>
+          <Img src='/images/add_course.png' maxWidth='100px'></Img>
           <Heading>Create Course</Heading>
         </Stack>
         <Form
