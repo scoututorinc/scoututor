@@ -43,7 +43,7 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
             key={id}
             {...input}
             onChange={(e) => {
-              onChange(e)
+              onChange?.(e)
               input.onChange(e)
             }}
             disabled={submitting}

@@ -41,15 +41,15 @@ model User {
 }
 
 model Course {
-  id            Int              @id @default(autoincrement())
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  title         String           @unique
-  description   String
-  levels        KnowledgeLevel[]
-  methods       TeachingMethod[]
-  previewImages String[]
-  hourlyRate    Int
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  title           String           @unique
+  description     String
+  knowledgeLevels KnowledgeLevel[]
+  methods         TeachingMethod[]
+  previewImages   String[]
+  hourlyRate      Int
 
   discipline     Discipline[]
   knowledgeAreas KnowledgeArea[]
