@@ -1,5 +1,4 @@
-import { FC } from 'react'
-import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button, Link } from '@chakra-ui/react'
+import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
 import { Link as BlitzLink, Routes } from 'blitz'
 import { StyledLink } from 'app/core/components/StyledLink'
