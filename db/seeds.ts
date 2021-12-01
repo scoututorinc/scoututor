@@ -6,6 +6,7 @@ faker.locale = 'pt_PT'
 
 const range = (n: number) => [...new Array(n).keys()]
 const randomInt = (s: number, b: number) => Math.round(Math.random() * (b - s - 1)) + s
+const pickOne = (...values: any) => values[Math.floor(Math.random() * values.length)]
 
 const seed = async () => {
   await db.courseMembership.deleteMany({})
@@ -95,7 +96,9 @@ async function createCourses(users: User[], disciplines: Discipline[]) {
       title: faker.company.catchPhrase(),
       description: faker.lorem.paragraphs(3, '.'),
       hourlyRate: randomInt(10, 20),
-      previewImages: range(randomInt(1, 4)).map((_) => faker.image.business()),
+      previewImage: faker.image.business(),
+      status: 'ACTIVE',
+      methods: pickOne(['ONLINE'], ['PRESENTIAL'], ['ONLINE', 'PRESENTIAL']),
       author: { connect: { id: users[randomInt(1, 5)]?.id || 0 } },
       discipline: { connect: { id: disciplines[randomInt(1, disciplines.length)]?.id || 0 } }
     })

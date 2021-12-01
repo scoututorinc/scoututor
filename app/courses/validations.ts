@@ -21,7 +21,7 @@ export const CreateCourseInput = z.object({
       ])
     )
     .min(1),
-  previewImages: z.array(z.string()).min(1),
+  previewImage: z.string(),
   hourlyRate: z.number().int().min(4).max(25)
 })
 
