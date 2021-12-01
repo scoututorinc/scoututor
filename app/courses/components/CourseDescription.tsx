@@ -17,9 +17,10 @@ import {
 } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
 import { Routes, useRouter } from 'next/stdlib'
-import { useMutation } from 'blitz'
+import { Routes, useMutation } from 'blitz'
 import deleteCourse from '../mutations/deleteCourse'
 import cancelMemberships from '../mutations/cancelMemberships'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 type CourseDescriptionProps = {
   id: number
@@ -75,7 +76,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
       )}
       {is_teacher && (
         <HStack spacing={4}>
-          <StyledLink as={BlitzLink} href={Routes.Applications({ id: id })}>
+          <StyledLink href={Routes.Applications({ id: id })}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
           <Button colorScheme='teal'>Edit information</Button>
