@@ -37,7 +37,6 @@ const Application = ({
 }: ApplicationProps) => {
   const [acceptApplicationMutation] = useMutation(acceptApplication)
   const [declineApplicationMutation] = useMutation(declineApplication)
-
   return (
     <Box borderWidth='1px' width='100%' rounded={6}>
       <Flex direction='column' p={4}>
@@ -47,7 +46,7 @@ const Application = ({
             alt='applicant'
             borderRadius='full'
             maxWidth='80px'
-          ></Img>
+          />
           <Heading as='h5' size='md'>
             {applicant.name}
           </Heading>

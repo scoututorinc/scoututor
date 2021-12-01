@@ -1,18 +1,24 @@
 import { SecurePassword } from 'blitz'
-import db, { Course, Prisma, User } from 'db'
+import db, { Course, Discipline, Prisma, User } from 'db'
+
 import faker from 'faker'
 faker.locale = 'pt_PT'
 
 const range = (n: number) => [...new Array(n).keys()]
 const randomInt = (s: number, b: number) => Math.round(Math.random() * (b - s - 1)) + s
+const pickOne = (...values: any) => values[Math.floor(Math.random() * values.length)]
 
 const seed = async () => {
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
   await db.user.deleteMany({})
+  await db.knowledgeArea.deleteMany({})
+  await db.discipline.deleteMany({})
 
+  const disciplines = await createDisciplines()
+  const knowledgeAreas = await createKnowledgeAreas(disciplines)
   const users = await createUsers()
-  const courses = await createCourses(users)
+  const courses = await createCourses(users, disciplines)
   await createCourseMemberships(users, courses)
   await createCourseApplications(users, courses)
 }
@@ -45,23 +51,60 @@ async function createUsers() {
   return await db.user.findMany({})
 }
 
-async function createCourses(users: User[]) {
-  const courses: Prisma.CourseCreateManyInput[] = []
+async function createDisciplines() {
+  const disciplines: Prisma.DisciplineCreateManyInput[] = []
+
+  for (const _ in range(20)) {
+    disciplines.push({
+      name: faker.commerce.department()
+    })
+  }
+
+  await db.discipline.createMany({
+    data: disciplines,
+    skipDuplicates: true
+  })
+
+  return await db.discipline.findMany({})
+}
+
+async function createKnowledgeAreas(disciplines: Discipline[]) {
+  const knowledgeAreas: Prisma.KnowledgeAreaCreateManyInput[] = []
+
+  disciplines.forEach((d) => {
+    for (const _ in range(20)) {
+      knowledgeAreas.push({
+        name: faker.commerce.productMaterial(),
+        disciplineId: d.id
+      })
+    }
+  })
+
+  await db.knowledgeArea.createMany({
+    data: knowledgeAreas,
+    skipDuplicates: true
+  })
+
+  return await db.knowledgeArea.findMany({})
+}
+
+async function createCourses(users: User[], disciplines: Discipline[]) {
+  const courses: Prisma.CourseCreateInput[] = []
 
   for (const _ in range(20)) {
     courses.push({
       title: faker.company.catchPhrase(),
       description: faker.lorem.paragraphs(3, '.'),
       hourlyRate: randomInt(10, 20),
-      previewImages: range(randomInt(1, 4)).map((_) => faker.image.business()),
-      authorId: users[randomInt(1, 5)]?.id || 0
+      previewImage: faker.image.business(),
+      status: 'ACTIVE',
+      methods: pickOne(['ONLINE'], ['PRESENTIAL'], ['ONLINE', 'PRESENTIAL']),
+      author: { connect: { id: users[randomInt(1, 5)]?.id || 0 } },
+      discipline: { connect: { id: disciplines[randomInt(1, disciplines.length)]?.id || 0 } }
     })
   }
 
-  await db.course.createMany({
-    data: courses,
-    skipDuplicates: true
-  })
+  await Promise.all(courses.map((c) => db.course.create({ data: c })))
 
   return await db.course.findMany({})
 }

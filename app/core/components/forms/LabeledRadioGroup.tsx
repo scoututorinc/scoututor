@@ -41,12 +41,11 @@ const AdaptedRadioGroup = ({ input, meta, label, children }) => (
   </FormControl>
 )
 
-export interface SelectFieldProps extends ComponentPropsWithoutRef<typeof Radio> {
-  name: string
+export interface RadioFieldProps extends ComponentPropsWithoutRef<typeof Radio> {
   label: string
 }
 
-export const LabeledRadioField = ({ value, label, ...props }) => {
+export const LabeledRadioField = ({ value, label, ...props }: RadioFieldProps) => {
   return (
     <Radio value={value} {...props}>
       {label}

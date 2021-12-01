@@ -6,11 +6,24 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CreateCourseInput),
   async ({ discipline, knowledgeAreas, ...props }, ctx) => {
+    const disciplineId = (
+      await db.discipline.findFirst({
+        where: { name: discipline },
+        select: { id: true }
+      })
+    )?.id as number
     return await db.course.create({
       data: {
         ...props,
         discipline: { connect: { name: discipline } },
-        knowledgeAreas: { connect: { ...knowledgeAreas.map((k: string) => ({ name: k })) } },
+        knowledgeAreas: {
+          connect: knowledgeAreas.map((k: string) => ({
+            name_disciplineId: {
+              name: k,
+              disciplineId
+            }
+          }))
+        },
         author: { connect: { id: ctx.session.$publicData.userId } }
       }
     })

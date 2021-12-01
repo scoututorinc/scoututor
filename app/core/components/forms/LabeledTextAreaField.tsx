@@ -7,17 +7,16 @@ import { Textarea, Heading, VStack } from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 
 export interface TextAreaProps extends ComponentPropsWithoutRef<typeof Textarea> {
-  /** Field name. */
   name: string
-  /** Field label. */
   label: string
+  placeholder: string
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements['div']>
   labelProps?: ComponentPropsWithoutRef<'label'>
   fieldProps?: UseFieldConfig<string>
 }
 
 export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  ({ name, label, placeholder, outerProps, fieldProps, labelProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting }
@@ -41,6 +40,7 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProp
             {...input}
             disabled={submitting}
             {...props}
+            placeholder={placeholder}
             ref={ref}
             focusBorderColor='teal.400'
           />

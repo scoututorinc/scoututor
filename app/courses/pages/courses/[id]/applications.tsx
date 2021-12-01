@@ -33,13 +33,11 @@ const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
     >
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon color='gray.500' />}>
         <BreadcrumbItem>
-          <BreadcrumbLink>
-            <Link href={Routes.CoursesView()}>Courses</Link>
-          </BreadcrumbLink>
+          <BreadcrumbLink href={Routes.CoursesView().pathname}>Courses</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink>
-            <Link href={Routes.CourseView({ id: course.id })}>{course.title}</Link>
+          <BreadcrumbLink href={Routes.CourseView({ id: course.id }).pathname}>
+            {course.title}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
