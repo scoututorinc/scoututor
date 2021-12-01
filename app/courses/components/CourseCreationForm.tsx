@@ -17,6 +17,7 @@ import { RiErrorWarningFill } from 'react-icons/ri'
 
 import { Form as FinalForm } from 'react-final-form'
 import { FORM_ERROR } from 'final-form'
+import { z } from 'zod'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
@@ -32,27 +33,32 @@ import createCourse from 'app/courses/mutations/createCourse'
 
 type CourseCreationFormProps = {
   onSuccess?: () => void
+  defaultValues?: z.infer<typeof CreateCourseInput>
   disciplines: string[]
 }
 
-export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFormProps) => {
+export const CourseCreationForm = ({
+  defaultValues,
+  disciplines,
+  onSuccess
+}: CourseCreationFormProps) => {
   const [createCourseMutation] = useMutation(createCourse)
 
   const [discipline, setDiscipline] = useState<string | null>(null)
-  const [values, setvalues] = useState<any | null>({
-    title: '',
-    description: '',
-    hourlyRate: 0,
-    previewImages: [
-      'https://cdn.britannica.com/q:60/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg'
-    ]
-  })
+  const [values, setvalues] = useState<any | null>(
+    defaultValues || {
+      title: '',
+      description: '',
+      hourlyRate: 0,
+      previewImage:
+        'https://cdn.britannica.com/q:60/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg'
+    }
+  )
   const [knowledgeAreas] = useQuery(getKnowledgeAreas, discipline, {
     enabled: !!discipline,
     suspense: false
   })
 
-  console.log('render')
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -184,7 +190,6 @@ export const CourseCreationForm = ({ disciplines, onSuccess }: CourseCreationFor
                     </option>
                   ))}
                 </SelectField>
-                {/* TODO: When discipline changes, the array gets updated by form values don't, should clear when discipline changes */}
                 {discipline && (knowledgeAreas?.length || 0) > 0 && (
                   <LabeledCheckboxArray name='knowledgeAreas' label='Knowledge Areas' my={4}>
                     <Grid templateColumns='repeat(3, 1fr)' gap={6}>
