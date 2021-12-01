@@ -1,5 +1,16 @@
 import { Link as BlitzLink, Routes } from 'blitz'
-import { Box, Stack, HStack, Heading, Text, Icon, Img, Button } from '@chakra-ui/react'
+import {
+  Box,
+  Stack,
+  HStack,
+  Heading,
+  Text,
+  Icon,
+  Img,
+  Image,
+  Button,
+  AspectRatio
+} from '@chakra-ui/react'
 import { SiGoogleclassroom } from 'react-icons/si'
 import { StyledLink } from 'app/core/components/StyledLink'
 
@@ -41,7 +52,7 @@ const CourseShortDisplay = ({
         <Text size='sm'>
           {description.length > 200 ? description.substring(0, 200) + '...' : description}
         </Text>
-        <Img src={previewImage} alt='course_preview' rounded={6}></Img>
+        <Img src={previewImage} alt='course_preview' height='300px' objectFit='cover' rounded={6} />
         <HStack spacing={4}>
           <Img
             src={author.profilePicture || '/images/profile.png'}
@@ -50,7 +61,7 @@ const CourseShortDisplay = ({
           />
           <Heading fontSize='sm'>Tutored by {author.name}</Heading>
         </HStack>
-        <StyledLink as={BlitzLink} href={Routes.CourseView({ id: id })}>
+        <StyledLink href={Routes.CourseView({ id: id })}>
           <Button colorScheme='teal'>See in detail</Button>
         </StyledLink>
       </Stack>
