@@ -13,7 +13,9 @@ export default resolver.pipe(
           select: {
             description: true,
             availableSchedule: true,
-            applicant: { select: { name: true, profilePicture: true } }
+            applicantId: true,
+            applicant: { select: { name: true, profilePicture: true } },
+            courseId: true
           }
         }
       }
