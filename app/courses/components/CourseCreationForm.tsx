@@ -29,22 +29,21 @@ import {
 
 import { CreateCourseInput } from 'app/courses/validations'
 import getKnowledgeAreas from 'app/courses/queries/getKnowledgeAreas'
-import createCourse from 'app/courses/mutations/createCourse'
 
 type CourseCreationFormProps = {
+  submit: (values: z.infer<typeof CreateCourseInput>) => Promise<void>
   onSuccess?: () => void
   defaultValues?: z.infer<typeof CreateCourseInput>
-  disciplines: string[]
+  disciplines?: string[]
 }
 
 export const CourseCreationForm = ({
   defaultValues,
   disciplines,
+  submit,
   onSuccess
 }: CourseCreationFormProps) => {
-  const [createCourseMutation] = useMutation(createCourse)
-
-  const [discipline, setDiscipline] = useState<string | null>(null)
+  const [discipline, setDiscipline] = useState<string | null>(defaultValues?.discipline || null)
   const [values, setvalues] = useState<any | null>(
     defaultValues || {
       title: '',
@@ -70,21 +69,17 @@ export const CourseCreationForm = ({
           alignItems='center'
         >
           <Img src='/images/add_course.png' maxWidth='100px'></Img>
-          <Heading>Create Course</Heading>
+          <Heading>{defaultValues ? 'Update Course' : 'Create course'}</Heading>
         </Stack>
         <FinalForm
           validate={validateZodSchema(CreateCourseInput)}
           initialValues={values}
-          mutators={{
-            clearKnowledgeAreas: (args, state, utils) => {
-              utils.changeValue(state, 'knowledgeAreas', () => [])
-            }
-          }}
           onSubmit={async (values) => {
             try {
               console.log(values)
               console.log('Tried to create course')
-              await createCourseMutation(values)
+              await submit(values)
+              onSuccess?.()
             } catch (error: any) {
               if (error instanceof AuthenticationError) {
                 return { [FORM_ERROR]: 'Sorry, those credentials are invalid' }
@@ -173,23 +168,32 @@ export const CourseCreationForm = ({
                     <CheckboxArrayControl name='knowledgeLevels' label='MASTER' value='MASTER' />
                   </Grid>
                 </LabeledCheckboxArray>
-                <SelectField
-                  name='discipline'
-                  label='Discipline'
-                  placeholder='Select one'
-                  onChange={(e: any) => {
-                    form.change('knowledgeAreas', [])
-                    const newDisc = e.target.value
-                    setvalues({ ...values, discipline: newDisc })
-                    setDiscipline(newDisc)
-                  }}
-                >
-                  {disciplines.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </SelectField>
+                {disciplines ? (
+                  <SelectField
+                    name='discipline'
+                    label='Discipline'
+                    placeholder='Select one'
+                    onChange={(e: any) => {
+                      form.change('knowledgeAreas', [])
+                      const newDisc = e.target.value
+                      setvalues({ ...values, discipline: newDisc })
+                      setDiscipline(newDisc)
+                    }}
+                  >
+                    {disciplines.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </SelectField>
+                ) : (
+                  <SelectField
+                    name='discipline'
+                    label='Discipline'
+                    disabled
+                    placeholder={defaultValues?.discipline}
+                  />
+                )}
                 {discipline && (knowledgeAreas?.length || 0) > 0 && (
                   <LabeledCheckboxArray name='knowledgeAreas' label='Knowledge Areas' my={4}>
                     <Grid templateColumns='repeat(3, 1fr)' gap={6}>
@@ -215,7 +219,7 @@ export const CourseCreationForm = ({
                     Cancel
                   </Button>
                   <Button type='submit' disabled={submitting} colorScheme='teal' w='50%'>
-                    Create course
+                    {defaultValues ? 'Update Course' : 'Create course'}
                   </Button>
                 </Stack>
               </VStack>

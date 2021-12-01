@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { number, z } from 'zod'
 
 export const CreateCourseInput = z.object({
   title: z.string().min(10),
@@ -23,6 +23,10 @@ export const CreateCourseInput = z.object({
     .min(1),
   previewImage: z.string(),
   hourlyRate: z.number().int().min(4).max(25)
+})
+
+export const UpdateCourseInput = CreateCourseInput.partial().extend({
+  id: z.number()
 })
 
 export const CourseApplication = z.object({

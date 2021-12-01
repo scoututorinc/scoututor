@@ -20,16 +20,16 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { CourseCreationForm } from 'app/courses/components/CourseCreationForm'
 
-import getDisciplines from 'app/courses/queries/getDisciplines'
-import createCourse from 'app/courses/mutations/createCourse'
+import getCourse from 'app/courses/queries/getCourse'
+import editCourse from 'app/courses/mutations/editCourse'
 
-const CreateCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
-  disciplines,
+const EditCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  course,
   error
 }) => {
-  const [createCourseMutation] = useMutation(createCourse)
+  const [editCourseMutation] = useMutation(editCourse)
 
-  return disciplines ? (
+  return course ? (
     <Flex
       direction='column'
       w='100%'
@@ -43,22 +43,26 @@ const CreateCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
           <BreadcrumbLink href=''>Courses</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href=''>Create Course</BreadcrumbLink>
+          <BreadcrumbLink href=''>Update Course</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
       <VStack spacing={2} alignItems='start' mb={6}>
-        <Heading>Create Course</Heading>
+        <Heading>Update Course</Heading>
         <Divider />
       </VStack>
       <Flex w='100%' justifyContent='center'>
         <CourseCreationForm
           submit={async (values) => {
-            await createCourseMutation(values)
+            await editCourseMutation(values)
           }}
           onSuccess={() => {
             alert('Success :)')
           }}
-          disciplines={disciplines.map((d) => d.name)}
+          defaultValues={{
+            ...course,
+            discipline: course.discipline.name,
+            knowledgeAreas: course.knowledgeAreas.map((k) => k.name)
+          }}
         />
       </Flex>
     </Flex>
@@ -67,14 +71,19 @@ const CreateCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
   )
 }
 
+const paramToInt = (param: string | string[] | undefined) => {
+  if (typeof param == 'string') return parseInt(param)
+  else return -1
+}
+
 export const getServerSideProps: GetServerSideProps<{
-  disciplines?: PromiseReturnType<typeof getDisciplines>
+  course?: PromiseReturnType<typeof getCourse>
   error?: any
 }> = async (context) => {
   try {
-    const disciplines = await invokeWithMiddleware(getDisciplines, null, context)
+    const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
     return {
-      props: { disciplines }
+      props: { course }
     }
   } catch (e) {
     console.log(e)
@@ -84,6 +93,6 @@ export const getServerSideProps: GetServerSideProps<{
   }
 }
 
-CreateCourse.suppressFirstRenderFlicker = true
-CreateCourse.getLayout = (page) => <LoggedInLayout title='Create Course'>{page}</LoggedInLayout>
-export default CreateCourse
+EditCourse.suppressFirstRenderFlicker = true
+EditCourse.getLayout = (page) => <LoggedInLayout title='Update Course'>{page}</LoggedInLayout>
+export default EditCourse

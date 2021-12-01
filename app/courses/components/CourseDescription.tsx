@@ -7,10 +7,15 @@ type CourseDescriptionProps = {
   id: number
   description: string
   hourlyRate: number
+  knowledgeAreas: string[]
 }
 
-const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
-  const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
+const CourseDescription = ({
+  id,
+  description,
+  hourlyRate,
+  knowledgeAreas
+}: CourseDescriptionProps) => {
   const hourly_rate = 15.0
   const is_teacher = true
 
@@ -21,7 +26,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
         <Divider />
       </VStack>
       <VStack spacing={8} alignItems='start' pb={10}>
-        {knowledge_areas.map((item) => (
+        {knowledgeAreas.map((item) => (
           <HStack key={item} spacing={6}>
             <Icon as={FaCheck}></Icon>
             <Heading size='md'>{item}</Heading>
@@ -50,10 +55,12 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
       )}
       {is_teacher && (
         <HStack spacing={4}>
-          <StyledLink as={BlitzLink} href={Routes.Applications({ id: id })}>
+          <StyledLink href={Routes.Applications({ id: id })}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
-          <Button colorScheme='teal'>Edit information</Button>
+          <StyledLink href={Routes.EditCourse({ id: id })}>
+            <Button colorScheme='teal'>Edit Information</Button>
+          </StyledLink>
         </HStack>
       )}
     </Flex>

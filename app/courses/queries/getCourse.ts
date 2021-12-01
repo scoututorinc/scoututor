@@ -8,7 +8,12 @@ export default resolver.pipe(
   async (id) => {
     return await db.course.findFirst({
       where: { id },
-      include: { author: { select: { name: true, profilePicture: true } }, reviews: true }
+      include: {
+        author: { select: { name: true, profilePicture: true } },
+        reviews: true,
+        discipline: true,
+        knowledgeAreas: true
+      }
     })
   }
 )
