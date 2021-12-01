@@ -16,8 +16,7 @@ import {
   AlertDialogOverlay
 } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
-import { Routes, useRouter } from 'next/stdlib'
-import { Routes, useMutation } from 'blitz'
+import { Routes, useMutation, useRouter } from 'blitz'
 import deleteCourse from '../mutations/deleteCourse'
 import cancelMemberships from '../mutations/cancelMemberships'
 import { StyledLink } from 'app/core/components/StyledLink'
