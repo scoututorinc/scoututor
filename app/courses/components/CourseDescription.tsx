@@ -38,7 +38,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
   const onCloseDC = () => setIsOpenDC(false)
   const [isOpenCM, setIsOpenCM] = React.useState(false)
   const onCloseCM = () => setIsOpenCM(false)
-  const cancelRef = React.useRef()
+  const cancelRef = React.useRef(null)
   return (
     <Flex direction='column' width={{ md: '75%' }}>
       <VStack alignItems='start' pb={5}>

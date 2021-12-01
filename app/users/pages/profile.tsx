@@ -37,7 +37,7 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const [deleteAccMutation] = useMutation(deleteAccount)
   const [isOpen, setIsOpen] = React.useState(false)
   const onClose = () => setIsOpen(false)
-  const cancelRef = React.useRef()
+  const cancelRef = React.useRef(null)
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack>
