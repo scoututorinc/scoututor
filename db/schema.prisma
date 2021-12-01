@@ -48,7 +48,8 @@ model Course {
   description     String
   knowledgeLevels KnowledgeLevel[]
   methods         TeachingMethod[]
-  previewImages   String[]
+  status          CourseStatus     @default(HIDDEN)
+  previewImage    String
   hourlyRate      Int
 
   discipline     Discipline[]
@@ -289,4 +290,10 @@ enum KnowledgeLevel {
 enum TeachingMethod {
   ONLINE
   PRESENTIAL
+}
+
+enum CourseStatus {
+  HIDDEN
+  ACTIVE
+  INACTIVE
 }

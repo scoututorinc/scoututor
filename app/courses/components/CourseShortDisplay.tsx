@@ -12,7 +12,7 @@ type CourseShortDisplayProps = {
     name: string
     profilePicture: string | null
   }
-  previewImages: string[]
+  previewImage: string
   methods: string[]
 }
 
@@ -21,18 +21,11 @@ const CourseShortDisplay = ({
   title,
   description,
   author,
-  previewImages,
+  previewImage,
   methods
 }: CourseShortDisplayProps) => {
   return (
-    <Box
-      rounded={6}
-      borderWidth='2px'
-      alignItems='center'
-      justifyContent='center'
-      p={2}
-      width={{ base: '90%', md: '50%', lg: '30%' }}
-    >
+    <Box rounded={6} borderWidth='2px' alignItems='center' justifyContent='center' p={2}>
       <Stack
         direction='column'
         spacing={4}
@@ -48,9 +41,7 @@ const CourseShortDisplay = ({
         <Text size='sm'>
           {description.length > 200 ? description.substring(0, 200) + '...' : description}
         </Text>
-        {/* TODO: replace this static image with the preview image on there any on the database */}
-        {/* This is why the unused parameter `previewImages` is in the function */}
-        <Img src='http://placeimg.com/640/480/business' alt='course_preview' rounded={6}></Img>
+        <Img src={previewImage} alt='course_preview' rounded={6}></Img>
         <HStack spacing={4}>
           <Img
             src={author.profilePicture || '/images/profile.png'}
