@@ -1,21 +1,23 @@
 import {
   BlitzPage,
-  useQuery,
-  useParam,
   GetServerSideProps,
   invokeWithMiddleware,
   InferGetServerSidePropsType
 } from 'blitz'
 import { Flex, Heading, Divider, VStack, Button } from '@chakra-ui/react'
 
+import { PromiseReturnType } from 'next/dist/types/utils'
+
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/courses/components/CourseReview'
 import CourseDescription from 'app/courses/components/CourseDescription'
 import CourseTeacher from 'app/courses/components/CourseTeacher'
+
 import getCourse from 'app/courses/queries/getCourse'
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
-  course
+  course,
+  error
 }) => {
   const is_enrolled = false
   const is_teacher = true
@@ -47,11 +49,11 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </VStack>
           )}
         </Flex>
-        <CourseDescription description={course.description} hourlyRate={course.hourlyRate} />
+        <CourseDescription {...course} />
       </Flex>
     </Flex>
   ) : (
-    <p>Error :^(</p>
+    <p>{JSON.stringify(error)}</p>
   )
 }
 
@@ -60,10 +62,20 @@ const paramToInt = (param: string | string[] | undefined) => {
   else return -1
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
-  return {
-    props: { course }
+export const getServerSideProps: GetServerSideProps<{
+  course?: PromiseReturnType<typeof getCourse>
+  error?: any
+}> = async (context) => {
+  try {
+    const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
+    return {
+      props: { course }
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      props: { error: e }
+    }
   }
 }
 

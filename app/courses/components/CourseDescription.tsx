@@ -1,23 +1,19 @@
-import { FC } from 'react'
 import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
+import { Link as BlitzLink, Routes } from 'blitz'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 type CourseDescriptionProps = {
+  id: number
   description: string
   hourlyRate: number
 }
 
-const CourseDescription = ({ description, hourlyRate }: CourseDescriptionProps) => {
+const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
   const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
-  const detailed_description =
-    'I can provide you with support the most diverse tasks of graphical design. ' +
-    'I have several years of experience and have worked with several companies' +
-    'over the years.I can teach you the basics of each of the listed softwares in' +
-    "order for you to get a working understanding of each one of them. Once you've " +
-    'mastered the basics, if you so wish we may progress to more advanced tasks and ' +
-    'you into a graphical design master.'
   const hourly_rate = 15.0
   const is_teacher = true
+
   return (
     <Flex direction='column' width={{ md: '75%' }}>
       <VStack alignItems='start' pb={5}>
@@ -54,7 +50,9 @@ const CourseDescription = ({ description, hourlyRate }: CourseDescriptionProps) 
       )}
       {is_teacher && (
         <HStack spacing={4}>
-          <Button colorScheme='teal'>Manage Applications</Button>
+          <StyledLink as={BlitzLink} href={Routes.Applications({ id: id })}>
+            <Button colorScheme='teal'>Manage Applications</Button>
+          </StyledLink>
           <Button colorScheme='teal'>Edit information</Button>
         </HStack>
       )}

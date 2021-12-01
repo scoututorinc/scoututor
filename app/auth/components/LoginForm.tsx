@@ -35,7 +35,7 @@ export const LoginForm = (props: LoginFormProps) => {
     >
       <Flex alignItems='center' justifyContent='center' direction='column'>
         <HStack spacing={6} p={10}>
-          <Img src='/images/signup.png' alt='login' maxWidth='100px' />
+          <Img src='/images/login.png' alt='login' maxWidth='100px' />
           <Heading>Log In</Heading>
         </HStack>
         <Form

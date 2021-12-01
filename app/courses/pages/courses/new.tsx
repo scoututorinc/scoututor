@@ -1,4 +1,10 @@
-import { BlitzPage } from 'blitz'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  invokeWithMiddleware
+} from 'blitz'
+import { PromiseReturnType } from 'next/dist/types/utils'
 import {
   Flex,
   VStack,
@@ -9,11 +15,17 @@ import {
   Divider
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
+
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { CourseCreationForm } from 'app/courses/components/CourseCreationForm'
 
-const CreateCourse: BlitzPage = () => {
-  return (
+import getDisciplines from 'app/courses/queries/getDisciplines'
+
+const CreateCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  disciplines,
+  error
+}) => {
+  return disciplines ? (
     <Flex
       direction='column'
       w='100%'
@@ -32,13 +44,32 @@ const CreateCourse: BlitzPage = () => {
       </Breadcrumb>
       <VStack spacing={2} alignItems='start' mb={6}>
         <Heading>Create Course</Heading>
-        <Divider></Divider>
+        <Divider />
       </VStack>
       <Flex w='100%' justifyContent='center'>
-        <CourseCreationForm />
+        <CourseCreationForm disciplines={disciplines.map((d) => d.name)} />
       </Flex>
     </Flex>
+  ) : (
+    <p>{JSON.stringify(error)}</p>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  disciplines?: PromiseReturnType<typeof getDisciplines>
+  error?: any
+}> = async (context) => {
+  try {
+    const disciplines = await invokeWithMiddleware(getDisciplines, null, context)
+    return {
+      props: { disciplines }
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      props: { error: e }
+    }
+  }
 }
 
 CreateCourse.suppressFirstRenderFlicker = true
