@@ -4,7 +4,7 @@ import { SiGoogleclassroom } from 'react-icons/si'
 import { StyledLink } from 'app/core/components/StyledLink'
 
 type CourseShortDisplayProps = {
-  id: string
+  id: number
   title: string
   description: string
   authorId: number
