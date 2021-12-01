@@ -49,7 +49,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </VStack>
           )}
         </Flex>
-        <CourseDescription description={course.description} hourlyRate={course.hourlyRate} />
+        <CourseDescription {...course} />
       </Flex>
     </Flex>
   ) : (
