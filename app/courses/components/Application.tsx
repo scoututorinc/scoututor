@@ -21,7 +21,7 @@ type ApplicationProps = {
   availableSchedule: string
   applicant: {
     name: string
-    profilePicture: string
+    profilePicture: string | null
   }
   applicantId: number
   courseId: number

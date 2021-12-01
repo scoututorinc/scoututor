@@ -12,7 +12,7 @@ type CourseDescriptionProps = {
 const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
   const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
   const hourly_rate = 15.0
-  const is_teacher = true
+  const is_teacher = false
 
   return (
     <Flex direction='column' width={{ md: '75%' }}>

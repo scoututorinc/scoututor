@@ -50,7 +50,7 @@ const CourseApplication: BlitzPage = () => {
         <Divider />
       </VStack>
       <Flex width='100%' justifyContent='center'>
-        <CourseApplicationForm />
+        <CourseApplicationForm courseId={course.id} />
       </Flex>
     </Flex>
   ) : (

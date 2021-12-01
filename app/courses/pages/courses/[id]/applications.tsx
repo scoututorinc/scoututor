@@ -19,6 +19,7 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import Application from 'app/courses/components/Application'
 import getCourseApplications from 'app/courses/queries/getCourseApplications'
+import { PromiseReturnType } from 'next/dist/types/utils'
 
 const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course
@@ -49,8 +50,8 @@ const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
         <Divider />
       </VStack>
       <VStack spacing={4}>
-        {course.applications.map((application) => (
-          <Application key={application.description} {...application} />
+        {course.applications.map((application, i) => (
+          <Application key={application.id || i} {...application} />
         ))}
       </VStack>
     </Flex>
@@ -64,7 +65,9 @@ const paramToInt = (param: string | string[] | undefined) => {
   else return -1
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<{
+  course?: PromiseReturnType<typeof getCourseApplications>
+}> = async (context) => {
   const course = await invokeWithMiddleware(
     getCourseApplications,
     paramToInt(context?.params?.id),

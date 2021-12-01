@@ -11,6 +11,7 @@ export default resolver.pipe(
       include: {
         applications: {
           select: {
+            id: true,
             description: true,
             availableSchedule: true,
             applicantId: true,
