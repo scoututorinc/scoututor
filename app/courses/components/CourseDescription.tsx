@@ -100,18 +100,22 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
-                  <Button ref={cancelRef} onClick={onCloseCM}>
-                    Back
-                  </Button>
-                  <Button
-                    colorScheme='red'
-                    onClick={async () => {
-                      await cancelMembershipsMutation(id)
-                      onCloseCM()
-                    }}
-                  >
-                    Cancel Memberships
-                  </Button>
+                  <Flex justifyContent='center' width='100%'>
+                    <HStack spacing={6}>
+                      <Button ref={cancelRef} onClick={onCloseCM}>
+                        Back
+                      </Button>
+                      <Button
+                        colorScheme='red'
+                        onClick={async () => {
+                          await cancelMembershipsMutation(id)
+                          onCloseCM()
+                        }}
+                      >
+                        Cancel Memberships
+                      </Button>
+                    </HStack>
+                  </Flex>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialogOverlay>
@@ -137,25 +141,29 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
-                  <Button ref={cancelRef} onClick={onCloseDC}>
-                    Cancel
-                  </Button>
-                  <Button
-                    colorScheme='red'
-                    onClick={async () => {
-                      try {
-                        await deleteCourseMutation(id)
-                        await router.push(Routes.CoursesView())
-                      } catch (error: any) {
-                        alert(
-                          'This course has active memberships and could not be deleted. If you wish to delete this course, make sure to cancel all memberships beforehand'
-                        )
-                        onCloseDC()
-                      }
-                    }}
-                  >
-                    Delete
-                  </Button>
+                  <Flex justifyContent='center' width='100%'>
+                    <HStack spacing={6}>
+                      <Button ref={cancelRef} onClick={onCloseDC}>
+                        Cancel
+                      </Button>
+                      <Button
+                        colorScheme='red'
+                        onClick={async () => {
+                          try {
+                            await deleteCourseMutation(id)
+                            await router.push(Routes.CoursesView())
+                          } catch (error: any) {
+                            alert(
+                              'This course has active memberships and could not be deleted. If you wish to delete this course, make sure to cancel all memberships beforehand'
+                            )
+                            onCloseDC()
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </HStack>
+                  </Flex>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialogOverlay>

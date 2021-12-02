@@ -10,6 +10,7 @@ import {
 import {
   AlertDialog,
   Flex,
+  HStack,
   Box,
   Button,
   VStack,
@@ -63,19 +64,23 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
               </AlertDialogBody>
 
               <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  colorScheme='red'
-                  onClick={async () => {
-                    await deleteAccMutation()
-                    await logoutMutation()
-                    await router.push(Routes.Home())
-                  }}
-                >
-                  Delete
-                </Button>
+                <Flex justifyContent='center' width='100%'>
+                  <HStack spacing={6}>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      colorScheme='red'
+                      onClick={async () => {
+                        await deleteAccMutation()
+                        await logoutMutation()
+                        await router.push(Routes.Home())
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </HStack>
+                </Flex>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialogOverlay>
