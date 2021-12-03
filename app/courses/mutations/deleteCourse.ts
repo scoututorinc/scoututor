@@ -1,4 +1,4 @@
-import { Ctx, NotFoundError, resolver } from 'blitz'
+import { Ctx, resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 

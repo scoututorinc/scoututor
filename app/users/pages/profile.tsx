@@ -1,3 +1,5 @@
+import React, { useState, useRef } from 'react'
+import { PromiseReturnType } from 'next/dist/types/utils'
 import {
   BlitzPage,
   GetServerSideProps,
@@ -7,27 +9,14 @@ import {
   useMutation,
   Routes
 } from 'blitz'
-import {
-  AlertDialog,
-  Flex,
-  HStack,
-  Box,
-  Button,
-  VStack,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay
-} from '@chakra-ui/react'
+import { Flex, Box, Button, VStack } from '@chakra-ui/react'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
+
 import getCurrentUser from 'app/users/queries/getCurrentUser'
-import React from 'react'
 import logout from 'app/auth/mutations/logout'
 import deleteAccount from 'app/auth/mutations/deleteAccount'
-
-import { PromiseReturnType } from 'next/dist/types/utils'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -36,9 +25,11 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
   const [deleteAccMutation] = useMutation(deleteAccount)
-  const [isOpen, setIsOpen] = React.useState(false)
+
+  const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
-  const cancelRef = React.useRef(null)
+  const cancelRef = useRef(null)
+
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack>
@@ -52,39 +43,34 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
         >
           Delete Account
         </Button>
-        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                Delete Account
-              </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure? You cannot undo this action afterwards.
-              </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Flex justifyContent='center' width='100%'>
-                  <HStack spacing={6}>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      colorScheme='red'
-                      onClick={async () => {
-                        await deleteAccMutation()
-                        await logoutMutation()
-                        await router.push(Routes.Home())
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </HStack>
-                </Flex>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
+        <SimpleAlertDialog
+          header='Delete Account'
+          body='Are you sure? You cannot undo this action afterwards.'
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <Button ref={cancelRef} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            colorScheme='red'
+            onClick={async () => {
+              try {
+                await deleteAccMutation()
+                await logoutMutation()
+                await router.push(Routes.Home())
+              } catch (error: any) {
+                alert(
+                  'Your account has active memberships and could not be deleted. If you wish to delete your account, make sure to cancel all  your memberships beforehand'
+                )
+                onClose()
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </SimpleAlertDialog>
       </VStack>
     </Flex>
   ) : (
