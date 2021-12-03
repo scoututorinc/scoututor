@@ -1,23 +1,77 @@
+import React, { useState, useRef } from 'react'
+import { PromiseReturnType } from 'next/dist/types/utils'
 import {
   BlitzPage,
   GetServerSideProps,
   invokeWithMiddleware,
-  InferGetServerSidePropsType
+  InferGetServerSidePropsType,
+  useRouter,
+  useMutation,
+  Routes
 } from 'blitz'
-import { Flex, Box } from '@chakra-ui/react'
+import { Flex, Box, Button, VStack } from '@chakra-ui/react'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import getCurrentUser from 'app/users/queries/getCurrentUser'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
-import { PromiseReturnType } from 'next/dist/types/utils'
+import getCurrentUser from 'app/users/queries/getCurrentUser'
+import logout from 'app/auth/mutations/logout'
+import deleteAccount from 'app/auth/mutations/deleteAccount'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
   error
 }) => {
+  const router = useRouter()
+  const [logoutMutation] = useMutation(logout)
+  const [deleteAccMutation] = useMutation(deleteAccount)
+
+  const [isOpen, setIsOpen] = useState(false)
+  const onClose = () => setIsOpen(false)
+  const cancelRef = useRef(null)
+
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
-      <Box as='pre'>{JSON.stringify(currentUser, null, 2)}</Box>
+      <VStack>
+        <Box as='pre'>{JSON.stringify(currentUser, null, 2)}</Box>
+        <Button
+          type='submit'
+          colorScheme='red'
+          onClick={() => {
+            setIsOpen(true)
+          }}
+        >
+          Delete Account
+        </Button>
+        <SimpleAlertDialog
+          header='Delete Account'
+          body='Are you sure? You cannot undo this action afterwards.'
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <Button ref={cancelRef} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            colorScheme='red'
+            onClick={async () => {
+              try {
+                await deleteAccMutation()
+                await logoutMutation()
+                await router.push(Routes.Home())
+              } catch (error: any) {
+                alert(
+                  'Your account has active memberships and could not be deleted. If you wish to delete your account, make sure to cancel all  your memberships beforehand'
+                )
+                onClose()
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </SimpleAlertDialog>
+      </VStack>
     </Flex>
   ) : (
     <p>{JSON.stringify(error)}</p>

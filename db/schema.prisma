@@ -52,7 +52,8 @@ model Course {
   previewImage    String
   hourlyRate      Int
 
-  discipline     Discipline[]
+  disciplineId   Int
+  discipline     Discipline      @relation(fields: [disciplineId], references: [id])
   knowledgeAreas KnowledgeArea[]
 
   author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)

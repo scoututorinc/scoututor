@@ -1,3 +1,4 @@
+import { useMutation } from 'blitz'
 import {
   Flex,
   Box,
@@ -11,17 +12,31 @@ import {
   Icon
 } from '@chakra-ui/react'
 import { AiFillMessage } from 'react-icons/ai'
+import acceptApplication from 'app/courses/mutations/acceptApplication'
+import declineApplication from 'app/courses/mutations/declineApplication'
 
 type ApplicationProps = {
+  id: number
   description: string
   availableSchedule: string
   applicant: {
     name: string
-    profilePicture: string
+    profilePicture: string | null
   }
+  applicantId: number
+  courseId: number
 }
 
-const Application = ({ description, availableSchedule, applicant }: ApplicationProps) => {
+const Application = ({
+  id,
+  description,
+  availableSchedule,
+  applicant,
+  applicantId,
+  courseId
+}: ApplicationProps) => {
+  const [acceptApplicationMutation] = useMutation(acceptApplication)
+  const [declineApplicationMutation] = useMutation(declineApplication)
   return (
     <Box borderWidth='1px' width='100%' rounded={6}>
       <Flex direction='column' p={4}>
@@ -31,7 +46,7 @@ const Application = ({ description, availableSchedule, applicant }: ApplicationP
             alt='applicant'
             borderRadius='full'
             maxWidth='80px'
-          ></Img>
+          />
           <Heading as='h5' size='md'>
             {applicant.name}
           </Heading>
@@ -51,8 +66,21 @@ const Application = ({ description, availableSchedule, applicant }: ApplicationP
           <Text fontWeight='bold'>{availableSchedule}</Text>
         </VStack>
         <HStack justifyContent='center' mb={6}>
-          <Button colorScheme='teal'>Accept</Button>
-          <Button colorScheme='red'>Decline</Button>
+          <Button
+            colorScheme='teal'
+            onClick={async () => {
+              await acceptApplicationMutation({
+                applicationId: id,
+                applicantId: applicantId,
+                courseId: courseId
+              })
+            }}
+          >
+            Accept
+          </Button>
+          <Button colorScheme='red' onClick={async () => await declineApplicationMutation(id)}>
+            Decline
+          </Button>
         </HStack>
         <HStack justifyContent='center' mb={2}>
           <Icon as={AiFillMessage}></Icon>
