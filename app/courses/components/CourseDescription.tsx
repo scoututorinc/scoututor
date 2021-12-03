@@ -17,6 +17,7 @@ const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe 
 const hourly_rate = 15.0
 const is_teacher = true
 const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
+
   const router = useRouter()
 
   const [deleteCourseMutation] = useMutation(deleteCourse)

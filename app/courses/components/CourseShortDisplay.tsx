@@ -1,16 +1,5 @@
 import { Link as BlitzLink, Routes } from 'blitz'
-import {
-  Box,
-  Stack,
-  HStack,
-  Heading,
-  Text,
-  Icon,
-  Img,
-  Image,
-  Button,
-  AspectRatio
-} from '@chakra-ui/react'
+import { Box, Stack, HStack, Heading, Text, Icon, Img, Button } from '@chakra-ui/react'
 import { SiGoogleclassroom } from 'react-icons/si'
 import { StyledLink } from 'app/core/components/StyledLink'
 
