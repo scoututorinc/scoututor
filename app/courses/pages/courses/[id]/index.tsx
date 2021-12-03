@@ -49,11 +49,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </VStack>
           )}
         </Flex>
-        <CourseDescription
-          id={course.id}
-          description={course.description}
-          hourlyRate={course.hourlyRate}
-        />
+        <CourseDescription {...course} knowledgeAreas={course.knowledgeAreas.map((k) => k.name)} />
       </Flex>
     </Flex>
   ) : (

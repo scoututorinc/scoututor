@@ -11,13 +11,18 @@ type CourseDescriptionProps = {
   id: number
   description: string
   hourlyRate: number
+  knowledgeAreas: string[]
 }
 
-const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
 const hourly_rate = 15.0
 const is_teacher = true
-const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
 
+const CourseDescription = ({
+  id,
+  description,
+  knowledgeAreas,
+  hourlyRate
+}: CourseDescriptionProps) => {
   const router = useRouter()
 
   const [deleteCourseMutation] = useMutation(deleteCourse)
@@ -36,7 +41,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
         <Divider />
       </VStack>
       <VStack spacing={8} alignItems='start' pb={10}>
-        {knowledge_areas.map((item) => (
+        {knowledgeAreas.map((item) => (
           <HStack key={item} spacing={6}>
             <Icon as={FaCheck} />
             <Heading size='md'>{item}</Heading>
@@ -68,7 +73,15 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
           <StyledLink href={Routes.Applications({ id: id })}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
-          <Button colorScheme='teal'>Edit information</Button>
+
+          <Button
+            onClick={() => {
+              router.push(Routes.EditCourse({ id: id }))
+            }}
+            colorScheme='teal'
+          >
+            Edit information
+          </Button>
           <Button
             type='submit'
             colorScheme='red'

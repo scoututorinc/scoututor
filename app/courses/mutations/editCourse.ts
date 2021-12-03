@@ -1,23 +1,23 @@
 import { resolver } from 'blitz'
 import db from 'db'
-import { CreateCourseInput } from 'app/courses/validations'
+import { UpdateCourseInput } from 'app/courses/validations'
 
 export default resolver.pipe(
   resolver.authorize(),
-  resolver.zod(CreateCourseInput),
-  async ({ discipline, knowledgeAreas, ...props }, ctx) => {
+  resolver.zod(UpdateCourseInput),
+  async ({ id, discipline, knowledgeAreas, ...props }, ctx) => {
     const disciplineId = (
       await db.discipline.findFirst({
         where: { name: discipline },
         select: { id: true }
       })
     )?.id as number
-    return await db.course.create({
+    return await db.course.update({
+      where: { id },
       data: {
         ...props,
-        discipline: { connect: { id: disciplineId } },
         knowledgeAreas: {
-          connect: knowledgeAreas.map((k: string) => ({
+          set: knowledgeAreas?.map((k: string) => ({
             name_disciplineId: {
               name: k,
               disciplineId
