@@ -12,7 +12,6 @@ export default resolver.pipe(
         select: { id: true }
       })
     )?.id as number
-    console.log(`disciplineId`, disciplineId)
     return await db.course.create({
       data: {
         ...props,
