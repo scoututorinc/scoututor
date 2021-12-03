@@ -74,14 +74,9 @@ const CourseDescription = ({
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
 
-          <Button
-            onClick={() => {
-              router.push(Routes.EditCourse({ id: id }))
-            }}
-            colorScheme='teal'
-          >
-            Edit information
-          </Button>
+          <StyledLink href={Routes.EditCourse({ id: id })}>
+            <Button colorScheme='teal'>Edit information</Button>
+          </StyledLink>
           <Button
             type='submit'
             colorScheme='red'
