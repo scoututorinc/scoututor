@@ -23,6 +23,7 @@ import { RiErrorWarningFill } from 'react-icons/ri'
 
 type CourseApplicationFormProps = {
   onSucess?: () => void
+  courseId: number
 }
 
 export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
@@ -38,37 +39,37 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
           justifyContent='center'
           alignItems='center'
         >
-          <Img src='/images/application.png' maxWidth='100px'></Img>
+          <Img src='/images/application.png' maxWidth='100px' />
           <Heading>Application</Heading>
         </Stack>
         <Form
           schema={CourseApplication}
-          initialValues={{ description: '', availableSchedule: '' }}
+          initialValues={{ description: '', availableSchedule: '', courseId: props.courseId }}
           onSubmit={async (values) => {
             try {
               console.log(values)
               console.log('Tried to submit')
-              // await courseApplicationMutation(values)
+              await courseApplicationMutation(values)
               props.onSucess?.()
             } catch (error: any) {
               console.log(error)
             }
           }}
         >
-          <VStack spacing={6} p={4} mb={2}>
-            <LabeledTextAreaField
-              name='interest_manifestation_and_questions'
-              label='Interest manifestation and questions'
-              size='sm'
-              type='text'
-            ></LabeledTextAreaField>
-            <LabeledTextAreaField
-              name='availability'
-              label='Availability'
-              size='sm'
-              type='text'
-            ></LabeledTextAreaField>
-          </VStack>
+          <LabeledTextAreaField
+            name='description'
+            label='Interest manifestation and questions'
+            placeholder='What do you expect from this course ?'
+            size='sm'
+            type='text'
+          />
+          <LabeledTextAreaField
+            name='availableSchedule'
+            label='Availability'
+            placeholder='When are you available for classes ?'
+            size='sm'
+            type='text'
+          />
           <HStack p={4} mb={2}>
             <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
             <Text fontSize='md'>

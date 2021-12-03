@@ -2,15 +2,18 @@ import {
   BlitzPage,
   GetServerSideProps,
   invokeWithMiddleware,
-  InferGetServerSidePropsType
+  InferGetServerSidePropsType,
+  Routes
 } from 'blitz'
-import { Heading, Flex, Grid } from '@chakra-ui/react'
+import { Heading, Flex, Grid, Button, Box } from '@chakra-ui/react'
 
 import { PromiseReturnType } from 'next/dist/types/utils'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getCourses from 'app/courses/queries/getCourses'
 import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
+
+import { StyledLink } from 'app/core/components/StyledLink'
 
 const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
@@ -27,6 +30,14 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
         }}
         gap={4}
       >
+        <Box display='grid' placeItems='center' rounded={6} borderWidth='2px'>
+          <StyledLink href={Routes.CreateCourse()}>
+            <Button marginX='auto' marginY='auto' display='block' colorScheme='teal'>
+              New
+            </Button>
+          </StyledLink>
+        </Box>
+
         {courses.map((c) => (
           <CourseShortDisplay key={c.id} {...c} />
         ))}
