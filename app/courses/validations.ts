@@ -35,6 +35,12 @@ export const CourseApplication = z.object({
   courseId: z.number().int().min(0)
 })
 
+export const CourseAcceptance = z.object({
+  applicationId: z.number().int().min(0),
+  applicantId: z.number().int().min(0),
+  courseId: z.number().int().min(0)
+})
+
 export const CourseCreation = z.object({
   name: z.string().min(5),
   description: z.string().min(20),

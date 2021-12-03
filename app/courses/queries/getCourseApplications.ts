@@ -11,9 +11,12 @@ export default resolver.pipe(
       include: {
         applications: {
           select: {
+            id: true,
             description: true,
             availableSchedule: true,
-            applicant: { select: { name: true, profilePicture: true } }
+            applicantId: true,
+            applicant: { select: { name: true, profilePicture: true } },
+            courseId: true
           }
         }
       }

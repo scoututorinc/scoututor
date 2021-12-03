@@ -19,7 +19,7 @@ machine:
 - Node.js 12.0
 - Blitz.js
 
-You can install **Node.js** by visiting their
+You can install _Node.js_ by visiting their
 [website](https://nodejs.org/en/download/). Once you have it installed you can
 install **Blitz.js** by running `npm install -g blitz --legacy-peer-deps`.
 
