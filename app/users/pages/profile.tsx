@@ -9,14 +9,17 @@ import {
   useMutation,
   Routes
 } from 'blitz'
-import { Flex, Box, Button, VStack } from '@chakra-ui/react'
+import { Flex, Button, VStack, Heading, Divider, Img } from '@chakra-ui/react'
+import { BiEdit } from 'react-icons/bi'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
+import { Form } from 'app/core/components/forms/Form'
 
 import getCurrentUser from 'app/users/queries/getCurrentUser'
 import logout from 'app/auth/mutations/logout'
 import deleteAccount from 'app/auth/mutations/deleteAccount'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -33,16 +36,45 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack>
-        <Box as='pre'>{JSON.stringify(currentUser, null, 2)}</Box>
-        <Button
-          type='submit'
-          colorScheme='red'
-          onClick={() => {
-            setIsOpen(true)
-          }}
-        >
-          Delete Account
+        <VStack spacing={2} alignItems='start' w='100%' mb={6}>
+          <Heading>Profile</Heading>
+          <Divider />
+        </VStack>
+        <Img
+          src={currentUser.profilePicture || '/images/profile.png'}
+          maxWidth='150px'
+          mb={2}
+          borderRadius='full'
+        />
+        <Button leftIcon={<BiEdit />} variant='ghost'>
+          {' '}
+          Edit profile picture{' '}
         </Button>
+        <Flex direction='column' w={{ base: '90%', lg: '30%' }}>
+          <Form onSubmit={async () => {}}>
+            <Flex direction='column' w='100%'>
+              <VStack spacing={4} mb={6} w='100%'>
+                <LabeledTextField label='Name' name='name' placeholder={currentUser.name} />
+                <LabeledTextField label='Email' name='email' placeholder={currentUser.email} />
+                <LabeledTextField label='Password' name='password' placeholder='*******' />
+              </VStack>
+              <VStack spacing={4} w='100%'>
+                <Button type='submit' colorScheme='teal' w={{ base: '90%', lg: '60%' }}>
+                  Confirm changes
+                </Button>
+                <Button
+                  colorScheme='red'
+                  w={{ base: '90%', lg: '60%' }}
+                  onClick={() => {
+                    setIsOpen(true)
+                  }}
+                >
+                  Delete Account
+                </Button>
+              </VStack>
+            </Flex>
+          </Form>
+        </Flex>
         <SimpleAlertDialog
           header='Delete Account'
           body='Are you sure? You cannot undo this action afterwards.'
