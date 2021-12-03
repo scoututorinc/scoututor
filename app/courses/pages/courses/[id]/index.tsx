@@ -1,4 +1,5 @@
 import {
+  Routes,
   BlitzPage,
   GetServerSideProps,
   invokeWithMiddleware,
@@ -21,7 +22,6 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
 }) => {
   const is_enrolled = false
   const is_teacher = true
-
   return course ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>
@@ -49,7 +49,11 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </VStack>
           )}
         </Flex>
-        <CourseDescription {...course} />
+        <CourseDescription
+          id={course.id}
+          description={course.description}
+          hourlyRate={course.hourlyRate}
+        />
       </Flex>
     </Flex>
   ) : (
@@ -65,12 +69,21 @@ const paramToInt = (param: string | string[] | undefined) => {
 export const getServerSideProps: GetServerSideProps<{
   course?: PromiseReturnType<typeof getCourse>
   error?: any
+  redirect?: any
 }> = async (context) => {
   try {
     const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
-    return {
-      props: { course }
-    }
+    if (!course)
+      return {
+        redirect: {
+          destination: Routes.CoursesView().pathname,
+          permanent: false
+        }
+      }
+    else
+      return {
+        props: { course }
+      }
   } catch (e) {
     console.log(e)
     return {

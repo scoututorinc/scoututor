@@ -1,7 +1,11 @@
+import React, { useState, useRef } from 'react'
 import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
-import { Link as BlitzLink, Routes } from 'blitz'
+import { Routes, useMutation, useRouter } from 'blitz'
+import deleteCourse from 'app/courses/mutations/deleteCourse'
+import cancelMemberships from 'app/courses/mutations/cancelMemberships'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 type CourseDescriptionProps = {
   id: number
@@ -9,10 +13,20 @@ type CourseDescriptionProps = {
   hourlyRate: number
 }
 
+const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
+const hourly_rate = 15.0
+const is_teacher = true
 const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionProps) => {
-  const knowledge_areas = ['Adobe Photoshop CS6', 'Adobe Illustrator CS6', 'Adobe InDesign CS6']
-  const hourly_rate = 15.0
-  const is_teacher = true
+  const router = useRouter()
+
+  const [deleteCourseMutation] = useMutation(deleteCourse)
+  const [cancelMembershipsMutation] = useMutation(cancelMemberships)
+
+  const [isOpenDC, setIsOpenDC] = useState(false)
+  const [isOpenCM, setIsOpenCM] = useState(false)
+  const onCloseDC = () => setIsOpenDC(false)
+  const onCloseCM = () => setIsOpenCM(false)
+  const cancelRef = useRef(null)
 
   return (
     <Flex direction='column' width={{ md: '75%' }}>
@@ -23,7 +37,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
       <VStack spacing={8} alignItems='start' pb={10}>
         {knowledge_areas.map((item) => (
           <HStack key={item} spacing={6}>
-            <Icon as={FaCheck}></Icon>
+            <Icon as={FaCheck} />
             <Heading size='md'>{item}</Heading>
           </HStack>
         ))}
@@ -40,7 +54,7 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
         <Divider />
       </VStack>
       <HStack spacing={8} pb={12}>
-        <Icon as={FaEuroSign}></Icon>
+        <Icon as={FaEuroSign} />
         <Heading fontSize='2xl'>{hourlyRate}</Heading>
       </HStack>
       {!is_teacher && (
@@ -50,10 +64,78 @@ const CourseDescription = ({ id, description, hourlyRate }: CourseDescriptionPro
       )}
       {is_teacher && (
         <HStack spacing={4}>
-          <StyledLink as={BlitzLink} href={Routes.Applications({ id: id })}>
+          <StyledLink href={Routes.Applications({ id: id })}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
           <Button colorScheme='teal'>Edit information</Button>
+          <Button
+            type='submit'
+            colorScheme='red'
+            onClick={() => {
+              setIsOpenCM(true)
+            }}
+          >
+            Cancel Memberships
+          </Button>
+
+          <SimpleAlertDialog
+            header='Cancel Memberships'
+            body='Are you sure? You cannot undo this action afterwards.'
+            isOpen={isOpenCM}
+            leastDestructiveRef={cancelRef}
+            onClose={onCloseCM}
+          >
+            <Button ref={cancelRef} onClick={onCloseCM}>
+              Back
+            </Button>
+            <Button
+              colorScheme='red'
+              onClick={async () => {
+                await cancelMembershipsMutation(id)
+                onCloseCM()
+              }}
+            >
+              Cancel Memberships
+            </Button>
+          </SimpleAlertDialog>
+
+          <Button
+            type='submit'
+            colorScheme='red'
+            onClick={() => {
+              setIsOpenDC(true)
+            }}
+          >
+            Delete Course
+          </Button>
+
+          <SimpleAlertDialog
+            header='Delete Course'
+            body='Are you sure? You cannot undo this action afterwards.'
+            isOpen={isOpenDC}
+            leastDestructiveRef={cancelRef}
+            onClose={onCloseDC}
+          >
+            <Button ref={cancelRef} onClick={onCloseDC}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme='red'
+              onClick={async () => {
+                try {
+                  await deleteCourseMutation(id)
+                  await router.push(Routes.CoursesView())
+                } catch (error: any) {
+                  alert(
+                    'This course has active memberships and could not be deleted. If you wish to delete this course, make sure to cancel all memberships beforehand'
+                  )
+                  onCloseDC()
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </SimpleAlertDialog>
         </HStack>
       )}
     </Flex>
