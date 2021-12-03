@@ -31,8 +31,8 @@ import { CreateCourseInput } from 'app/courses/validations'
 import getKnowledgeAreas from 'app/courses/queries/getKnowledgeAreas'
 
 type CourseCreationFormProps = {
-  submit: (values: z.infer<typeof CreateCourseInput>) => Promise<void>
-  onSuccess?: () => void
+  submit: (input: z.infer<typeof CreateCourseInput>) => Promise<any>
+  onSuccess?: (id: number) => void
   defaultValues?: z.infer<typeof CreateCourseInput>
   disciplines?: string[]
 }
@@ -78,8 +78,8 @@ export const CourseCreationForm = ({
             try {
               console.log(values)
               console.log('Tried to create course')
-              await submit(values)
-              onSuccess?.()
+              const course = await submit(values)
+              onSuccess?.(course.id)
             } catch (error: any) {
               if (error instanceof AuthenticationError) {
                 return { [FORM_ERROR]: 'Sorry, those credentials are invalid' }
@@ -176,7 +176,7 @@ export const CourseCreationForm = ({
                     onChange={(e: any) => {
                       form.change('knowledgeAreas', [])
                       const newDisc = e.target.value
-                      setvalues({ ...values, discipline: newDisc })
+                      setvalues({ ...values, discipline: newDisc, knowledgeAreas: [] })
                       setDiscipline(newDisc)
                     }}
                   >

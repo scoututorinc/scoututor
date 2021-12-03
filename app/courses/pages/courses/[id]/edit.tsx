@@ -3,6 +3,8 @@ import {
   GetServerSideProps,
   InferGetServerSidePropsType,
   invokeWithMiddleware,
+  Routes,
+  useRouter,
   useMutation
 } from 'blitz'
 import { PromiseReturnType } from 'next/dist/types/utils'
@@ -27,6 +29,8 @@ const EditCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   course,
   error
 }) => {
+  const router = useRouter()
+
   const [editCourseMutation] = useMutation(editCourse)
 
   return course ? (
@@ -53,10 +57,11 @@ const EditCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
       <Flex w='100%' justifyContent='center'>
         <CourseCreationForm
           submit={async (values) => {
-            await editCourseMutation(values)
+            return await editCourseMutation(values)
           }}
           onSuccess={() => {
             alert('Success :)')
+            router.push(Routes.CourseView({ id: course.id }))
           }}
           defaultValues={{
             ...course,
