@@ -37,27 +37,33 @@ type CourseCreationFormProps = {
   disciplines?: string[]
 }
 
+const KnowledgeAreasField = ({ discipline }: { discipline?: string }) => {
+  const [knowledgeAreas] = useQuery(getKnowledgeAreas, discipline, {
+    enabled: !!discipline,
+    suspense: false
+  })
+  return (
+    <LabeledCheckboxArray name='knowledgeAreas' label='Knowledge Areas' my={4}>
+      <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+        {knowledgeAreas?.map((k) => (
+          <CheckboxArrayControl
+            name='knowledgeAreas'
+            key={discipline + k.name}
+            label={k.name}
+            value={k.name}
+          />
+        ))}
+      </Grid>
+    </LabeledCheckboxArray>
+  )
+}
+
 export const CourseCreationForm = ({
   defaultValues,
   disciplines,
   submit,
   onSuccess
 }: CourseCreationFormProps) => {
-  const [discipline, setDiscipline] = useState<string | null>(defaultValues?.discipline || null)
-  const [values, setvalues] = useState<any | null>(
-    defaultValues || {
-      title: '',
-      description: '',
-      hourlyRate: 0,
-      previewImage:
-        'https://cdn.britannica.com/q:60/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg'
-    }
-  )
-  const [knowledgeAreas] = useQuery(getKnowledgeAreas, discipline, {
-    enabled: !!discipline,
-    suspense: false
-  })
-
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -73,7 +79,15 @@ export const CourseCreationForm = ({
         </Stack>
         <FinalForm
           validate={validateZodSchema(CreateCourseInput)}
-          initialValues={values}
+          initialValues={
+            defaultValues || {
+              title: '',
+              description: '',
+              hourlyRate: 0,
+              previewImage:
+                'https://cdn.britannica.com/q:60/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg'
+            }
+          }
           onSubmit={async (values) => {
             try {
               console.log(values)
@@ -91,7 +105,7 @@ export const CourseCreationForm = ({
               }
             }
           }}
-          // debug={console.log}
+          debug={(e) => console.log(e.validating, e.errors)}
           render={({ form, handleSubmit, submitting, submitError, values }) => (
             <Box as='form' p={4} onSubmit={handleSubmit}>
               <VStack spacing={6} p={4} mb={2}>
@@ -175,9 +189,6 @@ export const CourseCreationForm = ({
                     placeholder='Select one'
                     onChange={(e: any) => {
                       form.change('knowledgeAreas', [])
-                      const newDisc = e.target.value
-                      setvalues({ ...values, discipline: newDisc, knowledgeAreas: [] })
-                      setDiscipline(newDisc)
                     }}
                   >
                     {disciplines.map((d) => (
@@ -194,20 +205,7 @@ export const CourseCreationForm = ({
                     placeholder={defaultValues?.discipline}
                   />
                 )}
-                {discipline && (knowledgeAreas?.length || 0) > 0 && (
-                  <LabeledCheckboxArray name='knowledgeAreas' label='Knowledge Areas' my={4}>
-                    <Grid templateColumns='repeat(3, 1fr)' gap={6}>
-                      {knowledgeAreas?.map((k) => (
-                        <CheckboxArrayControl
-                          name='knowledgeAreas'
-                          key={discipline + k.name}
-                          label={k.name}
-                          value={k.name}
-                        />
-                      ))}
-                    </Grid>
-                  </LabeledCheckboxArray>
-                )}
+                {values.discipline && <KnowledgeAreasField discipline={values.discipline} />}
                 <Stack
                   direction={{ base: 'column', md: 'row' }}
                   justifyContent='center'
@@ -229,11 +227,13 @@ export const CourseCreationForm = ({
                   {submitError}
                 </div>
               )}
+              {JSON.stringify({
+                discipline: values.discipline,
+                k: values.knowledgeAreas
+              })}
             </Box>
           )}
         />
-        {JSON.stringify({ discipline, k: knowledgeAreas?.map((k) => k.name) })}
-        {JSON.stringify('ola')}
       </Flex>
     </Box>
   )
