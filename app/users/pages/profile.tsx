@@ -7,19 +7,21 @@ import {
   InferGetServerSidePropsType,
   useRouter,
   useMutation,
-  Routes
+  Routes,
+  validateZodSchema
 } from 'blitz'
 import { Flex, Button, VStack, Heading, Divider, Img } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
-
+import { Form as FinalForm } from 'react-final-form'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
-import { Form } from 'app/core/components/forms/Form'
 
 import getCurrentUser from 'app/users/queries/getCurrentUser'
 import logout from 'app/auth/mutations/logout'
 import deleteAccount from 'app/auth/mutations/deleteAccount'
-import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import updateProfile from 'app/auth/mutations/updateProfile'
+import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogglebleTextField'
+import { UpdateProfile } from 'app/auth/validations'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -28,6 +30,7 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
   const [deleteAccMutation] = useMutation(deleteAccount)
+  const [updateProfileMutation] = useMutation(updateProfile)
 
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
@@ -51,29 +54,59 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           Edit profile picture{' '}
         </Button>
         <Flex direction='column' w={{ base: '90%', lg: '30%' }}>
-          <Form onSubmit={async () => {}}>
-            <Flex direction='column' w='100%'>
-              <VStack spacing={4} mb={6} w='100%'>
-                <LabeledTextField label='Name' name='name' placeholder={currentUser.name} />
-                <LabeledTextField label='Email' name='email' placeholder={currentUser.email} />
-                <LabeledTextField label='Password' name='password' placeholder='*******' />
-              </VStack>
-              <VStack spacing={4} w='100%'>
-                <Button type='submit' colorScheme='teal' w={{ base: '90%', lg: '60%' }}>
-                  Confirm changes
-                </Button>
-                <Button
-                  colorScheme='red'
-                  w={{ base: '90%', lg: '60%' }}
-                  onClick={() => {
-                    setIsOpen(true)
-                  }}
-                >
-                  Delete Account
-                </Button>
-              </VStack>
-            </Flex>
-          </Form>
+          <FinalForm
+            validate={validateZodSchema(UpdateProfile)}
+            onSubmit={async (values) => {
+              console.log('Tried to update profile')
+              console.log(values)
+              try {
+                await updateProfileMutation(values)
+              } catch (err: any) {
+                console.log(err)
+              }
+            }}
+            initialValues={{ name: null, email: null, password: null }}
+            render={({ form, handleSubmit, submitting, submitError, values }) => (
+              <Flex as='form' onSubmit={handleSubmit} direction='column' w='100%'>
+                <VStack spacing={4} mb={6} w='100%'>
+                  <LabeledTogglebleTextField
+                    label='Name'
+                    name='name'
+                    placeholder={currentUser.name}
+                  />
+                  <LabeledTogglebleTextField
+                    label='Email'
+                    name='email'
+                    placeholder={currentUser.email}
+                  />
+                  <LabeledTogglebleTextField
+                    label='Password'
+                    name='password'
+                    placeholder='*******'
+                  />
+                </VStack>
+                <VStack spacing={4} w='100%'>
+                  <Button
+                    type='submit'
+                    disabled={submitting}
+                    colorScheme='teal'
+                    w={{ base: '90%', lg: '60%' }}
+                  >
+                    Confirm changes
+                  </Button>
+                  <Button
+                    colorScheme='red'
+                    w={{ base: '90%', lg: '60%' }}
+                    onClick={() => {
+                      setIsOpen(true)
+                    }}
+                  >
+                    Delete Account
+                  </Button>
+                </VStack>
+              </Flex>
+            )}
+          />
         </Flex>
         <SimpleAlertDialog
           header='Delete Account'
