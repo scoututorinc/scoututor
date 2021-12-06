@@ -105,7 +105,7 @@ export const CourseCreationForm = ({
               }
             }
           }}
-          // debug={(e) => console.log(e.validating, e.errors)}
+          debug={(e) => console.log(e.validating, JSON.stringify(e.errors))}
           render={({ form, handleSubmit, submitting, submitError, values }) => (
             <Box as='form' p={4} onSubmit={handleSubmit}>
               <VStack spacing={6} p={4} mb={2}>
