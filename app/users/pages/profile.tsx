@@ -10,9 +10,10 @@ import {
   Routes,
   validateZodSchema
 } from 'blitz'
-import { Flex, Button, VStack, Heading, Divider, Img } from '@chakra-ui/react'
+import { Flex, Button, VStack, HStack, Heading, Divider, Img } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
 import { Form as FinalForm } from 'react-final-form'
+import { Form } from 'app/core/components/forms/Form'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
@@ -22,6 +23,8 @@ import deleteAccount from 'app/auth/mutations/deleteAccount'
 import updateProfile from 'app/auth/mutations/updateProfile'
 import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogglebleTextField'
 import { UpdateProfile } from 'app/auth/validations'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import { MdAlternateEmail } from 'react-icons/md'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -35,6 +38,9 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const cancelRef = useRef(null)
+
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
+  const onCloseUpdate = () => setIsOpenUpdate(false)
 
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
@@ -54,59 +60,85 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           Edit profile picture{' '}
         </Button>
         <Flex direction='column' w={{ base: '90%', lg: '30%' }}>
-          <FinalForm
-            validate={validateZodSchema(UpdateProfile)}
+          <Form
+            schema={UpdateProfile}
             onSubmit={async (values) => {
               console.log('Tried to update profile')
               console.log(values)
               try {
                 await updateProfileMutation(values)
+                setIsOpenUpdate(false)
+                router.push(Routes.Profile())
               } catch (err: any) {
                 console.log(err)
               }
             }}
-            initialValues={{ name: null, email: null, password: null }}
-            render={({ form, handleSubmit, submitting, submitError, values }) => (
-              <Flex as='form' onSubmit={handleSubmit} direction='column' w='100%'>
-                <VStack spacing={4} mb={6} w='100%'>
-                  <LabeledTogglebleTextField
-                    label='Name'
-                    name='name'
-                    placeholder={currentUser.name}
-                  />
-                  <LabeledTogglebleTextField
-                    label='Email'
-                    name='email'
-                    placeholder={currentUser.email}
-                  />
-                  <LabeledTogglebleTextField
-                    label='Password'
-                    name='password'
-                    placeholder='*******'
-                  />
-                </VStack>
-                <VStack spacing={4} w='100%'>
-                  <Button
-                    type='submit'
-                    disabled={submitting}
-                    colorScheme='teal'
-                    w={{ base: '90%', lg: '60%' }}
-                  >
-                    Confirm changes
-                  </Button>
-                  <Button
-                    colorScheme='red'
-                    w={{ base: '90%', lg: '60%' }}
-                    onClick={() => {
-                      setIsOpen(true)
-                    }}
-                  >
-                    Delete Account
-                  </Button>
-                </VStack>
-              </Flex>
-            )}
-          />
+            initialValues={{
+              name: null,
+              email: null,
+              password: null,
+              currentPassword: undefined
+            }}
+          >
+            <Flex direction='column' w='100%'>
+              <VStack spacing={4} mb={6} w='100%'>
+                <LabeledTogglebleTextField
+                  label='Name'
+                  name='name'
+                  placeholder={currentUser.name}
+                />
+                <LabeledTogglebleTextField
+                  label='Email'
+                  name='email'
+                  placeholder={currentUser.email}
+                />
+                <LabeledTogglebleTextField label='Password' name='password' placeholder='*******' />
+              </VStack>
+              <VStack spacing={4} w='100%'>
+                <Button
+                  onClick={() => {
+                    setIsOpenUpdate(true)
+                  }}
+                  colorScheme='teal'
+                  w={{ base: '90%', lg: '60%' }}
+                >
+                  Confirm changes
+                </Button>
+                <Button
+                  colorScheme='red'
+                  w={{ base: '90%', lg: '60%' }}
+                  onClick={() => {
+                    setIsOpen(true)
+                  }}
+                >
+                  Delete Account
+                </Button>
+                <SimpleAlertDialog
+                  header='Update Account'
+                  body='In order to confirm the change you to type in your current password'
+                  isOpen={isOpenUpdate}
+                  leastDestructiveRef={cancelRef}
+                  onClose={onCloseUpdate}
+                >
+                  <VStack spacing={4}>
+                    <LabeledTextField
+                      label='Current Password'
+                      name='currentPassword'
+                      type='password'
+                    />
+                    <HStack spacing={4}>
+                      <Button ref={cancelRef} onClick={onCloseUpdate}>
+                        Cancel
+                      </Button>
+                      <Button type='submit' colorScheme='teal'>
+                        Submit
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </SimpleAlertDialog>
+              </VStack>
+            </Flex>
+          </Form>
         </Flex>
         <SimpleAlertDialog
           header='Delete Account'

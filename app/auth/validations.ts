@@ -35,8 +35,8 @@ export const ChangePassword = z.object({
 })
 
 export const UpdateProfile = z.object({
-  name: z.string().min(5),
-  email: z.string().email(),
-  password: password,
+  name: z.string().min(5).nullable(),
+  email: z.string().email().nullable(),
+  password: password.nullable(),
   currentPassword: password
 })
