@@ -25,6 +25,7 @@ import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogg
 import { UpdateProfile } from 'app/auth/validations'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { MdAlternateEmail } from 'react-icons/md'
+import { EditProfileForm } from 'app/users/components/EditProfileForm'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -59,115 +60,12 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           {' '}
           Edit profile picture{' '}
         </Button>
-        <Flex direction='column' w={{ base: '90%', lg: '30%' }}>
-          <Form
-            schema={UpdateProfile}
-            onSubmit={async (values) => {
-              console.log('Tried to update profile')
-              console.log(values)
-              try {
-                await updateProfileMutation(values)
-                setIsOpenUpdate(false)
-                router.push(Routes.Profile())
-              } catch (err: any) {
-                console.log(err)
-              }
-            }}
-            initialValues={{
-              name: null,
-              email: null,
-              password: null,
-              currentPassword: undefined
-            }}
-          >
-            <Flex direction='column' w='100%'>
-              <VStack spacing={4} mb={6} w='100%'>
-                <LabeledTogglebleTextField
-                  label='Name'
-                  name='name'
-                  placeholder={currentUser.name}
-                />
-                <LabeledTogglebleTextField
-                  label='Email'
-                  name='email'
-                  placeholder={currentUser.email}
-                />
-                <LabeledTogglebleTextField label='Password' name='password' placeholder='*******' />
-              </VStack>
-              <VStack spacing={4} w='100%'>
-                <Button
-                  onClick={() => {
-                    setIsOpenUpdate(true)
-                  }}
-                  colorScheme='teal'
-                  w={{ base: '90%', lg: '60%' }}
-                >
-                  Confirm changes
-                </Button>
-                <Button
-                  colorScheme='red'
-                  w={{ base: '90%', lg: '60%' }}
-                  onClick={() => {
-                    setIsOpen(true)
-                  }}
-                >
-                  Delete Account
-                </Button>
-                <SimpleAlertDialog
-                  header='Update Account'
-                  body='In order to confirm the change you to type in your current password'
-                  isOpen={isOpenUpdate}
-                  leastDestructiveRef={cancelRef}
-                  onClose={onCloseUpdate}
-                >
-                  <VStack spacing={4}>
-                    <LabeledTextField
-                      label='Current Password'
-                      name='currentPassword'
-                      type='password'
-                    />
-                    <HStack spacing={4}>
-                      <Button ref={cancelRef} onClick={onCloseUpdate}>
-                        Cancel
-                      </Button>
-                      <Button type='submit' colorScheme='teal'>
-                        Submit
-                      </Button>
-                    </HStack>
-                  </VStack>
-                </SimpleAlertDialog>
-              </VStack>
-            </Flex>
-          </Form>
-        </Flex>
-        <SimpleAlertDialog
-          header='Delete Account'
-          body='Are you sure? You cannot undo this action afterwards.'
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
-        >
-          <Button ref={cancelRef} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            colorScheme='red'
-            onClick={async () => {
-              try {
-                await deleteAccMutation()
-                await logoutMutation()
-                await router.push(Routes.Home())
-              } catch (error: any) {
-                alert(
-                  'Your account has active memberships and could not be deleted. If you wish to delete your account, make sure to cancel all  your memberships beforehand'
-                )
-                onClose()
-              }
-            }}
-          >
-            Delete
-          </Button>
-        </SimpleAlertDialog>
+        <EditProfileForm
+          defaultValues={{
+            name: currentUser.name,
+            email: currentUser.email
+          }}
+        />
       </VStack>
     </Flex>
   ) : (

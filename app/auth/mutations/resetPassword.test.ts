@@ -3,7 +3,9 @@ import db from 'db'
 import { hash256, SecurePassword } from 'blitz'
 
 beforeEach(async () => {
-  await db.$reset()
+  console.log('OOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLAAAAAAAAAAAA')
+
+  // await db.$reset()
 })
 
 const mockCtx: any = {

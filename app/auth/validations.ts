@@ -40,3 +40,8 @@ export const UpdateProfile = z.object({
   password: password.nullable(),
   currentPassword: password
 })
+
+export const UpdateProfileFormPlaceholders = z.object({
+  name: z.string().min(5),
+  email: z.string().email()
+})
