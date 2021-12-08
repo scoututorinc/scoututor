@@ -1,12 +1,24 @@
 import { SecurePassword } from 'blitz'
-import db, { Course, Discipline, Prisma, User } from 'db'
+import db, { Course, Discipline, KnowledgeArea, Prisma, User } from 'db'
 
-import faker from 'faker'
+import faker, { random } from 'faker'
 faker.locale = 'pt_PT'
 
 const range = (n: number) => [...new Array(n).keys()]
 const randomInt = (s: number, b: number) => Math.round(Math.random() * (b - s - 1)) + s
+
 const pickOne = (...values: any) => values[Math.floor(Math.random() * values.length)]
+const pickN = (values: any[], count: number) => {
+  if (count <= 0) return []
+  const chosen = pickOne(...values)
+  return [
+    chosen,
+    ...pickN(
+      values.filter((v: any) => v != chosen),
+      count - 1
+    )
+  ]
+}
 
 const seed = async () => {
   await db.courseMembership.deleteMany({})
@@ -18,7 +30,7 @@ const seed = async () => {
   const disciplines = await createDisciplines()
   const knowledgeAreas = await createKnowledgeAreas(disciplines)
   const users = await createUsers()
-  const courses = await createCourses(users, disciplines)
+  const courses = await createCourses(users, disciplines, knowledgeAreas)
   await createCourseMemberships(users, courses)
   await createCourseApplications(users, courses)
 }
@@ -38,7 +50,7 @@ async function createUsers() {
     const lastName = faker.name.lastName(1)
     users.push({
       name: `${firstName} ${lastName}`,
-      email: faker.internet.email(firstName, lastName),
+      email: faker.internet.email(firstName, lastName).toLowerCase(),
       profilePicture: faker.image.animals(),
       hashedPassword: await SecurePassword.hash('passpass123')
     })
@@ -88,10 +100,19 @@ async function createKnowledgeAreas(disciplines: Discipline[]) {
   return await db.knowledgeArea.findMany({})
 }
 
-async function createCourses(users: User[], disciplines: Discipline[]) {
+async function createCourses(
+  users: User[],
+  disciplines: Discipline[],
+  knowledgeAreas: KnowledgeArea[]
+) {
   const courses: Prisma.CourseCreateInput[] = []
-
   for (const _ in range(20)) {
+    const authorId = users[randomInt(1, 5)]?.id || 0
+    const disciplineId = disciplines[randomInt(1, disciplines.length)]?.id || 0
+    const knowledgeAreaIdsForDiscipline = knowledgeAreas
+      .filter((k) => k.disciplineId == disciplineId)
+      .map((k) => ({ id: k.id }))
+
     courses.push({
       title: faker.company.catchPhrase(),
       description: faker.lorem.paragraphs(3, '.'),
@@ -99,8 +120,48 @@ async function createCourses(users: User[], disciplines: Discipline[]) {
       previewImage: faker.image.business(),
       status: 'ACTIVE',
       methods: pickOne(['ONLINE'], ['PRESENTIAL'], ['ONLINE', 'PRESENTIAL']),
-      author: { connect: { id: users[randomInt(1, 5)]?.id || 0 } },
-      discipline: { connect: { id: disciplines[randomInt(1, disciplines.length)]?.id || 0 } }
+      author: { connect: { id: authorId } },
+      knowledgeLevels: pickN(
+        [
+          'BEGINNER',
+          'INTERMEDIATE',
+          'ADVANCED',
+          'FIRSTCYCLE',
+          'SECONDCYCLE',
+          'THIRDCYCLE',
+          'SECONDARY',
+          'BACHELOR',
+          'MASTER'
+        ],
+        randomInt(1, 5)
+      ),
+      discipline: { connect: { id: disciplineId } },
+      knowledgeAreas: {
+        connect: pickN(
+          knowledgeAreaIdsForDiscipline,
+          randomInt(1, knowledgeAreaIdsForDiscipline.length)
+        )
+      },
+      posts: {
+        create: range(3).map((_) => ({
+          title: faker.company.catchPhrase(),
+          description: faker.lorem.paragraphs(2, '.'),
+          authorId: authorId,
+          files: ['file1.pdf', 'file2.pdf'],
+          comments: {
+            create: range(5).map((_) => ({
+              content: faker.lorem.paragraphs(1, '.'),
+              authorId: users[randomInt(1, 10)]?.id || 0,
+              replies: {
+                create: range(2).map((_) => ({
+                  content: faker.lorem.paragraphs(1, '.'),
+                  authorId: users[randomInt(1, 10)]?.id || 0
+                }))
+              }
+            }))
+          }
+        }))
+      }
     })
   }
 
