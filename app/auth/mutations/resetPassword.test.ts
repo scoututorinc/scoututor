@@ -25,6 +25,7 @@ describe('resetPassword mutation', () => {
     past.setHours(past.getHours() - 4)
 
     await db.user.deleteMany({ where: { email: 'user@example.com' } })
+
     const user = await db.user.create({
       data: {
         email: 'user@example.com',
