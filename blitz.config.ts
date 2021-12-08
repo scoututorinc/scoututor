@@ -1,6 +1,10 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
 import { BlitzGuardMiddleware } from '@blitz-guard/core/dist/middleware'
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true'
+})
+
 const config: BlitzConfig = {
   middleware: [
     sessionMiddleware({
@@ -20,4 +24,4 @@ const config: BlitzConfig = {
   },
   */
 }
-module.exports = config
+module.exports = withBundleAnalyzer(config)
