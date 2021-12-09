@@ -13,25 +13,17 @@ export default resolver.pipe(
 
     if (!user) throw new NotFoundError()
 
-    console.log('TTOOOOOOOOOOOOOo')
-
     await authenticateUser(user.email, currentPassword)
-
-    const hashedPassword = await SecurePassword.hash(password?.trim())
 
     let update_object = {
       name: name,
       email: email,
-      password: hashedPassword
+      password: password ? await SecurePassword.hash(password?.trim()) : null
     }
-
-    console.log(update_object)
 
     const clean_update_object = Object.fromEntries(
       Object.entries(update_object).filter(([_, v]) => v != null)
     )
-
-    console.log(clean_update_object)
 
     await db.user.update({
       where: { id: ctx.session.userId! },

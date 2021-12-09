@@ -12,8 +12,6 @@ import {
 } from 'blitz'
 import { Flex, Button, VStack, HStack, Heading, Divider, Img } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
-import { Form as FinalForm } from 'react-final-form'
-import { Form } from 'app/core/components/forms/Form'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
@@ -31,18 +29,6 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   currentUser,
   error
 }) => {
-  const router = useRouter()
-  const [logoutMutation] = useMutation(logout)
-  const [deleteAccMutation] = useMutation(deleteAccount)
-  const [updateProfileMutation] = useMutation(updateProfile)
-
-  const [isOpen, setIsOpen] = useState(false)
-  const onClose = () => setIsOpen(false)
-  const cancelRef = useRef(null)
-
-  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
-  const onCloseUpdate = () => setIsOpenUpdate(false)
-
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack>

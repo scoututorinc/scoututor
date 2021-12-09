@@ -20,8 +20,9 @@ type EditProfileFormProps = {
 
 export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormProps) => {
   const router = useRouter()
-  const [isOpenUpdate, setIsOpenUpdate] = useState({ status: false, data: {} })
-  const onCloseUpdate = () => setIsOpenUpdate({ status: false, data: {} })
+
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
+  const onCloseUpdate = () => setIsOpenUpdate(false)
   const [isOpenDelete, setIsOpenDelete] = useState(false)
   const onCloseDelete = () => setIsOpenDelete(false)
   const cancelRef = useRef(null)
@@ -41,13 +42,17 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
           currentPassword: undefined
         }}
         onSubmit={async (values) => {
-          console.log('Tried to update profile')
-          console.log(values)
-          setIsOpenUpdate({ status: true, data: { ...values } })
+          await updateProfileMutation(values)
+          setIsOpenUpdate(false)
+          if (values.email || values.password) {
+            await logoutMutation()
+          } else {
+            router.reload()
+          }
         }}
-        //debug={console.log}
-        render={({ handleSubmit, submitting, values }) => (
-          <Box as='form' w='100%' onSubmit={handleSubmit}>
+        // debug={console.log}
+        render={({ form, handleSubmit, submitting, values }) => (
+          <form onSubmit={handleSubmit}>
             <VStack spacing={4} mb={6} w='100%'>
               <LabeledTogglebleTextField
                 label='Name'
@@ -63,8 +68,10 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
             </VStack>
             <VStack spacing={4} w='100%'>
               <Button
-                type='submit'
-                disabled={!values.name && !values.email && !values.password}
+                onClick={() => {
+                  setIsOpenUpdate(true)
+                }}
+                disabled={(!values.name && !values.email && !values.password) || submitting}
                 colorScheme='teal'
                 w={{ base: '90%', lg: '60%' }}
               >
@@ -83,7 +90,7 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
             <SimpleAlertDialog
               header='Update Account'
               body='In order to confirm the change you to provide in your current password'
-              isOpen={isOpenUpdate.status}
+              isOpen={isOpenUpdate}
               leastDestructiveRef={cancelRef}
               onClose={onCloseUpdate}
             >
@@ -95,12 +102,8 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
                   </Button>
                   <Button
                     onClick={async () => {
-                      const updateProfileFormInfo = { ...values }
-                      await updateProfileMutation(updateProfileFormInfo)
-                      setIsOpenUpdate({ status: false, data: {} })
-                      router.push(Routes.Profile())
+                      form.submit()
                     }}
-                    disabled={submitting}
                     colorScheme='teal'
                   >
                     Submit
@@ -136,7 +139,7 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
                 Delete
               </Button>
             </SimpleAlertDialog>
-          </Box>
+          </form>
         )}
       />
     </Flex>
