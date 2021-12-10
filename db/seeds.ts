@@ -29,6 +29,7 @@ const seed = async () => {
 
   const disciplines = await createDisciplines()
   const knowledgeAreas = await createKnowledgeAreas(disciplines)
+
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
   await createCourseMemberships(users, courses)
