@@ -13,14 +13,9 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import { CourseApplicationForm } from 'app/courses/components/CourseApplicationForm'
 import getCourse from 'app/courses/queries/getCourse'
 
-export const paramToInt = (param: string | string[] | undefined) => {
-  if (typeof param == 'string') return parseInt(param)
-  else return -1
-}
-
 const CourseApplication: BlitzPage = () => {
-  const courseId = useParam('id')
-  const [course, status] = useQuery(getCourse, paramToInt(courseId), {
+  const courseId = useParam('id', 'number')
+  const [course, status] = useQuery(getCourse, courseId, {
     suspense: false
   })
 
