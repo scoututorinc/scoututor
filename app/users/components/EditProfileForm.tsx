@@ -27,6 +27,9 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
   const onCloseDelete = () => setIsOpenDelete(false)
   const cancelRef = useRef(null)
 
+  const [isOpenResultInformer, setIsOpenResultInformer] = useState({ status: false, reload: false })
+  const onCloseResultInformer = () => setIsOpenResultInformer({ status: false, reload: false })
+
   const [updateProfileMutation] = useMutation(updateProfile)
   const [deleteAccMutation] = useMutation(deleteAccount)
   const [logoutMutation] = useMutation(logout)
@@ -45,12 +48,13 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
           await updateProfileMutation(values)
           setIsOpenUpdate(false)
           if (values.email || values.password) {
-            await logoutMutation()
+            // await logoutMutation()
+            setIsOpenResultInformer({ status: true, reload: false })
           } else {
-            router.reload()
+            setIsOpenResultInformer({ status: true, reload: true })
+            // router.reload()
           }
         }}
-        // debug={console.log}
         render={({ form, handleSubmit, submitting, values }) => (
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} mb={6} w='100%'>
@@ -110,6 +114,28 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
                   </Button>
                 </HStack>
               </VStack>
+            </SimpleAlertDialog>
+            <SimpleAlertDialog
+              header=''
+              body='The changes were applied successfuly'
+              isOpen={isOpenResultInformer.status}
+              leastDestructiveRef={cancelRef}
+              onClose={onCloseResultInformer}
+            >
+              <Button
+                colorscheme='teal'
+                onClick={async () => {
+                  if (isOpenResultInformer.reload) {
+                    setIsOpenResultInformer({ status: false, reload: false })
+                    router.reload()
+                  } else {
+                    setIsOpenResultInformer({ status: false, reload: false })
+                    await logoutMutation()
+                  }
+                }}
+              >
+                OK
+              </Button>
             </SimpleAlertDialog>
             <SimpleAlertDialog
               header='Delete Account'
