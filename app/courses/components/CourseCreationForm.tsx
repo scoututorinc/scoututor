@@ -64,6 +64,7 @@ export const CourseCreationForm = ({
   submit,
   onSuccess
 }: CourseCreationFormProps) => {
+  const [values, setValues] = useState(defaultValues)
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -80,7 +81,7 @@ export const CourseCreationForm = ({
         <FinalForm
           validate={validateZodSchema(CreateCourseInput)}
           initialValues={
-            defaultValues || {
+            values || {
               title: '',
               description: '',
               hourlyRate: 0,
@@ -92,6 +93,7 @@ export const CourseCreationForm = ({
             try {
               console.log(values)
               console.log('Tried to create course')
+              setValues(values)
               const course = await submit(values)
               onSuccess?.(course.id)
             } catch (error: any) {
