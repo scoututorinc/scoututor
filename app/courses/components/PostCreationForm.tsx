@@ -10,8 +10,8 @@ import { StyledLink } from 'app/core/components/StyledLink'
 import { Form } from 'app/core/components/forms/Form'
 
 export const PostCreationForm = () => {
-  const [isResultAlertOpen, setIsResultAltertOpen] = useState(false)
-  const onCloseResultAlert = () => setIsResultAltertOpen(false)
+  const [isResultAlertOpen, setIsResultAlertOpen] = useState(false)
+  const onCloseResultAlert = () => setIsResultAlertOpen(false)
   const [createPostMutation] = useMutation(CreatePost)
   const cancelRef = useRef(null)
   const courseId: number | undefined = useParam('id', 'number')
@@ -42,7 +42,7 @@ export const PostCreationForm = () => {
             initialValues={values}
             onSubmit={async (values) => {
               await createPostMutation(values)
-              setIsResultAltertOpen(true)
+              setIsResultAlertOpen(true)
             }}
           >
             <VStack spacing={6} p={4} w='100%'>
@@ -74,7 +74,7 @@ export const PostCreationForm = () => {
             <Button
               colorScheme='teal'
               onClick={() => {
-                setIsResultAltertOpen(false)
+                setIsResultAlertOpen(false)
               }}
             >
               OK
