@@ -23,7 +23,7 @@ import { StyledLink } from 'app/core/components/StyledLink'
 import { SearchIcon } from '@chakra-ui/icons'
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import getUserEnrolledCourses from 'app/users/queries/getUserEnrolledCourses'
+import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
 
 const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
@@ -72,9 +72,7 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
       </Flex>
       <Divider />
       {courses.map((course) =>
-        course.posts.map((post) => (
-          <Post key={post.id} courseTitle={course.title} author={course.author} {...post} />
-        ))
+        course.posts.map((post) => <Post key={post.id} courseTitle={course.title} {...post} />)
       )}
     </Flex>
   ) : (
