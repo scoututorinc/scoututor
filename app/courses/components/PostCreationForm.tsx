@@ -10,8 +10,8 @@ import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 import { StyledLink } from 'app/core/components/StyledLink'
 
 export const PostCreationForm = () => {
-  const [isResultAlertOpen, setIsResultAlterOpen] = useState(false)
-  const onCloseResultAlert = () => setIsResultAlterOpen(false)
+  const [isResultAlertOpen, setIsResultAltertOpen] = useState(false)
+  const onCloseResultAlert = () => setIsResultAltertOpen(false)
   const [createPostMutation] = useMutation(CreatePost)
   const cancelRef = useRef(null)
   const courseId: number | undefined = useParam('id', 'number')
@@ -42,10 +42,10 @@ export const PostCreationForm = () => {
           onSubmit={async (values) => {
             setValues(values)
             await createPostMutation(values)
-            setIsResultAlterOpen(true)
+            setIsResultAltertOpen(true)
           }}
           debug={console.log}
-          render={({ form, handleSubmit, submitting, submitError, values }) => (
+          render={({ form, submitting }) => (
             <VStack spacing={6} p={4} w={{ base: '90%', lg: '50%' }}>
               <LabeledTextField
                 label='Title'
@@ -75,7 +75,7 @@ export const PostCreationForm = () => {
             <Button
               colorScheme='teal'
               onClick={() => {
-                setIsResultAlterOpen(false)
+                setIsResultAltertOpen(false)
               }}
             >
               OK
