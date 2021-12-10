@@ -9,7 +9,8 @@
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -44,9 +45,11 @@
     "zod": "3.11.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "12.0.7",
     "@types/faker": "5.5.9",
     "@types/preview-email": "2.0.1",
     "@types/react": "17.0.32",
+    "cross-env": "7.0.3",
     "eslint": "7.32.0",
     "faker": "5.5.3",
     "husky": "6.0.0",
