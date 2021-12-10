@@ -4,9 +4,7 @@ import db from 'db'
 import previewEmail from 'preview-email'
 
 beforeEach(async () => {
-  console.log('OOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLAAAAAAAAAAAA')
-
-  // await db.$reset()
+  await db.$reset()
 })
 
 const generatedToken = 'plain-token'

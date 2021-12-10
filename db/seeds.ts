@@ -11,21 +11,17 @@ const pickOne = (...values: any) => values[Math.floor(Math.random() * values.len
 const seed = async () => {
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
-
   await db.user.deleteMany({})
-
   await db.knowledgeArea.deleteMany({})
   await db.discipline.deleteMany({})
 
   const disciplines = await createDisciplines()
   const knowledgeAreas = await createKnowledgeAreas(disciplines)
-  console.log('sup3')
 
   const users = await createUsers()
   const courses = await createCourses(users, disciplines)
   await createCourseMemberships(users, courses)
   await createCourseApplications(users, courses)
-  console.log('biatch')
 }
 
 async function createUsers() {
