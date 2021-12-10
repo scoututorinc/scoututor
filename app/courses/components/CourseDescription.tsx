@@ -28,10 +28,10 @@ const CourseDescription = ({
   const [deleteCourseMutation] = useMutation(deleteCourse)
   const [cancelMembershipsMutation] = useMutation(cancelMemberships)
 
-  const [isOpenDC, setIsOpenDC] = useState(false)
-  const [isOpenCM, setIsOpenCM] = useState(false)
-  const onCloseDC = () => setIsOpenDC(false)
-  const onCloseCM = () => setIsOpenCM(false)
+  const [isOpenDeleteCourse, setIsOpenDeleteCourse] = useState(false)
+  const [isOpenCancelMemberships, setIsOpenCancelMemberships] = useState(false)
+  const onCloseDeleteCourse = () => setIsOpenDeleteCourse(false)
+  const onCloseCancelMemberships = () => setIsOpenCancelMemberships(false)
   const cancelRef = useRef(null)
 
   return (
@@ -81,7 +81,7 @@ const CourseDescription = ({
             type='submit'
             colorScheme='red'
             onClick={() => {
-              setIsOpenCM(true)
+              setIsOpenCancelMemberships(true)
             }}
           >
             Cancel Memberships
@@ -90,18 +90,18 @@ const CourseDescription = ({
           <SimpleAlertDialog
             header='Cancel Memberships'
             body='Are you sure? You cannot undo this action afterwards.'
-            isOpen={isOpenCM}
+            isOpen={isOpenCancelMemberships}
             leastDestructiveRef={cancelRef}
-            onClose={onCloseCM}
+            onClose={onCloseCancelMemberships}
           >
-            <Button ref={cancelRef} onClick={onCloseCM}>
+            <Button ref={cancelRef} onClick={onCloseCancelMemberships}>
               Back
             </Button>
             <Button
               colorScheme='red'
               onClick={async () => {
                 await cancelMembershipsMutation(id)
-                onCloseCM()
+                onCloseCancelMemberships()
               }}
             >
               Cancel Memberships
@@ -112,7 +112,7 @@ const CourseDescription = ({
             type='submit'
             colorScheme='red'
             onClick={() => {
-              setIsOpenDC(true)
+              setIsOpenDeleteCourse(true)
             }}
           >
             Delete Course
@@ -121,11 +121,11 @@ const CourseDescription = ({
           <SimpleAlertDialog
             header='Delete Course'
             body='Are you sure? You cannot undo this action afterwards.'
-            isOpen={isOpenDC}
+            isOpen={isOpenDeleteCourse}
             leastDestructiveRef={cancelRef}
-            onClose={onCloseDC}
+            onClose={onCloseDeleteCourse}
           >
-            <Button ref={cancelRef} onClick={onCloseDC}>
+            <Button ref={cancelRef} onClick={onCloseDeleteCourse}>
               Cancel
             </Button>
             <Button
@@ -138,7 +138,7 @@ const CourseDescription = ({
                   alert(
                     'This course has active memberships and could not be deleted. If you wish to delete this course, make sure to cancel all memberships beforehand'
                   )
-                  onCloseDC()
+                  onCloseDeleteCourse()
                 }
               }}
             >

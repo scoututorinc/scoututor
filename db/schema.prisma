@@ -22,8 +22,8 @@ model User {
   hashedPassword String?
   role           Role     @default(USER)
 
-  coursesCreated  Course[]
-  coursesEnrolled CourseMembership[]
+  coursesCreated    Course[]
+  courseMemberships CourseMembership[]
 
   courseApplication        CourseApplication[]
   courseApplicationMessage CourseApplicationMessage[]

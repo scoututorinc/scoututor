@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { Routes } from 'blitz'
 import {
   Flex,
   Box,
@@ -14,31 +14,44 @@ import {
 import { CalendarIcon } from '@chakra-ui/icons'
 import { AiFillFilePdf } from 'react-icons/ai'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
+import React from 'react'
+import { StyledLink } from 'app/core/components/StyledLink'
 
-const Post: FC = () => {
-  const post = {
-    author: 'Angelique Kerber',
-    course: 'Mathematics',
-    date: 'Friday, 29th October 2021',
-    text:
-      'As you know exams are approaching and you should raise up the pace of your studying.' +
-      'Having that into account I would like to schedule another session for the following week.' +
-      'In order to make the session productive I would like you to go through the assignments' +
-      'that you can find in the post. As always, if you have any doubt during the week feel free' +
-      'to reach me through the direct messages. Keep up the good work!',
-    material: ['assignment_1.pdf', 'assignment_2.pdf', 'assignment_3.pdf']
+interface PostProps {
+  id: number
+  title: string
+  createdAt: Date
+  updatedAt: Date
+  author: {
+    id: number
+    name: string
+    profilePicture: string | null
   }
+  description: string
+  files: string[]
+  courseId: number
+  courseTitle: string
+}
 
+const Post = (props: PostProps) => {
   return (
     <VStack spacing={4} mt={4}>
       <Box borderWidth='1px' rounded={6} p={4} width='100%'>
         <Flex direction={{ base: 'column', md: 'row' }} mb={4}>
-          <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems='center'>
-            <Img src='/images/knowledge.png' alt='tutor' borderRadius='full' maxWidth='60px' />
-            <Heading size='sm'>
-              {post.author} - {post.course}
-            </Heading>
-          </Stack>
+          {/* //TODO: Link to post page */}
+          <StyledLink href={Routes.MainFeed()}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems='center'>
+              <Img
+                src={props.author.profilePicture || '/images/profile.png'}
+                alt='tutor'
+                borderRadius='full'
+                maxWidth='60px'
+              />
+              <Heading size='sm'>
+                {props.author.name} - {props.courseTitle}
+              </Heading>
+            </Stack>
+          </StyledLink>
           <Spacer />
           <Stack
             direction={{ base: 'column', md: 'row' }}
@@ -47,14 +60,14 @@ const Post: FC = () => {
             pt={{ base: 4, md: 0 }}
           >
             <CalendarIcon />
-            <Heading size='sm'>{post.date}</Heading>
+            <Heading size='sm'>{props.createdAt.toLocaleString()}</Heading>
           </Stack>
         </Flex>
-        <Text>{post.text}</Text>
+        <Text>{props.description}</Text>
         <Stack direction={{ base: 'column', md: 'row' }} spacing={4} mt={4}>
-          {post.material.map((item) => (
-            <Button key={item} leftIcon={<AiFillFilePdf />}>
-              {item}
+          {props.files.map((file) => (
+            <Button key={file} leftIcon={<AiFillFilePdf />}>
+              {file}
             </Button>
           ))}
         </Stack>

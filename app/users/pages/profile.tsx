@@ -7,70 +7,50 @@ import {
   InferGetServerSidePropsType,
   useRouter,
   useMutation,
-  Routes
+  Routes,
+  validateZodSchema
 } from 'blitz'
-import { Flex, Box, Button, VStack } from '@chakra-ui/react'
-
+import { Flex, Button, VStack, HStack, Heading, Divider, Img } from '@chakra-ui/react'
+import { BiEdit } from 'react-icons/bi'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 import getCurrentUser from 'app/users/queries/getCurrentUser'
 import logout from 'app/auth/mutations/logout'
 import deleteAccount from 'app/auth/mutations/deleteAccount'
+import updateProfile from 'app/auth/mutations/updateProfile'
+import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogglebleTextField'
+import { UpdateProfile } from 'app/auth/validations'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import { MdAlternateEmail } from 'react-icons/md'
+import { EditProfileForm } from 'app/users/components/EditProfileForm'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
   error
 }) => {
-  const router = useRouter()
-  const [logoutMutation] = useMutation(logout)
-  const [deleteAccMutation] = useMutation(deleteAccount)
-
-  const [isOpen, setIsOpen] = useState(false)
-  const onClose = () => setIsOpen(false)
-  const cancelRef = useRef(null)
-
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack>
-        <Box as='pre'>{JSON.stringify(currentUser, null, 2)}</Box>
-        <Button
-          type='submit'
-          colorScheme='red'
-          onClick={() => {
-            setIsOpen(true)
-          }}
-        >
-          Delete Account
+        <VStack spacing={2} alignItems='start' w='100%' mb={6}>
+          <Heading>Profile</Heading>
+          <Divider />
+        </VStack>
+        <Img
+          src={currentUser.profilePicture || '/images/profile.png'}
+          maxWidth='150px'
+          mb={2}
+          borderRadius='full'
+        />
+        <Button leftIcon={<BiEdit />} variant='ghost'>
+          Edit profile picture
         </Button>
-        <SimpleAlertDialog
-          header='Delete Account'
-          body='Are you sure? You cannot undo this action afterwards.'
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
-        >
-          <Button ref={cancelRef} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            colorScheme='red'
-            onClick={async () => {
-              try {
-                await deleteAccMutation()
-                await logoutMutation()
-                await router.push(Routes.Home())
-              } catch (error: any) {
-                alert(
-                  'Your account has active memberships and could not be deleted. If you wish to delete your account, make sure to cancel all  your memberships beforehand'
-                )
-                onClose()
-              }
-            }}
-          >
-            Delete
-          </Button>
-        </SimpleAlertDialog>
+        <EditProfileForm
+          defaultValues={{
+            name: currentUser.name,
+            email: currentUser.email
+          }}
+        />
       </VStack>
     </Flex>
   ) : (
