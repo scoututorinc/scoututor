@@ -42,7 +42,7 @@ const Post = (props: PostProps) => {
           <StyledLink href={Routes.MainFeed()}>
             <Stack direction={{ base: 'column', md: 'row' }} spacing={4} alignItems='center'>
               <Img
-                src={props.author.profilePicture || undefined}
+                src={props.author.profilePicture || '/images/profile.png'}
                 alt='tutor'
                 borderRadius='full'
                 maxWidth='60px'
