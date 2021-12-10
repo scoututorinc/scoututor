@@ -1,14 +1,5 @@
 import { BlitzPage, Routes, useParam } from 'blitz'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Flex,
-  VStack,
-  Heading,
-  Divider,
-  Text
-} from '@chakra-ui/react'
+import { Breadcrumb, BreadcrumbItem, Flex, VStack, Heading, Divider, Text } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { PostCreationForm } from 'app/courses/components/PostCreationForm'
@@ -16,8 +7,7 @@ import { StyledLink } from 'app/core/components/StyledLink'
 
 const NewPost: BlitzPage = () => {
   const courseId = useParam('id', 'string')
-  console.log(courseId)
-  console.log(JSON.stringify(Routes.CourseView({ id: courseId! })))
+
   return (
     <Flex
       direction='column'

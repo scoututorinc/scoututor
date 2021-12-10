@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react'
-import { validateZodSchema, useMutation, useParam, Routes } from 'blitz'
+import { useMutation, useParam, Routes } from 'blitz'
 import { Box, Flex, Stack, Img, Heading, VStack, Button } from '@chakra-ui/react'
 import { CoursePost } from 'app/courses/validations'
-import { Form as FinalForm } from 'react-final-form'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 import CreatePost from 'app/courses/mutations/createPost'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { Form } from 'app/core/components/forms/Form'
 
 export const PostCreationForm = () => {
   const [isResultAlertOpen, setIsResultAltertOpen] = useState(false)
@@ -36,17 +36,16 @@ export const PostCreationForm = () => {
           <Img src='/images/new_post.png' maxWidth='100px'></Img>
           <Heading>Create post</Heading>
         </Stack>
-        <FinalForm
-          validate={validateZodSchema(CoursePost)}
-          initialValues={values}
-          onSubmit={async (values) => {
-            setValues(values)
-            await createPostMutation(values)
-            setIsResultAltertOpen(true)
-          }}
-          debug={console.log}
-          render={({ form, submitting }) => (
-            <VStack spacing={6} p={4} w={{ base: '90%', lg: '50%' }}>
+        <Box w={{ base: '90%', lg: '70%' }}>
+          <Form
+            schema={CoursePost}
+            initialValues={values}
+            onSubmit={async (values) => {
+              await createPostMutation(values)
+              setIsResultAltertOpen(true)
+            }}
+          >
+            <VStack spacing={6} p={4} w='100%'>
               <LabeledTextField
                 label='Title'
                 name='title'
@@ -58,12 +57,12 @@ export const PostCreationForm = () => {
                 placeholder='Give a description to your post'
               />
               <LabeledTextField disabled='true' label='Files' name='files' placeholder='Files' />
-              <Button onClick={() => form.submit()} disabled={submitting} colorScheme='teal'>
+              <Button type='submit' colorScheme='teal'>
                 Create post
               </Button>
             </VStack>
-          )}
-        />
+          </Form>
+        </Box>
         <SimpleAlertDialog
           header='Create post'
           body='Your post was created successfuly'
