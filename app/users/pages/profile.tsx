@@ -43,8 +43,7 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           borderRadius='full'
         />
         <Button leftIcon={<BiEdit />} variant='ghost'>
-          {' '}
-          Edit profile picture{' '}
+          Edit profile picture
         </Button>
         <EditProfileForm
           defaultValues={{

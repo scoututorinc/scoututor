@@ -48,11 +48,9 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
           await updateProfileMutation(values)
           setIsOpenUpdate(false)
           if (values.email || values.password) {
-            // await logoutMutation()
             setIsOpenResultInformer({ status: true, reload: false })
           } else {
             setIsOpenResultInformer({ status: true, reload: true })
-            // router.reload()
           }
         }}
         render={({ form, handleSubmit, submitting, values }) => (
