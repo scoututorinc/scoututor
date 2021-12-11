@@ -5,5 +5,5 @@ const EnhancedPrisma = enhancePrisma(PrismaClient)
 
 export * from '@prisma/client'
 export default new EnhancedPrisma({
-  log: ['query', 'info', 'warn', 'error']
+  log: ['warn', 'error']
 })

@@ -16,13 +16,15 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  ModalContent
+  ModalContent,
+  Divider
 } from '@chakra-ui/react'
 import { CalendarIcon } from '@chakra-ui/icons'
 import { AiFillFilePdf } from 'react-icons/ai'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
 import React, { useState } from 'react'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { PostComments } from 'app/courses/components/PostComments'
 
 interface PostProps {
   id: number
@@ -122,18 +124,43 @@ const Post = (props: PostProps) => {
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
             <Flex direction='row' maxH='100%'>
-              <Box as='pre' style={{ whiteSpace: 'pre-wrap' }} w='60%'>
-                {JSON.stringify(post, null, 2)}
-              </Box>
-              <Box
-                as='pre'
-                style={{ whiteSpace: 'pre-wrap' }}
-                w='40%'
-                maxH='100%'
-                overflowY='scroll'
-              >
-                {JSON.stringify(comments, null, 2)}
-              </Box>
+              <Flex direction='column' mb={4} w='65%'>
+                <Flex direction='row' mb={4}>
+                  {/* //TODO: Link to post page */}
+                  <Stack direction='row' spacing={4} alignItems='center'>
+                    <Img
+                      src={props.author.profilePicture || '/images/profile.png'}
+                      alt='tutor'
+                      borderRadius='full'
+                      height={'2.5rem'}
+                      maxWidth='60px'
+                    />
+                    <Heading size='sm'>
+                      {props.author.name} - {props.courseTitle}
+                    </Heading>
+                  </Stack>
+                  <Spacer />
+                  <Stack
+                    direction={{ base: 'column', md: 'row' }}
+                    alignItems='center'
+                    spacing={4}
+                    pt={{ base: 4, md: 0 }}
+                  >
+                    <CalendarIcon />
+                    <Heading size='sm'>{props.createdAt.toLocaleString()}</Heading>
+                  </Stack>
+                </Flex>
+                <Text>{props.description}</Text>
+                <Stack direction={{ base: 'column', md: 'row' }} spacing={4} mt={4}>
+                  {props.files.map((file) => (
+                    <Button key={file} leftIcon={<AiFillFilePdf />}>
+                      {file}
+                    </Button>
+                  ))}
+                </Stack>
+              </Flex>
+              <Divider orientation='vertical' mx={4} />
+              <PostComments comments={props.comments} />
             </Flex>
           </ModalBody>
         </ModalContent>

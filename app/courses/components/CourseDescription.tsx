@@ -12,16 +12,18 @@ type CourseDescriptionProps = {
   description: string
   hourlyRate: number
   knowledgeAreas: string[]
+  permissions: {
+    canUpdateCourse: boolean
+    canJoinCourse: boolean
+  }
 }
-
-const hourly_rate = 15.0
-const is_teacher = true
 
 const CourseDescription = ({
   id,
   description,
   knowledgeAreas,
-  hourlyRate
+  hourlyRate,
+  permissions
 }: CourseDescriptionProps) => {
   const router = useRouter()
 
@@ -63,12 +65,12 @@ const CourseDescription = ({
         <Icon as={FaEuroSign} />
         <Heading fontSize='2xl'>{hourlyRate}</Heading>
       </HStack>
-      {!is_teacher && (
+      {permissions.canJoinCourse && (
         <Button colorScheme='teal' maxWidth={{ base: '90%', md: '30%', lg: '20%' }}>
           Apply for a vacancy
         </Button>
       )}
-      {is_teacher && (
+      {permissions.canUpdateCourse && (
         <HStack spacing={4}>
           <StyledLink href={Routes.Applications({ id: id })}>
             <Button colorScheme='teal'>Manage Applications</Button>

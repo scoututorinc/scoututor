@@ -16,14 +16,16 @@ import CourseTeacher from 'app/courses/components/CourseTeacher'
 import { StyledLink } from 'app/core/components/StyledLink'
 
 import getCourse from 'app/courses/queries/getCourse'
+import getAbility from 'app/guard/queries/getAbility'
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
-  error
+  error,
+  permissions
 }) => {
   const is_enrolled = false
   const is_teacher = true
-  return course ? (
+  return course && permissions ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>
         <Heading>{course.title}</Heading>
@@ -37,12 +39,15 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
           maxWidth={{ base: '100%', lg: '25%' }}
         >
           <CourseTeacher {...course.author} />
-          <StyledLink pb={4} href={Routes.NewPost({ id: course.id })}>
-            <Button colorScheme='teal'>Create post</Button>
-          </StyledLink>
+          {permissions.canUpdateCourse && (
+            <StyledLink pb={4} href={Routes.NewPost({ id: course.id })}>
+              <Button colorScheme='teal'>Create post</Button>
+            </StyledLink>
+          )}
           <CourseReview />
           <CourseReview />
-          {is_enrolled && (
+          {/* Can't enroll, is not owner => Enrolled */}
+          {!permissions.canJoinCourse && !permissions.canUpdateCourse && (
             <VStack spacing={4} width='90%'>
               <Button colorScheme='teal' width='80%'>
                 Comment on course
@@ -53,7 +58,11 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </VStack>
           )}
         </Flex>
-        <CourseDescription {...course} knowledgeAreas={course.knowledgeAreas.map((k) => k.name)} />
+        <CourseDescription
+          {...course}
+          permissions={permissions}
+          knowledgeAreas={course.knowledgeAreas.map((k) => k.name)}
+        />
       </Flex>
     </Flex>
   ) : (
@@ -68,21 +77,41 @@ const paramToInt = (param: string | string[] | undefined) => {
 
 export const getServerSideProps: GetServerSideProps<{
   course?: PromiseReturnType<typeof getCourse>
+  permissions?: {
+    canUpdateCourse: boolean
+    canJoinCourse: boolean
+  }
   error?: any
   redirect?: any
 }> = async (context) => {
   try {
-    const course = await invokeWithMiddleware(getCourse, paramToInt(context?.params?.id), context)
+    const courseId = paramToInt(context?.params?.id)
+    const course = await invokeWithMiddleware(getCourse, courseId, context)
+    const [canUpdateCourse, canJoinCourse] = await invokeWithMiddleware(
+      getAbility,
+      [
+        ['update', 'Course', { id: courseId }],
+        ['join', 'Course', { id: courseId }]
+      ],
+      context
+    )
+
     if (!course)
       return {
         redirect: {
-          destination: Routes.CoursesView().pathname,
+          destination: Routes.CoursesView(),
           permanent: false
         }
       }
     else
       return {
-        props: { course }
+        props: {
+          course,
+          permissions: {
+            canUpdateCourse: canUpdateCourse.can,
+            canJoinCourse: canJoinCourse.can
+          }
+        }
       }
   } catch (e) {
     console.log(e)
