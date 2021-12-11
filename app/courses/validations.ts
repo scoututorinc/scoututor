@@ -46,3 +46,10 @@ export const CourseCreation = z.object({
   description: z.string().min(20),
   hourlyRate: z.number().nonnegative()
 })
+
+export const CoursePost = z.object({
+  courseId: z.number(),
+  title: z.string().min(5),
+  description: z.string().min(20),
+  files: z.array(z.string())
+})
