@@ -190,21 +190,28 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
 }
 
 async function createCourseApplications(users: User[], courses: Course[]) {
-  const courseApplications: Prisma.CourseApplicationCreateManyInput[] = []
+  const courseApplications: Prisma.CourseApplicationUncheckedCreateInput[] = []
 
   for (const _ in range(20)) {
+    const courseId = courses[randomInt(15, 19)]?.id || 0
+    const courseAuthorId = courses.find((c) => c.id == courseId)?.authorId
+    const applicantId = users[randomInt(5, 10)]?.id || 0
+
     courseApplications.push({
       description: faker.lorem.paragraphs(2),
       availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
-      courseId: courses[randomInt(15, 19)]?.id || 0,
-      applicantId: users[randomInt(5, 10)]?.id || 0
+      courseId,
+      applicantId,
+      messages: {
+        create: range(5).map((_) => ({
+          content: faker.lorem.paragraphs(1),
+          authorId: pickOne(applicantId, courseAuthorId)
+        }))
+      }
     })
   }
 
-  await db.courseApplication.createMany({
-    data: courseApplications,
-    skipDuplicates: true
-  })
+  await Promise.all(courseApplications.map((c) => db.courseApplication.create({ data: c })))
 }
 
 export default seed
