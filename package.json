@@ -35,7 +35,7 @@
     "@emotion/styled": "11.0.0",
     "@fontsource/inter": "4.5.0",
     "@prisma/client": "3.6.0",
-    "blitz": "0.42.0",
+    "blitz": "0.44.0",
     "final-form": "4.20.6",
     "framer-motion": "3.2.0",
     "react": "alpha",
