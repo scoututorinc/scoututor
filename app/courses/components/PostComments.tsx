@@ -31,7 +31,7 @@ type CommentProps = {
 type PostCommentsProps = {
   comments: CommentProps[]
 }
-const Reply = (props) => {
+const Reply = (props: ReplyProps) => {
   return (
     <Flex opacity='70%' w='100%' direction='row'>
       <Spacer w='20%' />
@@ -75,16 +75,9 @@ const Comment = (props: CommentProps) => {
         <Button fontSize='xs' variant='ghost'>
           Reply
         </Button>
-        {!areRepliesOpen && props.replies.length > 0 && (
-          <Button onClick={() => setRepliesOpen(true)} fontSize='xs' variant='ghost'>
-            View replies
-          </Button>
-        )}
-        {areRepliesOpen && (
-          <Button onClick={() => setRepliesOpen(false)} fontSize='xs' variant='ghost'>
-            Close replies
-          </Button>
-        )}
+        <Button onClick={() => setRepliesOpen((isOpen) => !isOpen)} fontSize='xs' variant='ghost'>
+          {areRepliesOpen ? 'Close replies' : 'View replies'}
+        </Button>
       </HStack>
       <Divider mb={4} />
       {areRepliesOpen && props.replies.map((reply) => <Reply key={reply.content} {...reply} />)}
