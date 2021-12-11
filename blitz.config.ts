@@ -11,9 +11,10 @@ const config: BlitzConfig = {
       cookiePrefix: 'scoututor',
       isAuthorized: simpleRolesIsAuthorized
     }),
+    //Todo: Remove any when fix is released
     BlitzGuardMiddleware({
       excluded: []
-    })
+    }) as any
   ]
   /* Uncomment this to customize the webpack config
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
