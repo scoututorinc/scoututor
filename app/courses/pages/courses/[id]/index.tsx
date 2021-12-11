@@ -13,6 +13,7 @@ import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import CourseReview from 'app/courses/components/CourseReview'
 import CourseDescription from 'app/courses/components/CourseDescription'
 import CourseTeacher from 'app/courses/components/CourseTeacher'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 import getCourse from 'app/courses/queries/getCourse'
 
@@ -36,6 +37,9 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
           maxWidth={{ base: '100%', lg: '25%' }}
         >
           <CourseTeacher {...course.author} />
+          <StyledLink pb={4} href={Routes.NewPost({ id: course.id })}>
+            <Button colorScheme='teal'>Create post</Button>
+          </StyledLink>
           <CourseReview />
           <CourseReview />
           {is_enrolled && (

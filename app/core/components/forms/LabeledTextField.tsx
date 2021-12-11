@@ -6,6 +6,7 @@ import { Input, InputLeftElement, InputGroup } from '@chakra-ui/input'
 import { Icon, VStack, Heading } from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 import { IconType } from 'react-icons'
+import { BsPersonPlusFill } from 'react-icons/bs'
 
 export interface LabeledTextFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   /** Field name. */
