@@ -124,18 +124,6 @@ const Post = (props: PostProps) => {
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
             <Flex direction='row' maxH='100%'>
-              {/* <Box as='pre' style={{ whiteSpace: 'pre-wrap' }} w='60%'>
-                {JSON.stringify(post, null, 2)}
-              </Box>
-              <Box
-                as='pre'
-                style={{ whiteSpace: 'pre-wrap' }}
-                w='40%'
-                maxH='100%'
-                overflowY='scroll'
-              >
-                {JSON.stringify(comments, null, 2)}
-              </Box> */}
               <Flex direction='column' mb={4} w='65%'>
                 <Flex direction='row' mb={4}>
                   {/* //TODO: Link to post page */}
