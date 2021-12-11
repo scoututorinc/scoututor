@@ -1,6 +1,19 @@
 import React, { useState } from 'react'
 import { Flex, Img, Text, HStack, Button, Divider, Spacer } from '@chakra-ui/react'
 
+type ReplyProps = {
+  id: number
+  createdAt: Date
+  content: string
+  commentId: number
+  authorId: number
+  author: {
+    id: number
+    name: string
+    profilePicture: string | null
+  }
+}
+
 type CommentProps = {
   id: number
   createdAt: Date
@@ -12,18 +25,7 @@ type CommentProps = {
     name: string
     profilePicture: string | null
   }
-  replies: {
-    id: number
-    createdAt: Date
-    content: string
-    commentId: number
-    authorId: number
-    author: {
-      id: number
-      name: string
-      profilePicture: string | null
-    }
-  }[]
+  replies: ReplyProps[]
 }
 
 type PostCommentsProps = {
