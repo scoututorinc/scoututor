@@ -68,7 +68,9 @@ interface PostProps {
 
 const Post = (props: PostProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { comments, ...post } = props
+  const { comments: commentsFromProps, ...post } = props
+  const [comments, setcomments] = useState(commentsFromProps)
+
   return (
     <VStack spacing={4} mt={4}>
       <Box borderWidth='1px' rounded={6} p={4} width='100%'>
@@ -96,7 +98,7 @@ const Post = (props: PostProps) => {
             pt={{ base: 4, md: 0 }}
           >
             <CalendarIcon />
-            <Heading size='sm'>{props.createdAt.toLocaleString()}</Heading>
+            <Heading size='sm'>{props.createdAt.toUTCString()}</Heading>
           </Stack>
         </Flex>
         <Text>{props.description}</Text>
@@ -160,7 +162,11 @@ const Post = (props: PostProps) => {
                 </Stack>
               </Flex>
               <Divider orientation='vertical' mx={4} />
-              <PostComments comments={props.comments} />
+              <PostComments
+                postId={props.id}
+                updateComments={(newComments) => setcomments(newComments)}
+                comments={comments}
+              />
             </Flex>
           </ModalBody>
         </ModalContent>
