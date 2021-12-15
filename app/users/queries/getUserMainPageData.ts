@@ -47,9 +47,11 @@ export default resolver.pipe(resolver.authorize(), async ({ ...props }, ctx) => 
                               profilePicture: true
                             }
                           }
-                        }
+                        },
+                        orderBy: { createdAt: 'desc' }
                       }
-                    }
+                    },
+                    orderBy: { createdAt: 'desc' }
                   }
                 },
                 where: {
@@ -57,7 +59,7 @@ export default resolver.pipe(resolver.authorize(), async ({ ...props }, ctx) => 
                     gte: new Date(Date.now() - SEVEN_DAYS_IN_MILLIS)
                   }
                 },
-                orderBy: { createdAt: 'asc' }
+                orderBy: { createdAt: 'desc' }
               }
             }
           }
