@@ -66,17 +66,19 @@ const CourseDescription = ({
         <Heading fontSize='2xl'>{hourlyRate}</Heading>
       </HStack>
       {permissions.canJoinCourse && (
-        <Button colorScheme='teal' maxWidth={{ base: '90%', md: '30%', lg: '20%' }}>
-          Apply for a vacancy
-        </Button>
+        <StyledLink href={Routes.CourseApplication({ id })}>
+          <Button colorScheme='teal' maxWidth={{ base: '90%', md: '30%', lg: '20%' }}>
+            Apply for a vacancy
+          </Button>
+        </StyledLink>
       )}
       {permissions.canUpdateCourse && (
         <HStack spacing={4}>
-          <StyledLink href={Routes.Applications({ id: id })}>
+          <StyledLink href={Routes.Applications({ id })}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
 
-          <StyledLink href={Routes.EditCourse({ id: id })}>
+          <StyledLink href={Routes.EditCourse({ id })}>
             <Button colorScheme='teal'>Edit information</Button>
           </StyledLink>
           <Button

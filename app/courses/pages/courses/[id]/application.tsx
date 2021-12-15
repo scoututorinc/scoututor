@@ -1,4 +1,4 @@
-import { BlitzPage, useQuery, useParam } from 'blitz'
+import { BlitzPage, useQuery, useParam, useRouter, Router, Routes } from 'blitz'
 import {
   Flex,
   Breadcrumb,
@@ -14,6 +14,7 @@ import { CourseApplicationForm } from 'app/courses/components/CourseApplicationF
 import getCourse from 'app/courses/queries/getCourse'
 
 const CourseApplication: BlitzPage = () => {
+  const router = useRouter()
   const courseId = useParam('id', 'number')
   const [course, status] = useQuery(getCourse, courseId, {
     suspense: false
@@ -45,7 +46,10 @@ const CourseApplication: BlitzPage = () => {
         <Divider />
       </VStack>
       <Flex width='100%' justifyContent='center'>
-        <CourseApplicationForm courseId={course.id} />
+        <CourseApplicationForm
+          courseId={course.id}
+          onSuccess={(id) => router.push(Routes.Applications({ id: courseId || 0 }))}
+        />
       </Flex>
     </Flex>
   ) : (

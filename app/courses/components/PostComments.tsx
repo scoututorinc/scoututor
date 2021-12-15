@@ -59,32 +59,33 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
     }
   }
   return (
-    <Flex direction='column' maxW='30%' height='calc(100%)'>
+    <Flex direction='column' maxW='30%' height='100%'>
       <Flex direction='column' height='calc(100%-1.75rem)' overflowY='scroll'>
         {comments.map((comment) => (
           <Comment key={comment.id} {...comment} />
         ))}
       </Flex>
-
-      <InputGroup mt='1rem' mb='0.5rem' size='md'>
-        <Input
-          value={commentContent}
-          onChange={(e) => setcommentContent(e.target.value)}
-          pr='4.5rem'
-          type='text'
-          placeholder='Add a comment...'
-        />
-        <InputRightElement width='4.5rem'>
-          <Button
-            h='1.75rem'
-            size='sm'
-            onClick={submitComment}
-            disabled={commentContent.length == 0}
-          >
-            Post
-          </Button>
-        </InputRightElement>
-      </InputGroup>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          submitComment()
+        }}
+      >
+        <InputGroup mt='1rem' mb='0.5rem' size='md'>
+          <Input
+            value={commentContent}
+            onChange={(e) => setcommentContent(e.target.value)}
+            pr='4.5rem'
+            type='text'
+            placeholder='Add a comment...'
+          />
+          <InputRightElement width='4.5rem'>
+            <Button h='1.75rem' size='sm' type='submit' disabled={commentContent.length == 0}>
+              Post
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      </form>
     </Flex>
   )
 }

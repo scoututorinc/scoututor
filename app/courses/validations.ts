@@ -58,3 +58,8 @@ export const CreatePostCommentInput = z.object({
   postId: z.number(),
   content: z.string().min(1)
 })
+
+export const CreateCourseApplicationMessage = z.object({
+  applicationId: z.number(),
+  content: z.string().min(1)
+})
