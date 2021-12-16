@@ -52,10 +52,12 @@ const Application = ({
   applicant,
   applicantId,
   courseId,
-  messages
+  messages: propsMessages
 }: ApplicationProps) => {
   const [acceptApplicationMutation] = useMutation(acceptApplication)
   const [declineApplicationMutation] = useMutation(declineApplication)
+
+  const [messages, setMessages] = useState(propsMessages)
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -122,7 +124,7 @@ const Application = ({
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
             <Flex direction='row' w='100%'>
-              <Flex direction='column' mb={4} w='65%'>
+              <Flex direction='column' mb={4} w='70%'>
                 <HStack spacing={4} alignItems='center' justifyContent='start' mb={4}>
                   <Img
                     src={applicant.profilePicture || '/images/profile.png'}
@@ -170,7 +172,11 @@ const Application = ({
                 </HStack>
               </Flex>
               <Divider orientation='vertical' mx={4} />
-              <ApplicationMessages messages={messages} />
+              <ApplicationMessages
+                applicationId={id}
+                messages={messages}
+                updateMessages={(newMessages) => setMessages(newMessages)}
+              />
             </Flex>
           </ModalBody>
         </ModalContent>
