@@ -22,7 +22,7 @@ import { CourseApplication } from 'app/courses/validations'
 import { RiErrorWarningFill } from 'react-icons/ri'
 
 type CourseApplicationFormProps = {
-  onSucess?: () => void
+  onSuccess?: (id: number) => void
   courseId: number
 }
 
@@ -49,8 +49,8 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
             try {
               console.log(values)
               console.log('Tried to submit')
-              await courseApplicationMutation(values)
-              props.onSucess?.()
+              const newApplication = await courseApplicationMutation(values)
+              props.onSuccess?.(newApplication.id)
             } catch (error: any) {
               console.log(error)
             }

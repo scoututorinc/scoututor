@@ -10,23 +10,26 @@ export default resolver.pipe(
       where: { id },
       include: {
         applications: {
+          where: { status: 'PENDING' },
           select: {
             id: true,
             description: true,
             availableSchedule: true,
             applicantId: true,
-            applicant: { select: { name: true, profilePicture: true } },
+            applicant: { select: { id: true, name: true, profilePicture: true } },
             courseId: true,
             messages: {
               select: {
                 content: true,
                 author: {
                   select: {
+                    id: true,
                     name: true,
                     profilePicture: true
                   }
                 }
-              }
+              },
+              orderBy: { createdAt: 'asc' }
             }
           }
         }
