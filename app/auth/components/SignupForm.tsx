@@ -10,6 +10,7 @@ import { Signup } from 'app/auth/validations'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { m } from 'framer-motion'
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -35,13 +36,21 @@ export const SignupForm = (props: SignupFormProps) => {
         <Form
           schema={Signup}
           initialValues={{
-            name: '',
+            first_name: '',
+            last_name: '',
             email: '',
             password: ''
           }}
           onSubmit={async (values) => {
             try {
               await signupMutation(values)
+              const chatEngineUser = {
+                username:
+                  values.first_name.trim().toLowerCase() + values.last_name.trim().toLowerCase(),
+                first_name: values.first_name.trim(),
+                last_name: values.last_name.trim(),
+                email: values.email.trim()
+              }
               props.onSuccess?.()
             } catch (error: any) {
               if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
@@ -56,9 +65,16 @@ export const SignupForm = (props: SignupFormProps) => {
           <VStack spacing={6} p={10}>
             <VStack spacing={4}>
               <LabeledTextField
-                name='name'
-                label='Name'
-                placeholder='Full Name'
+                name='first_name'
+                label='First Name'
+                placeholder='First Name'
+                type='text'
+                icon={BsFillPersonFill}
+              />
+              <LabeledTextField
+                name='last_name'
+                label='Last Name'
+                placeholder='Last Name'
                 type='text'
                 icon={BsFillPersonFill}
               />
