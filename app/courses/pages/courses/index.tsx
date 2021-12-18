@@ -5,7 +5,7 @@ import {
   InferGetServerSidePropsType,
   Routes
 } from 'blitz'
-import { Heading, Flex, Grid, Button, Box } from '@chakra-ui/react'
+import { Heading, Flex, Grid, Button, Box, HStack, Input, Divider, Spacer, VStack } from '@chakra-ui/react'
 
 import { PromiseReturnType } from 'next/dist/types/utils'
 
@@ -14,14 +14,31 @@ import getCourses from 'app/courses/queries/getCourses'
 import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
 
 import { StyledLink } from 'app/core/components/StyledLink'
+import { SearchIcon } from '@chakra-ui/icons'
+import { useState } from 'react'
 
 const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
   error
 }) => {
+  const [searchTerm, setSearchTerm] = useState("")
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
-      <Heading pb={6}>Courses</Heading>
+      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
+        <VStack spacing={2}>
+          <Heading>Courses</Heading>
+          <Divider />
+        </VStack>
+        <Spacer />
+        <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
+          <Input focusBorderColor='teal.400' type='text' placeholder='What are you looking for?' onChange={
+            (e)=>{setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : "")}
+          }/>
+          <Button colorScheme='teal'>
+            <SearchIcon color='gray.700' />
+          </Button>
+        </HStack>
+      </Flex>
       <Grid
         templateColumns={{
           base: 'repeat(1, 1fr)',
@@ -38,7 +55,8 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
           </StyledLink>
         </Box>
 
-        {courses.map((c) => (
+        {courses.filter((c) => searchTerm === "" || c.title.toLowerCase().includes(searchTerm) || c.author.location.toLowerCase().includes(searchTerm))
+        .map((c) => (
           <CourseShortDisplay key={c.id} {...c} />
         ))}
       </Grid>

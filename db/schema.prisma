@@ -18,6 +18,7 @@ model User {
   updatedAt      DateTime @updatedAt
   name           String
   email          String   @unique
+  location       String
   profilePicture String?
   hashedPassword String?
   role           Role     @default(USER)
