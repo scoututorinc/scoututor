@@ -13,6 +13,7 @@ export default resolver.pipe(resolver.authorize(), async ({ ...props }, ctx) => 
             select: {
               id: true,
               title: true,
+              knowledgeAreas: true,
               posts: {
                 select: {
                   id: true,
