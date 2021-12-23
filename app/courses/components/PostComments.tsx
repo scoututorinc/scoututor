@@ -10,14 +10,18 @@ import {
   Spacer,
   InputGroup,
   Input,
-  InputRightElement
+  InputRightElement,
+  InputLeftAddon,
+  CloseButton
 } from '@chakra-ui/react'
+
 import createPostComment from '../mutations/createPostComment'
+import createPostCommentReply from '../mutations/createPostCommentReply'
 
 type PostCommentsProps = {
   postId: number
-  updateComments: (newComments: CommentProps[]) => void
-  comments: CommentProps[]
+  updateComments: (newComments: Omit<CommentProps, 'setReplying'>[]) => void
+  comments: Omit<CommentProps, 'setReplying'>[]
 }
 
 type CommentProps = {
@@ -32,6 +36,7 @@ type CommentProps = {
     profilePicture: string | null
   }
   replies: ReplyProps[]
+  setReplying: (user: { commentId: number; name: string }) => void
 }
 
 type ReplyProps = {
@@ -48,11 +53,31 @@ type ReplyProps = {
 }
 export const PostComments = ({ postId, updateComments, comments }: PostCommentsProps) => {
   const [commentContent, setcommentContent] = useState('')
+  const [replyingTo, setreplyingTo] = useState<{ commentId: number; name: string } | null>(null)
   const [createComment] = useMutation(createPostComment)
+  const [createCommentReply] = useMutation(createPostCommentReply)
   const submitComment = async () => {
     try {
-      const newComment = await createComment({ postId, content: commentContent })
-      updateComments([newComment, ...comments])
+      if (replyingTo) {
+        const newReply = await createCommentReply({
+          commentId: replyingTo.commentId,
+          content: commentContent
+        })
+        updateComments(
+          comments.map((comment) =>
+            comment.id == replyingTo.commentId
+              ? {
+                  ...comment,
+                  replies: [...comment.replies, newReply]
+                }
+              : comment
+          )
+        )
+        setreplyingTo(null)
+      } else {
+        const newComment = await createComment({ postId, content: commentContent })
+        updateComments([newComment, ...comments])
+      }
       setcommentContent('')
     } catch (e) {
       console.error('Error: ' + e)
@@ -62,7 +87,13 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
     <Flex direction='column' maxW='30%' height='100%'>
       <Flex direction='column' height='calc(100%-1.75rem)' overflowY='scroll'>
         {comments.map((comment) => (
-          <Comment key={comment.id} {...comment} />
+          <Comment
+            key={comment.id}
+            setReplying={(user) => {
+              setreplyingTo(user)
+            }}
+            {...comment}
+          />
         ))}
       </Flex>
       <form
@@ -72,6 +103,12 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
         }}
       >
         <InputGroup mt='1rem' mb='0.5rem' size='md'>
+          {replyingTo && (
+            <InputLeftAddon fontWeight={'bold'}>
+              <CloseButton size='sm' colorScheme='red.400' onClick={() => setreplyingTo(null)} />@
+              {replyingTo.name.split(' ')[0]}
+            </InputLeftAddon>
+          )}
           <Input
             value={commentContent}
             onChange={(e) => setcommentContent(e.target.value)}
@@ -90,7 +127,7 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
   )
 }
 
-const Comment = (props: CommentProps) => {
+const Comment = ({ setReplying, ...props }: CommentProps) => {
   const [areRepliesOpen, setRepliesOpen] = useState(false)
   return (
     <Flex w='100%' direction='column'>
@@ -106,7 +143,11 @@ const Comment = (props: CommentProps) => {
       </HStack>
       <HStack spacing={6}>
         <Text fontSize='xs'>47m</Text>
-        <Button fontSize='xs' variant='ghost'>
+        <Button
+          fontSize='xs'
+          variant='ghost'
+          onClick={() => setReplying({ commentId: props.id, name: props.author.name })}
+        >
           Reply
         </Button>
         <Button onClick={() => setRepliesOpen((isOpen) => !isOpen)} fontSize='xs' variant='ghost'>
@@ -134,11 +175,11 @@ const Reply = (props: ReplyProps) => {
             <strong>{props.author.name}</strong> {props.content}
           </Text>
         </HStack>
-        <HStack spacing={6}>
+        <HStack spacing={6} my={1}>
           <Text fontSize='xs'>47m</Text>
-          <Button fontSize='xs' variant='ghost'>
+          {/* <Button fontSize='xs' variant='ghost'>
             Reply
-          </Button>
+          </Button> */}
         </HStack>
       </Flex>
     </Flex>
