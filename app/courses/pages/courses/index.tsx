@@ -58,12 +58,8 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
       </Grid>
       <VStack mb={4}>
         <Divider my={4} />
-        <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
-          <VStack spacing={2}>
-            <Heading>Courses</Heading>
-            <Divider />
-          </VStack>
-          <Spacer />
+        <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-around' w={'100%'}>
+          <Heading>Courses</Heading>
           <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
             <Input
               focusBorderColor='teal.400'
@@ -78,6 +74,7 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
             </Button>
           </HStack>
         </Flex>
+        <Divider />
       </VStack>
       <Spacer />
       <Grid
