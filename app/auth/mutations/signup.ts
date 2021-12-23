@@ -11,6 +11,7 @@ export default resolver.pipe(
       data: {
         email: email.toLowerCase().trim(),
         name: name.trim(),
+        location: 'Braga',
         profilePicture: profilePicture?.trim(),
         hashedPassword,
         role: 'USER'
