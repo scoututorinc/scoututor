@@ -39,6 +39,7 @@ export default resolver.pipe(
     const user = await db.user.create({
       data: {
         email: email.toLowerCase().trim(),
+        location: 'BRAGA',
         name: first_name.trim() + ' ' + last_name.trim(),
         profilePicture: profilePicture?.trim(),
         hashedPassword,
