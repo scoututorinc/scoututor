@@ -6,7 +6,18 @@ import {
   Routes
 } from 'blitz'
 
-import { Heading, Flex, Grid, Button, Box, Divider, HStack, VStack, Spacer } from '@chakra-ui/react'
+import {
+  Heading,
+  Flex,
+  Grid,
+  Button,
+  Box,
+  Divider,
+  HStack,
+  VStack,
+  Spacer,
+  Input
+} from '@chakra-ui/react'
 
 import { PromiseReturnType } from 'next/dist/types/utils'
 
@@ -17,14 +28,15 @@ import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
 import { StyledLink } from 'app/core/components/StyledLink'
 
 import getUserCourseSuggestions from 'app/users/queries/getUserCourseSuggestions'
-
+import { useState } from 'react'
+import { SearchIcon } from '@chakra-ui/icons'
 
 const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
   coursesSuggested,
   error
 }) => {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState('')
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack mb={4}>
@@ -46,21 +58,26 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
       </Grid>
       <VStack mb={4}>
         <Divider my={4} />
-         <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
-        <VStack spacing={2}>
-          <Heading>Courses</Heading>
-          <Divider />
-        </VStack>
-        <Spacer />
-        <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
-          <Input focusBorderColor='teal.400' type='text' placeholder='What are you looking for?' onChange={
-            (e)=>{setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : "")}
-          }/>
-          <Button colorScheme='teal'>
-            <SearchIcon color='gray.700' />
-          </Button>
-        </HStack>
-      </Flex>
+        <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
+          <VStack spacing={2}>
+            <Heading>Courses</Heading>
+            <Divider />
+          </VStack>
+          <Spacer />
+          <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
+            <Input
+              focusBorderColor='teal.400'
+              type='text'
+              placeholder='What are you looking for?'
+              onChange={(e) => {
+                setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : '')
+              }}
+            />
+            <Button colorScheme='teal'>
+              <SearchIcon color='gray.700' />
+            </Button>
+          </HStack>
+        </Flex>
       </VStack>
       <Spacer />
       <Grid
@@ -78,10 +95,16 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
             </Button>
           </StyledLink>
         </Box>
-        {courses.filter((c) => searchTerm === "" || c.title.toLowerCase().includes(searchTerm) || c.author.location.toLowerCase().includes(searchTerm))
-        .map((c) => (
-          <CourseShortDisplay key={c.id} {...c} />
-        ))}
+        {courses
+          .filter(
+            (c) =>
+              searchTerm === '' ||
+              c.title.toLowerCase().includes(searchTerm) ||
+              c.author.location.toLowerCase().includes(searchTerm)
+          )
+          .map((c) => (
+            <CourseShortDisplay key={c.id} {...c} />
+          ))}
       </Grid>
     </Flex>
   ) : (
