@@ -11,27 +11,16 @@ import { PromiseReturnType } from 'next/dist/types/utils'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getCourses from 'app/courses/queries/getCourses'
-import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
 import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
 
 import { StyledLink } from 'app/core/components/StyledLink'
+import getUserCourseSuggestions from 'app/users/queries/getUserCourseSuggestions'
 
 const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
-  userEnrolledCourses,
+  coursesSuggested,
   error
 }) => {
-  const userTagsNested = userEnrolledCourses?.map((c) => c.knowledgeAreas.map((ka) => ka.name))
-  const userTags = Array.prototype.concat.apply([], userTagsNested)
-
-  let suggestionCourses = courses?.filter((c) =>
-    c.knowledgeAreas.some((e) => userTags.includes(e.name))
-  )
-  suggestionCourses = suggestionCourses?.splice(
-    Math.floor(Math.random() * suggestionCourses.length),
-    4
-  )
-
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack mb={4}>
@@ -47,13 +36,13 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
         }}
         gap={4}
       >
-        {suggestionCourses?.map((c) => (
+        {coursesSuggested?.map((c) => (
           <CourseShortDisplay key={c.id} {...c} />
         ))}
       </Grid>
       <VStack mb={4}>
-        <Heading pb={6}>Courses</Heading>
-        <Divider mt={4} />
+        <Divider my={4} />
+        <Heading>Courses</Heading>
       </VStack>
       <Spacer />
       <Grid
@@ -83,14 +72,14 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
 
 export const getServerSideProps: GetServerSideProps<{
   courses?: PromiseReturnType<typeof getCourses>
-  userEnrolledCourses?: PromiseReturnType<typeof getUserEnrolledCourses>
+  coursesSuggested?: PromiseReturnType<typeof getUserCourseSuggestions>
   error?: any
 }> = async (context) => {
   try {
     const courses = await invokeWithMiddleware(getCourses, null, context)
-    const userEnrolledCourses = await invokeWithMiddleware(getUserEnrolledCourses, null, context)
+    const coursesSuggested = await invokeWithMiddleware(getUserCourseSuggestions, null, context)
     return {
-      props: { courses, userEnrolledCourses }
+      props: { courses, coursesSuggested }
     }
   } catch (e) {
     console.log(e)

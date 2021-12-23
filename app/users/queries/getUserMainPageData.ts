@@ -13,7 +13,6 @@ export default resolver.pipe(resolver.authorize(), async ({ ...props }, ctx) => 
             select: {
               id: true,
               title: true,
-              knowledgeAreas: true,
               posts: {
                 select: {
                   id: true,
@@ -68,7 +67,6 @@ export default resolver.pipe(resolver.authorize(), async ({ ...props }, ctx) => 
       }
     }
   })
-  const x = userMembershipsWithCourse?.courseMemberships[0]?.course.posts[0]
 
   return userMembershipsWithCourse?.courseMemberships.map((m) => m.course) || null
 })
