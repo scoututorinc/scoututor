@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button } from '@chakra-ui/react'
+import { Flex, VStack, HStack, Heading, Divider, Icon, Text, Button, Grid } from '@chakra-ui/react'
 import { FaCheck, FaEuroSign } from 'react-icons/fa'
 import { Routes, useMutation, useRouter } from 'blitz'
 import deleteCourse from 'app/courses/mutations/deleteCourse'
@@ -42,14 +42,22 @@ const CourseDescription = ({
         <Heading size='lg'>Knowledge the tutor can provide</Heading>
         <Divider />
       </VStack>
-      <VStack spacing={8} alignItems='start' pb={10}>
+      <Grid
+        templateColumns={{
+          base: 'repeat(2, 1fr)',
+          lg: 'repeat(3, 1fr)',
+          xl: 'repeat(5, 1fr)'
+        }}
+        gap={6}
+        pb={10}
+      >
         {knowledgeAreas.map((item) => (
           <HStack key={item} spacing={6}>
             <Icon as={FaCheck} />
             <Heading size='md'>{item}</Heading>
           </HStack>
         ))}
-      </VStack>
+      </Grid>
       <VStack alignItems='start' pb={5}>
         <Heading size='lg'>Detailed description</Heading>
         <Divider />
