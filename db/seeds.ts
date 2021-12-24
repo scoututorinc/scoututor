@@ -42,7 +42,7 @@ async function createUsers() {
   users.push({
     name: 'Jose Cardoso',
     email: 'jose@gmail.com',
-    location: 'BRAGA',
+    location: 'Braga',
     profilePicture: faker.image.animals(),
     hashedPassword: await SecurePassword.hash('passpass123')
   })
@@ -53,7 +53,7 @@ async function createUsers() {
     users.push({
       name: `${firstName} ${lastName}`,
       email: faker.internet.email(firstName, lastName).toLowerCase(),
-      location: 'BRAGA',
+      location: 'Braga',
       profilePicture: faker.image.animals(),
       hashedPassword: await SecurePassword.hash('passpass123')
     })
