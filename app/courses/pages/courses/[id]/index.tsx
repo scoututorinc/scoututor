@@ -23,8 +23,6 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   error,
   permissions
 }) => {
-  const is_enrolled = false
-  const is_teacher = true
   return course && permissions ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <VStack spacing={2} pb={8} alignItems='start'>

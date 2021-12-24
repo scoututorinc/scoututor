@@ -5,7 +5,19 @@ import {
   InferGetServerSidePropsType,
   Routes
 } from 'blitz'
-import { Heading, Flex, Grid, Button, Box } from '@chakra-ui/react'
+
+import {
+  Heading,
+  Flex,
+  Grid,
+  Button,
+  Box,
+  Divider,
+  HStack,
+  VStack,
+  Spacer,
+  Input
+} from '@chakra-ui/react'
 
 import { PromiseReturnType } from 'next/dist/types/utils'
 
@@ -15,13 +27,56 @@ import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
 
 import { StyledLink } from 'app/core/components/StyledLink'
 
+import getUserCourseSuggestions from 'app/users/queries/getUserCourseSuggestions'
+import { useState } from 'react'
+import { SearchIcon } from '@chakra-ui/icons'
+
 const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
+  coursesSuggested,
   error
 }) => {
+  const [searchTerm, setSearchTerm] = useState('')
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
-      <Heading pb={6}>Courses</Heading>
+      <VStack mb={4}>
+        <Heading size='lg'>Suggested Courses</Heading>
+        <Divider mt={4} />
+      </VStack>
+      <Spacer />
+      <Grid
+        templateColumns={{
+          base: 'repeat(2, 1fr)',
+          lg: 'repeat(3, 1fr)',
+          xl: 'repeat(4, 1fr)'
+        }}
+        gap={4}
+      >
+        {coursesSuggested?.map((c) => (
+          <CourseShortDisplay key={c.id} {...c} />
+        ))}
+      </Grid>
+      <VStack mb={4}>
+        <Divider my={4} />
+        <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-around' w={'100%'}>
+          <Heading>Courses</Heading>
+          <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
+            <Input
+              focusBorderColor='teal.400'
+              type='text'
+              placeholder='What are you looking for?'
+              onChange={(e) => {
+                setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : '')
+              }}
+            />
+            <Button colorScheme='teal'>
+              <SearchIcon color='gray.700' />
+            </Button>
+          </HStack>
+        </Flex>
+        <Divider />
+      </VStack>
+      <Spacer />
       <Grid
         templateColumns={{
           base: 'repeat(1, 1fr)',
@@ -37,10 +92,16 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
             </Button>
           </StyledLink>
         </Box>
-
-        {courses.map((c) => (
-          <CourseShortDisplay key={c.id} {...c} />
-        ))}
+        {courses
+          .filter(
+            (c) =>
+              searchTerm === '' ||
+              c.title.toLowerCase().includes(searchTerm) ||
+              c.author.location.toLowerCase().includes(searchTerm)
+          )
+          .map((c) => (
+            <CourseShortDisplay key={c.id} {...c} />
+          ))}
       </Grid>
     </Flex>
   ) : (
@@ -50,12 +111,14 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
 
 export const getServerSideProps: GetServerSideProps<{
   courses?: PromiseReturnType<typeof getCourses>
+  coursesSuggested?: PromiseReturnType<typeof getUserCourseSuggestions>
   error?: any
 }> = async (context) => {
   try {
     const courses = await invokeWithMiddleware(getCourses, null, context)
+    const coursesSuggested = await invokeWithMiddleware(getUserCourseSuggestions, null, context)
     return {
-      props: { courses }
+      props: { courses, coursesSuggested }
     }
   } catch (e) {
     console.log(e)
