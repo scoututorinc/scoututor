@@ -19,7 +19,6 @@ model User {
   name           String
   location       String
   email          String   @unique
-  location       String
   profilePicture String?
   hashedPassword String?
   role           Role     @default(USER)
