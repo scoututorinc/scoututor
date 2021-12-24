@@ -10,7 +10,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// --------------------------------------
+// ---------------------------------------
 
 model User {
   id             Int      @id @default(autoincrement())
@@ -19,6 +19,7 @@ model User {
   name           String
   location       String
   email          String   @unique
+  location       String
   profilePicture String?
   hashedPassword String?
   role           Role     @default(USER)

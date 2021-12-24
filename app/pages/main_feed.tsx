@@ -37,13 +37,6 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           <Heading>This is what is happening</Heading>
           <Divider />
         </VStack>
-        <Spacer />
-        <HStack width={{ base: '100%', md: '30%' }} spacing={4}>
-          <Input focusBorderColor='teal.400' type='text' placeholder='What are you looking for?' />
-          <Button colorScheme='teal'>
-            <SearchIcon color='gray.700' />
-          </Button>
-        </HStack>
       </Flex>
       <Flex direction='column' mt={14}>
         <Flex>
