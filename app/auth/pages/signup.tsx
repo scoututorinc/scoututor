@@ -5,7 +5,13 @@ import { SignupForm } from 'app/auth/components/SignupForm'
 const SignupPage: BlitzPage = () => {
   const router = useRouter()
 
-  return <SignupForm onSuccess={() => router.push(Routes.Home())} />
+  return (
+    <SignupForm
+      onSuccess={() => {
+        router.push(Routes.Home())
+      }}
+    />
+  )
 }
 
 SignupPage.getLayout = (page) => <LoggedOutLayout title='Sign Up'>{page}</LoggedOutLayout>

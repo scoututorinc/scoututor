@@ -13,7 +13,7 @@ import {
 import LoginForm from 'app/auth/components/LoginForm'
 import { ChakraProvider } from '@chakra-ui/react'
 import Theme from 'app/theme/Fonts'
-
+import 'app/styles/bubbles.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
@@ -37,7 +37,7 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     return (
       <ErrorComponent
         statusCode={error.statusCode}
-        title="Sorry, you are not authorized to access this"
+        title='Sorry, you are not authorized to access this'
       />
     )
   } else {

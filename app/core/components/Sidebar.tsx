@@ -19,7 +19,7 @@ const Sidebar: FC = () => {
         icon_text: 'Search'
       },
       {
-        href: Routes.MainFeed().pathname,
+        href: Routes.Chat().pathname,
         image_src: '/images/sidebar/messages.png',
         image_alt: 'chat',
         icon_text: 'Chat'
