@@ -14,9 +14,9 @@ const Sidebar: FC = () => {
     upper_items: [
       {
         href: Routes.MainFeed().pathname,
-        image_src: '/images/sidebar/search.png',
-        image_alt: 'scoututor',
-        icon_text: 'Search'
+        image_src: '/images/sidebar/my_feed.png',
+        image_alt: 'main feed',
+        icon_text: 'Feed'
       },
       {
         href: Routes.Chat().pathname,
