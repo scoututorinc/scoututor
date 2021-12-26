@@ -98,7 +98,7 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
               searchTerm === '' ||
               c.title.toLowerCase().includes(searchTerm) ||
               c.author.district.toLowerCase().includes(searchTerm) ||
-              c.author.municipality.toLowerCase().includes(searchTerm)
+              c.author.municipality?.toLowerCase().includes(searchTerm)
           )
           .map((c) => (
             <CourseShortDisplay key={c.id} {...c} />
