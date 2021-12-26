@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { Routes } from 'blitz'
 import {
   BlitzPage,
@@ -10,8 +11,8 @@ import {
   Spacer,
   HStack,
   VStack,
-  Stack,
   Button,
+  IconButton,
   Heading,
   Input,
   Divider,
@@ -20,7 +21,7 @@ import {
 import { PromiseReturnType } from 'next/dist/types/utils'
 import { StyledLink } from 'app/core/components/StyledLink'
 
-import { SearchIcon } from '@chakra-ui/icons'
+import { Search2Icon } from '@chakra-ui/icons'
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
@@ -29,7 +30,22 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   courses,
   error
 }) => {
-  const currently_enrolled_courses = ['Mathematics', 'Geography', 'Graphic Design']
+  const [filterText, setFilterText] = useState('')
+
+  const filterPostByFilter = () => {
+    let posts: Array<Record<string, any>> = []
+    courses?.map((course) => {
+      course.posts.map((post) => posts.push(post))
+    })
+    if (filterText != '') {
+      return posts.filter((post, index) => {
+        post.description.toLowerCase().includes(filterText)
+      })
+    } else {
+      return posts
+    }
+  }
+
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
@@ -56,8 +72,17 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
       </Flex>
       <Flex direction='column' mt={14}>
         <Flex>
-          <VStack spacing={2}>
-            <Heading size='lg'>Latest posts</Heading>
+          <VStack w='100%' spacing={2}>
+            <HStack w='100%' spacing={4} justifyContent='space-between' alignItems='center'>
+              <Heading size='lg'>Latest posts</Heading>
+              <Spacer />
+              <Input
+                maxW='400px'
+                placeholder='Search a post for its content'
+                focusBorderColor='teal.400'
+                onChange={(event) => setFilterText(event.target.value)}
+              />
+            </HStack>
             <Divider mt={4} />
           </VStack>
           <Spacer />
@@ -65,7 +90,11 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
       </Flex>
       <Divider />
       {courses.map((course) =>
-        course.posts.map((post) => <Post key={post.id} courseTitle={course.title} {...post} />)
+        course.posts.map((post) => {
+          if (post.description.toLowerCase().includes(filterText.toLowerCase())) {
+            return <Post key={post.id} courseTitle={course.title} {...post} />
+          }
+        })
       )}
     </Flex>
   ) : (
