@@ -7,6 +7,8 @@ export const Signup = z.object({
   first_name: z.string().min(3),
   last_name: z.string().min(3),
   profilePicture: z.string().url().optional(),
+  district: z.string(),
+  municipality: z.string(),
   password
 })
 
