@@ -12,7 +12,6 @@ import {
   HStack,
   VStack,
   Button,
-  IconButton,
   Heading,
   Input,
   Divider,
@@ -21,7 +20,6 @@ import {
 import { PromiseReturnType } from 'next/dist/types/utils'
 import { StyledLink } from 'app/core/components/StyledLink'
 
-import { Search2Icon } from '@chakra-ui/icons'
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
@@ -31,20 +29,6 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   error
 }) => {
   const [filterText, setFilterText] = useState('')
-
-  const filterPostByFilter = () => {
-    let posts: Array<Record<string, any>> = []
-    courses?.map((course) => {
-      course.posts.map((post) => posts.push(post))
-    })
-    if (filterText != '') {
-      return posts.filter((post, index) => {
-        post.description.toLowerCase().includes(filterText)
-      })
-    } else {
-      return posts
-    }
-  }
 
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
