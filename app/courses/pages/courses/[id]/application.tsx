@@ -21,14 +21,7 @@ const CourseApplication: BlitzPage = () => {
   })
 
   return status.isError == false && course ? (
-    <Flex
-      direction='column'
-      w='100%'
-      h='100%'
-      overflowY='scroll'
-      overflowX='hidden'
-      p={{ base: 4, lg: 10 }}
-    >
+    <Flex direction='column' w='100%' overflowY='scroll' overflowX='hidden' p={{ base: 4, lg: 10 }}>
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
           <BreadcrumbLink href=''>

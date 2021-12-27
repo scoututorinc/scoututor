@@ -2,6 +2,8 @@ import { resolver, NotFoundError } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
+const SEVEN_DAYS_IN_MILLIS = 604_800_000
+
 export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(z.number().int().min(0)),
@@ -12,7 +14,55 @@ export default resolver.pipe(
         author: { select: { name: true, profilePicture: true } },
         reviews: true,
         discipline: true,
-        knowledgeAreas: true
+        knowledgeAreas: true,
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            createdAt: true,
+            updatedAt: true,
+            description: true,
+            files: true,
+            courseId: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                profilePicture: true
+              }
+            },
+            comments: {
+              include: {
+                author: {
+                  select: {
+                    id: true,
+                    name: true,
+                    profilePicture: true
+                  }
+                },
+                replies: {
+                  include: {
+                    author: {
+                      select: {
+                        id: true,
+                        name: true,
+                        profilePicture: true
+                      }
+                    }
+                  },
+                  orderBy: { createdAt: 'desc' }
+                }
+              },
+              orderBy: { createdAt: 'desc' }
+            }
+          },
+          where: {
+            createdAt: {
+              gte: new Date(Date.now() - SEVEN_DAYS_IN_MILLIS)
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        }
       }
     })
   }
