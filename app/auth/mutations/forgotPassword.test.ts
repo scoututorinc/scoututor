@@ -26,7 +26,8 @@ describe('forgotPassword mutation', () => {
       data: {
         email: 'user@example.com',
         name: 'Jose Antunes',
-        location: 'Braga',
+        district: 'Braga',
+        municipality: 'Amares',
         hashedPassword: await SecurePassword.hash('XKCD123'),
         profilePicture: 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png',
         tokens: {

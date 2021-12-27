@@ -1,6 +1,19 @@
 import { Routes, useMutation } from 'blitz'
+import React, { useState } from 'react'
 import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
-import { Flex, Box, Center, HStack, VStack, Img, Heading, Button } from '@chakra-ui/react'
+import {
+  Flex,
+  Box,
+  Center,
+  HStack,
+  VStack,
+  Img,
+  Heading,
+  Button,
+  FormLabel,
+  Container
+} from '@chakra-ui/react'
+import { Select } from 'chakra-react-select'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { AiOutlineMail } from 'react-icons/ai'
 import { RiLockPasswordFill } from 'react-icons/ri'
@@ -10,6 +23,8 @@ import { Signup } from 'app/auth/validations'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { portugal } from 'app/auth/data/portugal'
+import { string } from 'zod'
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -17,6 +32,9 @@ type SignupFormProps = {
 
 export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
+  const [selectableConselhos, setSelectableConselhos] = useState(
+    [] as Array<Record<string, string>> | undefined
+  )
 
   return (
     <Box
@@ -35,9 +53,12 @@ export const SignupForm = (props: SignupFormProps) => {
         <Form
           schema={Signup}
           initialValues={{
-            name: '',
+            first_name: '',
+            last_name: '',
             email: '',
-            password: ''
+            password: '',
+            district: '',
+            municipality: ''
           }}
           onSubmit={async (values) => {
             try {
@@ -56,9 +77,16 @@ export const SignupForm = (props: SignupFormProps) => {
           <VStack spacing={6} p={10}>
             <VStack spacing={4}>
               <LabeledTextField
-                name='name'
-                label='Name'
-                placeholder='Full Name'
+                name='first_name'
+                label='First Name'
+                placeholder='First Name'
+                type='text'
+                icon={BsFillPersonFill}
+              />
+              <LabeledTextField
+                name='last_name'
+                label='Last Name'
+                placeholder='Last Name'
                 type='text'
                 icon={BsFillPersonFill}
               />
@@ -68,6 +96,48 @@ export const SignupForm = (props: SignupFormProps) => {
                 placeholder='Email'
                 icon={AiOutlineMail}
               />
+              <VStack w='100%' spacing={2} alignItems='start'>
+                <Container w='100%' m={0} p={0}>
+                  <Heading size='sm' mb={2}>
+                    Location
+                  </Heading>
+                  <FormLabel>
+                    <strong>District</strong>
+                  </FormLabel>
+                  <Select
+                    mb={2}
+                    selectedOptionStyle='check'
+                    placeholder='Select ...'
+                    name='district'
+                    onChange={(event) => {
+                      const chosen_district = portugal.find(
+                        (element) => element.name == event.value
+                      )
+                      const selectableConselhos_ = chosen_district?.conselhos.map((conselho) => {
+                        return {
+                          label: conselho.name,
+                          value: conselho.name
+                        }
+                      })
+                      setSelectableConselhos(selectableConselhos_)
+                    }}
+                    options={portugal.map((district) => {
+                      return { label: district.name, value: district.name }
+                    })}
+                  />
+                  <FormLabel mt={2}>
+                    <strong>Municipality</strong>
+                  </FormLabel>
+                  <Select
+                    isDisabled={selectableConselhos?.length == 0}
+                    name='municipality'
+                    selectedOptionStyle='check'
+                    placeholder='Select ...'
+                    options={selectableConselhos}
+                  />
+                </Container>
+              </VStack>
+
               <LabeledTextField
                 name='password'
                 label='Password'

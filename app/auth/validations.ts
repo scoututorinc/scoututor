@@ -4,9 +4,19 @@ const password = z.string().min(10).max(100)
 
 export const Signup = z.object({
   email: z.string().email(),
-  name: z.string().min(5),
+  first_name: z.string().min(3),
+  last_name: z.string().min(3),
   profilePicture: z.string().url().optional(),
+  district: z.string(),
+  municipality: z.string(),
   password
+})
+
+export const ChatSignUp = z.object({
+  username: z.string().nonempty(),
+  first_name: z.string().nonempty(),
+  last_name: z.string().nonempty(),
+  secret: z.string().nonempty()
 })
 
 export const Login = z.object({
