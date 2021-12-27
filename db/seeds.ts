@@ -34,6 +34,7 @@ const seed = async () => {
   const courses = await createCourses(users, disciplines, knowledgeAreas)
   await createCourseMemberships(users, courses)
   await createCourseApplications(users, courses)
+  await createCourseReviews(users, courses)
 }
 
 async function createUsers() {
@@ -216,6 +217,23 @@ async function createCourseApplications(users: User[], courses: Course[]) {
   }
 
   await Promise.all(courseApplications.map((c) => db.courseApplication.create({ data: c })))
+}
+
+async function createCourseReviews(users: User[], courses: Course[]) {
+  const courseReviews: Prisma.CourseReviewCreateInput[] = []
+  for (const index in range(20)) {
+    const courseId = courses[index]?.id || 0
+    for (const app_index in range(10)) {
+      const reviewerId = users[app_index]?.id || 0
+      courseReviews.push({
+        rating: randomInt(1, 5),
+        content: faker.lorem.paragraph(randomInt(1, 3)),
+        course: { connect: { id: courseId } },
+        author: { connect: { id: reviewerId } }
+      })
+    }
+  }
+  await Promise.all(courseReviews.map((c) => db.courseReview.create({ data: c })))
 }
 
 export default seed

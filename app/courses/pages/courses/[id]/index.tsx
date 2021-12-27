@@ -42,11 +42,31 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
               <Button colorScheme='teal'>Create post</Button>
             </StyledLink>
           )}
-          <CourseReview />
-          <CourseReview />
+          <VStack maxH='40vh' overflowY='hidden'>
+            {course.reviews.map((review) => (
+              <CourseReview
+                key={review.content}
+                version='small'
+                authorId={review.authorId}
+                content={review.content}
+                rating={review.rating}
+              />
+            ))}
+          </VStack>
+          <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })}>
+            <Button colorScheme='teal' mt={4}>
+              See all reviews in detail
+            </Button>
+          </StyledLink>
+
           {/* Can't enroll, is not owner => Enrolled */}
           {!permissions.canJoinCourse && !permissions.canUpdateCourse && (
             <VStack spacing={4} width='90%'>
+              {/* <StyledLink href={Routes.CoursePosts({ id: course.id })}>
+                <Button colorScheme='teal' width='80%'>
+                  See all course posts
+                </Button>
+              </StyledLink> */}
               <Button colorScheme='teal' width='80%'>
                 Comment on course
               </Button>
