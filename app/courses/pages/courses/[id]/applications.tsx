@@ -51,7 +51,7 @@ const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
       </VStack>
       <VStack spacing={4}>
         {course.applications.map((application, i) => (
-          <Application key={application.id || i} {...application} />
+          <Application isAuthor={false} key={application.id || i} {...application} />
         ))}
       </VStack>
     </Flex>
