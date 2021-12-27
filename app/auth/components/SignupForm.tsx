@@ -110,8 +110,10 @@ export const SignupForm = (props: SignupFormProps) => {
                     placeholder='Select ...'
                     name='district'
                     onChange={(event) => {
-                      let chosen_district = portugal.find((element) => element.name == event.value)
-                      let selectableConselhos_ = chosen_district?.conselhos.map((conselho) => {
+                      const chosen_district = portugal.find(
+                        (element) => element.name == event.value
+                      )
+                      const selectableConselhos_ = chosen_district?.conselhos.map((conselho) => {
                         return {
                           label: conselho.name,
                           value: conselho.name
