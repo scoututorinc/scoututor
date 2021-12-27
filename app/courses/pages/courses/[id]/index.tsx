@@ -17,7 +17,6 @@ import { StyledLink } from 'app/core/components/StyledLink'
 
 import getCourse from 'app/courses/queries/getCourse'
 import getAbility from 'app/guard/queries/getAbility'
-import { Router } from 'next/dist/client/router'
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
