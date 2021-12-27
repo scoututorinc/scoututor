@@ -111,13 +111,13 @@ export const SignupForm = (props: SignupFormProps) => {
                     name='district'
                     onChange={(event) => {
                       let chosen_district = portugal.find((element) => element.name == event.value)
-                      let cenas = chosen_district?.conselhos.map((conselho) => {
+                      let selectableConselhos_ = chosen_district?.conselhos.map((conselho) => {
                         return {
                           label: conselho.name,
                           value: conselho.name
                         }
                       })
-                      setSelectableConselhos(cenas)
+                      setSelectableConselhos(selectableConselhos_)
                     }}
                     options={portugal.map((district) => {
                       return { label: district.name, value: district.name }
@@ -127,6 +127,7 @@ export const SignupForm = (props: SignupFormProps) => {
                     <strong>Municipality</strong>
                   </FormLabel>
                   <Select
+                    isDisabled={selectableConselhos?.length == 0}
                     name='municipality'
                     selectedOptionStyle='check'
                     placeholder='Select ...'
