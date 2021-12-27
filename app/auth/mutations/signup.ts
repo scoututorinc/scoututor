@@ -34,12 +34,16 @@ const createChatUser = ({
 
 export default resolver.pipe(
   resolver.zod(Signup),
-  async ({ email, first_name, last_name, profilePicture, password }, ctx) => {
+  async (
+    { email, first_name, last_name, district, municipality, profilePicture, password },
+    ctx
+  ) => {
     const hashedPassword = await SecurePassword.hash(password.trim())
     const user = await db.user.create({
       data: {
         email: email.toLowerCase().trim(),
-        location: 'Braga',
+        district,
+        municipality,
         name: first_name.trim() + ' ' + last_name.trim(),
         profilePicture: profilePicture?.trim(),
         hashedPassword,

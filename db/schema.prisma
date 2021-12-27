@@ -17,7 +17,8 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   name           String
-  location       String
+  district       String
+  municipality   String?
   email          String   @unique
   profilePicture String?
   hashedPassword String?
