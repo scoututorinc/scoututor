@@ -5,25 +5,27 @@ import {
   GetServerSideProps,
   invokeWithMiddleware,
   InferGetServerSidePropsType,
-  useRouter,
-  useMutation,
-  Routes,
-  validateZodSchema
+  Routes
 } from 'blitz'
-import { Flex, Button, VStack, HStack, Heading, Divider, Img } from '@chakra-ui/react'
+import {
+  Flex,
+  Button,
+  VStack,
+  HStack,
+  Heading,
+  Divider,
+  Img,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink
+} from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 import getCurrentUser from 'app/users/queries/getCurrentUser'
-import logout from 'app/auth/mutations/logout'
-import deleteAccount from 'app/auth/mutations/deleteAccount'
-import updateProfile from 'app/auth/mutations/updateProfile'
-import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogglebleTextField'
-import { UpdateProfile } from 'app/auth/validations'
-import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
-import { MdAlternateEmail } from 'react-icons/md'
 import { EditProfileForm } from 'app/users/components/EditProfileForm'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 
 const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -31,6 +33,14 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
 }) => {
   return currentUser ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
+      <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon color='gray.500' />}>
+        <BreadcrumbItem>
+          <BreadcrumbLink href={Routes.Activity().pathname}>Profile</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink href={Routes.Profile().pathname}>Edit profile</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <VStack>
         <VStack spacing={2} alignItems='start' w='100%' mb={6}>
           <Heading>Profile</Heading>

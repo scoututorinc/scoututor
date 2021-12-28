@@ -33,6 +33,7 @@ type MessageProps = {
 }
 
 type ApplicationProps = {
+  isAuthor: boolean
   id: number
   description: string
   availableSchedule: string
@@ -46,6 +47,7 @@ type ApplicationProps = {
 }
 
 const Application = ({
+  isAuthor,
   id,
   description,
   availableSchedule,
@@ -61,7 +63,7 @@ const Application = ({
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <VStack spacing={4} mb={4}>
+    <VStack w='100%' spacing={4} mb={4}>
       <Box borderWidth='1px' width='100%' rounded={6}>
         <Flex direction='column' p={4}>
           <HStack spacing={4} alignItems='center' justifyContent='start' mb={4}>
@@ -89,23 +91,25 @@ const Application = ({
             <Divider />
             <Text fontWeight='bold'>{availableSchedule}</Text>
           </VStack>
-          <HStack justifyContent='center' mb={6}>
-            <Button
-              colorScheme='teal'
-              onClick={async () => {
-                await acceptApplicationMutation({
-                  applicationId: id,
-                  applicantId: applicantId,
-                  courseId: courseId
-                })
-              }}
-            >
-              Accept
-            </Button>
-            <Button colorScheme='red' onClick={async () => await declineApplicationMutation(id)}>
-              Decline
-            </Button>
-          </HStack>
+          {!isAuthor && (
+            <HStack justifyContent='center' mb={6}>
+              <Button
+                colorScheme='teal'
+                onClick={async () => {
+                  await acceptApplicationMutation({
+                    applicationId: id,
+                    applicantId: applicantId,
+                    courseId: courseId
+                  })
+                }}
+              >
+                Accept
+              </Button>
+              <Button colorScheme='red' onClick={async () => await declineApplicationMutation(id)}>
+                Decline
+              </Button>
+            </HStack>
+          )}
           <HStack justifyContent='center' mb={2}>
             <Button
               leftIcon={<Icon as={AiFillMessage} />}
