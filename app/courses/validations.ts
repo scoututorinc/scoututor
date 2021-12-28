@@ -51,7 +51,12 @@ export const CoursePost = z.object({
   courseId: z.number(),
   title: z.string().min(5),
   description: z.string().min(20),
-  files: z.array(z.string())
+  files: z.array(
+    z.object({
+      name: z.string().min(1),
+      url: z.string().url()
+    })
+  )
 })
 
 export const CreatePostCommentInput = z.object({
