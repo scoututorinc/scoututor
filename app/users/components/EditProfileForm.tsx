@@ -46,12 +46,13 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
         initialValues={{
           name: null,
           email: null,
+          profilePicture: null,
           password: null,
           currentPassword: undefined
         }}
         debug={console.log}
         onSubmit={async (values) => {
-          await updateProfileMutation({ profilePicture, ...values })
+          await updateProfileMutation({ ...values, profilePicture })
           setIsOpenUpdate(false)
           if (values.email || values.password) {
             setIsOpenResultInformer({ status: true, reload: false })

@@ -39,7 +39,7 @@ export const SignupForm = (props: SignupFormProps) => {
   )
 
   const [isUploading, setIsUploading] = useState(false)
-  const [profilePicture, setProfilePicture] = useState('/images/sidebar/profile.png')
+  const [profilePicture, setProfilePicture] = useState(null)
 
   return (
     <Box
@@ -60,6 +60,7 @@ export const SignupForm = (props: SignupFormProps) => {
           initialValues={{
             first_name: '',
             last_name: '',
+            profilePicture: null,
             email: '',
             password: '',
             district: '',
@@ -67,7 +68,7 @@ export const SignupForm = (props: SignupFormProps) => {
           }}
           onSubmit={async (values) => {
             try {
-              await signupMutation({ profilePicture, ...values })
+              await signupMutation({ ...values, profilePicture })
               props.onSuccess?.()
             } catch (error: any) {
               if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
@@ -84,9 +85,14 @@ export const SignupForm = (props: SignupFormProps) => {
               <FormControl>
                 <FormLabel fontWeight='bold'>Profile Picture</FormLabel>
                 <HStack>
-                  <Img src={profilePicture} width='50px' height='50px' objectFit={'cover'} />
+                  <Img
+                    src={profilePicture || '/images/sidebar/profile.png'}
+                    width='50px'
+                    height='50px'
+                    objectFit={'cover'}
+                  />
                   <Spacer />
-                  <Button onClick={() => setIsUploading(true)}>Update</Button>
+                  <Button onClick={() => setIsUploading(true)}>Upload</Button>
                 </HStack>
                 {isUploading && (
                   <PickerOverlay

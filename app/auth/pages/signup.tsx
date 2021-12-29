@@ -8,7 +8,7 @@ const SignupPage: BlitzPage = () => {
   return (
     <SignupForm
       onSuccess={() => {
-        router.push(Routes.Home())
+        router.push(Routes.MainFeed())
       }}
     />
   )
