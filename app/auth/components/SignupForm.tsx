@@ -19,7 +19,7 @@ import { Select } from 'chakra-react-select'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { AiOutlineMail } from 'react-icons/ai'
 import { RiLockPasswordFill } from 'react-icons/ri'
-import { PickerInline, PickerOverlay, PickerDropPane } from 'filestack-react'
+import { PickerOverlay } from 'filestack-react'
 
 import signup from 'app/auth/mutations/signup'
 import { Signup } from 'app/auth/validations'
@@ -84,29 +84,22 @@ export const SignupForm = (props: SignupFormProps) => {
               <FormControl>
                 <FormLabel fontWeight='bold'>Profile Picture</FormLabel>
                 <HStack>
-                  <Img
-                    src={profilePicture}
-                    width='50px'
-                    height='50px'
-                    objectFit={'cover'}
-                    onClick={() => setIsUploading(true)}
-                  />
+                  <Img src={profilePicture} width='50px' height='50px' objectFit={'cover'} />
                   <Spacer />
                   <Button onClick={() => setIsUploading(true)}>Update</Button>
                 </HStack>
+                {isUploading && (
+                  <PickerOverlay
+                    apikey='AzwEASTdfQ5OYbBHxlAxrz'
+                    onSuccess={(res) => {
+                      setIsUploading(false)
+                      setProfilePicture(res.filesUploaded[0].url)
+                    }}
+                    onUploadDone={(res) => res}
+                    pickerOptions={{ accept: 'image/*', imageDim: [300, 300] }}
+                  />
+                )}
               </FormControl>
-              {isUploading && (
-                <PickerOverlay
-                  apikey='AzwEASTdfQ5OYbBHxlAxrz'
-                  onSuccess={(res) => {
-                    setIsUploading(false)
-                    setProfilePicture(res.filesUploaded[0].url)
-                    console.log(res)
-                  }}
-                  onUploadDone={(res) => console.log(res)}
-                  pickerOptions={{ accept: 'image/*', imageDim: [300, 300] }}
-                />
-              )}
               <LabeledTextField
                 name='first_name'
                 label='First Name'

@@ -6,7 +6,7 @@ import db from 'db'
 export default resolver.pipe(
   resolver.zod(UpdateProfile),
   resolver.authorize(),
-  async ({ name, email, password, currentPassword }, ctx) => {
+  async ({ name, email, password, currentPassword, profilePicture }, ctx) => {
     const user = await db.user.findFirst({
       where: { id: ctx.session.userId! }
     })
@@ -16,8 +16,9 @@ export default resolver.pipe(
     await authenticateUser(user.email, currentPassword)
 
     let update_object = {
-      name: name,
-      email: email,
+      name,
+      email,
+      profilePicture,
       password: password ? await SecurePassword.hash(password?.trim()) : null
     }
 
