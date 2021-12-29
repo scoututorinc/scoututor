@@ -17,7 +17,8 @@ import {
   Img,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink
+  BreadcrumbLink,
+  Spacer
 } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
@@ -46,19 +47,11 @@ const Profile: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           <Heading>Profile</Heading>
           <Divider />
         </VStack>
-        <Img
-          src={currentUser.profilePicture || '/images/profile.png'}
-          maxWidth='150px'
-          mb={2}
-          borderRadius='full'
-        />
-        <Button leftIcon={<BiEdit />} variant='ghost'>
-          Edit profile picture
-        </Button>
         <EditProfileForm
           defaultValues={{
             name: currentUser.name,
-            email: currentUser.email
+            email: currentUser.email,
+            profilePicture: currentUser.profilePicture
           }}
         />
       </VStack>

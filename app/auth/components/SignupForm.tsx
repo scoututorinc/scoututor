@@ -1,5 +1,5 @@
 import { Routes, useMutation } from 'blitz'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
 import {
   Flex,
@@ -11,12 +11,15 @@ import {
   Heading,
   Button,
   FormLabel,
-  Container
+  Container,
+  FormControl,
+  Spacer
 } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { AiOutlineMail } from 'react-icons/ai'
 import { RiLockPasswordFill } from 'react-icons/ri'
+import { PickerOverlay } from 'filestack-react'
 
 import signup from 'app/auth/mutations/signup'
 import { Signup } from 'app/auth/validations'
@@ -24,7 +27,6 @@ import { Signup } from 'app/auth/validations'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { StyledLink } from 'app/core/components/StyledLink'
 import { portugal } from 'app/auth/data/portugal'
-import { string } from 'zod'
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -35,6 +37,9 @@ export const SignupForm = (props: SignupFormProps) => {
   const [selectableConselhos, setSelectableConselhos] = useState(
     [] as Array<Record<string, string>> | undefined
   )
+
+  const [isUploading, setIsUploading] = useState(false)
+  const [profilePicture, setProfilePicture] = useState('/images/sidebar/profile.png')
 
   return (
     <Box
@@ -62,7 +67,7 @@ export const SignupForm = (props: SignupFormProps) => {
           }}
           onSubmit={async (values) => {
             try {
-              await signupMutation(values)
+              await signupMutation({ profilePicture, ...values })
               props.onSuccess?.()
             } catch (error: any) {
               if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
@@ -76,6 +81,25 @@ export const SignupForm = (props: SignupFormProps) => {
         >
           <VStack spacing={6} p={10}>
             <VStack spacing={4}>
+              <FormControl>
+                <FormLabel fontWeight='bold'>Profile Picture</FormLabel>
+                <HStack>
+                  <Img src={profilePicture} width='50px' height='50px' objectFit={'cover'} />
+                  <Spacer />
+                  <Button onClick={() => setIsUploading(true)}>Update</Button>
+                </HStack>
+                {isUploading && (
+                  <PickerOverlay
+                    apikey='AzwEASTdfQ5OYbBHxlAxrz'
+                    onSuccess={(res) => {
+                      setIsUploading(false)
+                      setProfilePicture(res.filesUploaded[0].url)
+                    }}
+                    onUploadDone={(res) => res}
+                    pickerOptions={{ accept: 'image/*', imageDim: [300, 300] }}
+                  />
+                )}
+              </FormControl>
               <LabeledTextField
                 name='first_name'
                 label='First Name'
@@ -149,7 +173,7 @@ export const SignupForm = (props: SignupFormProps) => {
           </VStack>
           <Center>
             <HStack spacing={4} p={6}>
-              <StyledLink href={Routes.Home().pathname}>
+              <StyledLink href={Routes.Home()}>
                 <Button variant='outline'>Cancel</Button>
               </StyledLink>
               <Button type='submit' colorScheme='teal'>

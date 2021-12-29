@@ -1,6 +1,19 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useParam, Routes } from 'blitz'
-import { Box, Flex, Stack, Img, Heading, VStack, Button } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Stack,
+  Img,
+  Heading,
+  VStack,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Spacer,
+  Grid
+} from '@chakra-ui/react'
 import { CoursePost } from 'app/courses/validations'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
@@ -8,6 +21,8 @@ import CreatePost from 'app/courses/mutations/createPost'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 import { StyledLink } from 'app/core/components/StyledLink'
 import { Form } from 'app/core/components/forms/Form'
+import { AiFillFilePdf } from 'react-icons/ai'
+import { PickerDropPane } from 'filestack-react'
 
 export const PostCreationForm = () => {
   const [isResultAlertOpen, setIsResultAlertOpen] = useState(false)
@@ -16,12 +31,19 @@ export const PostCreationForm = () => {
   const cancelRef = useRef(null)
   const courseId: number | undefined = useParam('id', 'number')
 
+  const [files, setFiles] = useState<{ name: string; url: string }[]>([])
+
   const [values, setValues] = useState({
     title: '',
     description: '',
     files: [],
     courseId: courseId
   })
+
+  const [isOnBrowser, setIsOnBrowser] = useState(false)
+  useEffect(() => {
+    setIsOnBrowser(true)
+  }, [])
 
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '60%' }}>
@@ -41,7 +63,7 @@ export const PostCreationForm = () => {
             schema={CoursePost}
             initialValues={values}
             onSubmit={async (values) => {
-              await createPostMutation(values)
+              await createPostMutation({ ...values, files })
               setIsResultAlertOpen(true)
             }}
           >
@@ -56,7 +78,31 @@ export const PostCreationForm = () => {
                 name='description'
                 placeholder='Give a description to your post'
               />
-              <LabeledTextField disabled='true' label='Files' name='files' placeholder='Files' />
+              <FormControl>
+                <FormLabel fontWeight='bold'>Files</FormLabel>
+                <Grid templateColumns='repeat(4, 1fr)' gap={2} mb={5}>
+                  {files.map((file) => (
+                    <Button key={file.name} leftIcon={<AiFillFilePdf />}>
+                      <StyledLink href={file.url} rel='noopener noreferrer' target='_blank'>
+                        {file.name}
+                      </StyledLink>
+                    </Button>
+                  ))}
+                  <Spacer />
+                </Grid>
+                {isOnBrowser && (
+                  <PickerDropPane
+                    apikey='AzwEASTdfQ5OYbBHxlAxrz'
+                    onSuccess={(res) => {
+                      setFiles(
+                        res.filesUploaded.map((file) => ({ name: file.filename, url: file.url }))
+                      )
+                    }}
+                    onUploadDone={(res) => res}
+                    pickerOptions={{ maxFiles: 10 }}
+                  />
+                )}
+              </FormControl>
               <Button type='submit' colorScheme='teal'>
                 Create post
               </Button>

@@ -11,7 +11,7 @@ export default resolver.pipe(
         courseId,
         title,
         description,
-        files,
+        files: { createMany: { data: files } },
         authorId: ctx.session.$publicData.userId
       }
     })

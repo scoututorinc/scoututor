@@ -32,7 +32,7 @@ interface PostProps {
   createdAt: Date
   updatedAt: Date
   description: string
-  files: string[]
+  files: { name: string; url: string }[]
   courseId: number
   courseTitle: string
   author: {
@@ -104,8 +104,10 @@ const Post = (props: PostProps) => {
         <Text>{props.description}</Text>
         <Stack direction={{ base: 'column', md: 'row' }} spacing={4} mt={4}>
           {props.files.map((file) => (
-            <Button key={file} leftIcon={<AiFillFilePdf />}>
-              {file}
+            <Button key={file.name} leftIcon={<AiFillFilePdf />}>
+              <StyledLink href={file.url} rel='noopener noreferrer' target='_blank'>
+                {file.name}
+              </StyledLink>
             </Button>
           ))}
         </Stack>
@@ -155,8 +157,10 @@ const Post = (props: PostProps) => {
                 <Text>{props.description}</Text>
                 <Stack direction={{ base: 'column', md: 'row' }} spacing={4} mt={4}>
                   {props.files.map((file) => (
-                    <Button key={file} leftIcon={<AiFillFilePdf />}>
-                      {file}
+                    <Button key={file.name} leftIcon={<AiFillFilePdf />}>
+                      <StyledLink href={file.url} rel='noopener noreferrer' target='_blank'>
+                        {file.name}
+                      </StyledLink>
                     </Button>
                   ))}
                 </Stack>

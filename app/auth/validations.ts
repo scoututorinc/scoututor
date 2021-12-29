@@ -47,11 +47,13 @@ export const ChangePassword = z.object({
 export const UpdateProfile = z.object({
   name: z.string().min(5).nullable(),
   email: z.string().email().nullable(),
+  profilePicture: z.string().nullable().optional(),
   password: password.nullable(),
   currentPassword: password
 })
 
 export const UpdateProfileFormPlaceholders = z.object({
   name: z.string().min(5),
-  email: z.string().email()
+  email: z.string().email(),
+  profilePicture: z.string().nullable()
 })

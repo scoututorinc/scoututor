@@ -153,7 +153,14 @@ async function createCourses(
           title: faker.company.catchPhrase(),
           description: faker.lorem.paragraphs(2, '.'),
           authorId: authorId,
-          files: ['file1.pdf', 'file2.pdf'],
+          files: {
+            createMany: {
+              data: [
+                { name: 'file1.png', url: faker.image.business() },
+                { name: 'file2.png', url: faker.image.business() }
+              ]
+            }
+          },
           comments: {
             create: range(5).map((_) => ({
               content: faker.lorem.paragraphs(1, '.'),
