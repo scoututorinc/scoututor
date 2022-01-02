@@ -38,8 +38,9 @@ model User {
   chats    Chat[]
   messages Message[]
 
-  tokens   Token[]
-  sessions Session[]
+  tokens           Token[]
+  sessions         Session[]
+  AvailableSession AvailableSession[]
 }
 
 model Course {
@@ -113,6 +114,9 @@ model WeeklySession {
   startTime DateTime  @db.Time
   endTime   DateTime  @db.Time
 
+  availableSessionId Int
+  availableSession   AvailableSession @relation(fields: [availableSessionId], references: [id])
+
   courseMembershipId Int
   courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
 }
@@ -129,19 +133,23 @@ model CourseApplication {
   courseId Int
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  applicantId Int
-  applicant   User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId      Int
+  applicant        User               @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  AvailableSession AvailableSession[]
 }
 
-// model AvailableSession {
-//   id        Int      @id @default(autoincrement())
-//   day       WeekDay
-//   startTime DateTime @db.Time
-//   endTime   DateTime @db.Time
+model AvailableSession {
+  id        Int      @id @default(autoincrement())
+  day       WeekDay
+  startTime DateTime @db.Time
+  endTime   DateTime @db.Time
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 
-//   courseApplication   CourseApplication? @relation(fields: [courseApplicationId], references: [id])
-//   courseApplicationId Int?
-// }
+  courseApplication   CourseApplication? @relation(fields: [courseApplicationId], references: [id])
+  courseApplicationId Int?
+  weeklySession       WeeklySession[]
+}
 
 model CourseApplicationMessage {
   id        Int      @id @default(autoincrement())

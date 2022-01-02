@@ -1,4 +1,5 @@
-import { CourseMembership, WeekDay } from '@prisma/client'
+import { PrismaModelsType } from '@blitz-guard/core'
+import { AvailableSession, CourseMembership, WeekDay } from '@prisma/client'
 import { SecurePassword } from 'blitz'
 import db, { Course, Discipline, KnowledgeArea, Prisma, User } from 'db'
 
@@ -34,7 +35,8 @@ const seed = async () => {
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
   const courseMemberships = await createCourseMemberships(users, courses)
-  await createWeeklySessions(courseMemberships)
+  const availableSessions = await createAvailableSessions(users)
+  await createWeeklySessions(availableSessions, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
 }
@@ -198,7 +200,30 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
   return db.courseMembership.findMany({})
 }
 
-async function createWeeklySessions(courseMemberships: CourseMembership[]) {
+async function createAvailableSessions(users: User[]) {
+  const availableSessions: Prisma.AvailableSessionCreateManyInput[] = []
+
+  for (const _ in range(200)) {
+    availableSessions.push({
+      day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
+      startTime: new Date(),
+      endTime: new Date(),
+      userId: users[randomInt(0, 5)]?.id || 0
+    })
+  }
+
+  await db.availableSession.createMany({
+    data: availableSessions,
+    skipDuplicates: true
+  })
+
+  return db.availableSession.findMany({})
+}
+
+async function createWeeklySessions(
+  availableSessions: AvailableSession[],
+  courseMemberships: CourseMembership[]
+) {
   const weeklySessions: Prisma.WeeklySessionCreateManyInput[] = []
 
   for (const _ in range(100)) {
@@ -208,6 +233,7 @@ async function createWeeklySessions(courseMemberships: CourseMembership[]) {
       ) as Prisma.Enumerable<WeekDay>,
       startTime: new Date(2021, 12, 30, 15, 0),
       endTime: new Date(2021, 12, 30, 16, 0),
+      availableSessionId: availableSessions[randomInt(0, availableSessions.length)]?.id || 0,
       courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
     })
   }

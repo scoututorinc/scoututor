@@ -5,8 +5,16 @@ import { SelectField } from 'app/core/components/forms/SelectField'
 import { TimeBlock } from 'app/calendar/validations'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import createAvailableTimeBlock from 'app/calendar/mutations/createAvailableTimeBlock'
+import { WeekDay } from '@prisma/client'
 
 const AddFreeTimeBlockForm = () => {
+  const createDateFromTime = (time) => {
+    var date = new Date()
+    date.setHours(time.split(':').at(0))
+    date.setMinutes(time.split(':').at(1))
+    return date
+  }
+
   const [createAvailableTimeBlockMutation] = useMutation(createAvailableTimeBlock)
   return (
     <VStack spacing={2} alignItems='start' mb={6}>
@@ -15,7 +23,7 @@ const AddFreeTimeBlockForm = () => {
       <Box w='100%'>
         <Form
           schema={TimeBlock}
-          initialValues={{ day: '', startTime: null, endTime: null }}
+          initialValues={{ day: 'MONDAY', startTime: '', endTime: '' }}
           onSubmit={async (values) => {
             try {
               await createAvailableTimeBlockMutation(values)
@@ -30,7 +38,7 @@ const AddFreeTimeBlockForm = () => {
                 <SelectField name='day' label='Day' placeholder='Select ...'>
                   {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((e) => {
                     return (
-                      <option key={e} value={e}>
+                      <option key={e} value={e.toUpperCase() as WeekDay}>
                         {e}
                       </option>
                     )

@@ -14,6 +14,7 @@ import {
   HStack,
   Divider,
   Container,
+  Text,
   Button,
   Box,
   Input
@@ -22,12 +23,14 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import getCalendarEvents from 'app/calendar/queries/getCalendarEvents'
 import AddFreeTimeBlockForm from 'app/calendar/components/AddFreeTimeBlockForm'
+import getAvailableSessions from 'app/calendar/queries/getAvailableSessions'
 
 const Calendar: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   events,
+  availableSessions,
   error
 }) => {
-  return (
+  return events && availableSessions ? (
     <Flex direction='column' p={{ base: 6, md: 10 }} width='100%' maxH='100vh'>
       <AddFreeTimeBlockForm />
       <VStack spacing={2} alignItems='start' mb={6}>
@@ -43,17 +46,21 @@ const Calendar: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
         />
       </Container>
     </Flex>
+  ) : (
+    <p>{JSON.stringify(error)}</p>
   )
 }
 
 export const getServerSideProps: GetServerSideProps<{
   events?: PromiseReturnType<typeof getCalendarEvents>
+  availableSessions?: PromiseReturnType<typeof getAvailableSessions>
   error?: any
 }> = async (context) => {
   try {
     const events = await invokeWithMiddleware(getCalendarEvents, null, context)
+    const availableSessions = await invokeWithMiddleware(getAvailableSessions, null, context)
     return {
-      props: { events }
+      props: { events, availableSessions }
     }
   } catch (e) {
     return {
