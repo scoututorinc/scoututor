@@ -1,3 +1,4 @@
+import { CourseMembership, WeekDay } from '@prisma/client'
 import { SecurePassword } from 'blitz'
 import db, { Course, Discipline, KnowledgeArea, Prisma, User } from 'db'
 
@@ -32,7 +33,8 @@ const seed = async () => {
 
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
-  await createCourseMemberships(users, courses)
+  const courseMemberships = await createCourseMemberships(users, courses)
+  await createWeeklySessions(courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
 }
@@ -192,6 +194,27 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
     data: courseMemberships,
     skipDuplicates: true
   })
+
+  return db.courseMembership.findMany({})
+}
+
+async function createWeeklySessions(courseMemberships: CourseMembership[]) {
+  const weeklySessions: Prisma.WeeklySessionCreateManyInput[] = []
+
+  for (const _ in range(100)) {
+    weeklySessions.push({
+      days: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(
+        randomInt(0, 4)
+      ) as Prisma.Enumerable<WeekDay>,
+      startTime: new Date(2021, 12, 30, 15, 0),
+      endTime: new Date(2021, 12, 30, 16, 0),
+      courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
+    })
+  }
+
+  await Promise.all(weeklySessions.map((s) => db.weeklySession.create({ data: s })))
+
+  return await db.weeklySession.findMany({})
 }
 
 async function createCourseApplications(users: User[], courses: Course[]) {

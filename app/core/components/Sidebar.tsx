@@ -31,8 +31,14 @@ const Sidebar: FC = () => {
         icon_text: 'Courses'
       }
     ],
+    calendar: {
+      href: Routes.Calendar().pathname,
+      image_src: '/images/sidebar/calendar.png',
+      image_alt: 'calendar',
+      icon_text: 'Calendar'
+    },
     profile: {
-      href: Routes.Profile().pathname,
+      href: Routes.Activity().pathname,
       image_src: '/images/sidebar/profile.png',
       image_alt: 'profile',
       icon_text: 'Profile'
@@ -65,6 +71,18 @@ const Sidebar: FC = () => {
       </VStack>
       <Spacer />
       <VStack mb={10}>
+        <VStack pt={5}>
+          <StyledLink
+            href={items.calendar.href}
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+          >
+            <Img src={items.calendar.image_src} alt={items.calendar.image_alt} maxWidth='50%' />
+            <Heading size='xs'>{items.calendar.icon_text}</Heading>
+          </StyledLink>
+        </VStack>
+
         <VStack pt={5}>
           <StyledLink
             href={items.profile.href}

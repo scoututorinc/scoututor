@@ -25,7 +25,8 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
+    "district" TEXT NOT NULL,
+    "municipality" TEXT,
     "email" TEXT NOT NULL,
     "profilePicture" TEXT,
     "hashedPassword" TEXT,
@@ -83,6 +84,17 @@ CREATE TABLE "CourseMembership" (
     "courseId" INTEGER NOT NULL,
 
     CONSTRAINT "CourseMembership_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WeeklySession" (
+    "id" SERIAL NOT NULL,
+    "days" "WeekDay"[],
+    "startTime" TIME NOT NULL,
+    "endTime" TIME NOT NULL,
+    "courseMembershipId" INTEGER NOT NULL,
+
+    CONSTRAINT "WeeklySession_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -261,6 +273,9 @@ ALTER TABLE "CourseMembership" ADD CONSTRAINT "CourseMembership_userId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "CourseMembership" ADD CONSTRAINT "CourseMembership_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WeeklySession" ADD CONSTRAINT "WeeklySession_courseMembershipId_fkey" FOREIGN KEY ("courseMembershipId") REFERENCES "CourseMembership"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CourseApplication" ADD CONSTRAINT "CourseApplication_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;

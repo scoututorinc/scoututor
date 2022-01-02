@@ -102,19 +102,20 @@ model CourseMembership {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
+  courseId      Int
+  course        Course          @relation(fields: [courseId], references: [id])
+  weeklySession WeeklySession[]
 }
 
-// model WeeklySession {
-//   id        Int      @id @default(autoincrement())
-//   day       WeekDay
-//   startTime DateTime @db.Time
-//   endTime   DateTime @db.Time
+model WeeklySession {
+  id        Int       @id @default(autoincrement())
+  days      WeekDay[]
+  startTime DateTime  @db.Time
+  endTime   DateTime  @db.Time
 
-//   courseMembershipId Int
-//   courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
-// }
+  courseMembershipId Int
+  courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
+}
 
 model CourseApplication {
   id                Int      @id @default(autoincrement())
