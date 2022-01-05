@@ -3,8 +3,8 @@ import db from 'db'
 
 const convertDay = (day: string) => {
   return {
-    MONDAY: 0,
-    TUESDAY: 1,
+    MONDAY: 1,
+    TUESDAY: 2,
     WEDNESDAY: 3,
     THURSDAY: 4,
     FRIDAY: 5
@@ -12,7 +12,11 @@ const convertDay = (day: string) => {
 }
 
 const convertTime = (time: Date) => {
-  return time.getHours().toString() + ':' + time.getMinutes().toString()
+  return (
+    time.getHours().toString() +
+    ':' +
+    (time.getMinutes() < 10 ? '0' + time.getMinutes().toString() : time.getMinutes().toString())
+  )
 }
 
 export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
@@ -24,13 +28,13 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
       endTime: true
     }
   })
-  console.log(vanilla_sessions)
   return vanilla_sessions.map((session) => {
     return {
       title: 'Free block',
       startTime: convertTime(session.startTime),
       endTime: convertTime(session.endTime),
-      daysOfWeek: [convertDay(session.day)]
+      daysOfWeek: [convertDay(session.day)],
+      color: 'green'
     }
   })
 })

@@ -23,6 +23,8 @@ const pickN = (values: any[], count: number) => {
 }
 
 const seed = async () => {
+  await db.weeklySession.deleteMany({})
+  await db.availableSession.deleteMany({})
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
   await db.user.deleteMany({})
@@ -206,8 +208,8 @@ async function createAvailableSessions(users: User[]) {
   for (const _ in range(200)) {
     availableSessions.push({
       day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
-      startTime: new Date(),
-      endTime: new Date(),
+      startTime: new Date(2021, 12, 12, 21, 0),
+      endTime: new Date(2021, 12, 12, 22, 0),
       userId: users[randomInt(0, 5)]?.id || 0
     })
   }
@@ -231,8 +233,8 @@ async function createWeeklySessions(
       days: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(
         randomInt(0, 4)
       ) as Prisma.Enumerable<WeekDay>,
-      startTime: new Date(2021, 12, 30, 15, 0),
-      endTime: new Date(2021, 12, 30, 16, 0),
+      startTime: new Date(2021, 12, 12, 15),
+      endTime: new Date(2021, 12, 12, 16),
       availableSessionId: availableSessions[randomInt(0, availableSessions.length)]?.id || 0,
       courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
     })

@@ -7,7 +7,7 @@ import {
   PromiseReturnType
 } from 'blitz'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import { Flex, Heading, VStack, Divider, Container } from '@chakra-ui/react'
+import { Flex, Heading, VStack, Divider, Container, Text } from '@chakra-ui/react'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import getCalendarEvents from 'app/calendar/queries/getCalendarEvents'
@@ -19,6 +19,7 @@ const Calendar: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   availableSessions,
   error
 }) => {
+  const fake_event = {}
   return events && availableSessions ? (
     <Flex direction='column' p={{ base: 6, md: 10 }} width='100%' maxH='100vh'>
       <AddFreeTimeBlockForm scheduleSessions={events} />
@@ -31,9 +32,11 @@ const Calendar: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           plugins={[timeGridPlugin]}
           initialView='timeGridWeek'
           weekends={false}
-          events={events}
+          events={events.concat(availableSessions)}
         />
       </Container>
+      {/* <Text>{JSON.stringify(events)}</Text>
+      <Text>{JSON.stringify(availableSessions)}</Text> */}
     </Flex>
   ) : (
     <p>{JSON.stringify(error)}</p>

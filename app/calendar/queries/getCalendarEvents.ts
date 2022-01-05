@@ -3,8 +3,8 @@ import db from 'db'
 
 const convertDays = (days_array: Array<string>) => {
   const correspondence = {
-    MONDAY: 0,
-    TUESDAY: 1,
+    MONDAY: 1,
+    TUESDAY: 2,
     WEDNESDAY: 3,
     THURSDAY: 4,
     FRIDAY: 5
@@ -12,8 +12,15 @@ const convertDays = (days_array: Array<string>) => {
   return days_array.map((element: string) => correspondence[element])
 }
 
+const convertMinutes = (mins) => {
+  if (mins < 10) {
+    return '0' + mins.toString()
+  }
+  return mins.toString()
+}
+
 const convertTime = (time: Date) => {
-  return time.getHours().toString() + ':' + time.getMinutes().toString()
+  return time.getHours().toString() + ':' + convertMinutes(time.getMinutes())
 }
 
 const weeklySessionsFromMemberships = (memberships: Array<Record<string, any>>) => {
@@ -21,9 +28,10 @@ const weeklySessionsFromMemberships = (memberships: Array<Record<string, any>>) 
     return membership.weeklySession.map((session) => {
       return {
         title: membership.course.title,
-        startTime: convertTime(session.startTime) + '0',
-        endTime: convertTime(session.endTime) + '0',
-        daysOfWeek: convertDays(session.days)
+        startTime: convertTime(session.startTime),
+        endTime: convertTime(session.endTime),
+        daysOfWeek: convertDays(session.days),
+        color: 'red'
       }
     })
   })
