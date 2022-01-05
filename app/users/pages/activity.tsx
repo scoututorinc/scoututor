@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import { PromiseReturnType } from 'next/dist/types/utils'
 import {
   BlitzPage,

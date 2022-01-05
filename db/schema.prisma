@@ -203,7 +203,7 @@ model Post {
   updatedAt   DateTime  @updatedAt
   title       String
   description String
-  files       String[]
+  files       File[]
   comments    Comment[]
 
   courseId Int
@@ -211,6 +211,8 @@ model Post {
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
+
+
 }
 
 model Comment {
@@ -232,6 +234,14 @@ model Reply {
   commentId Int
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
+}
+
+model File {
+  id     Int    @id @default(autoincrement())
+  name   String
+  url    String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
 }
 
 model Session {

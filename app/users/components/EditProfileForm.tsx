@@ -33,6 +33,9 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
   const [deleteAccMutation] = useMutation(deleteAccount)
   const [logoutMutation] = useMutation(logout)
 
+  const [isUploading, setIsUploading] = useState(false)
+  const [profilePicture, setProfilePicture] = useState(defaultValues?.profilePicture)
+
   return (
     <Flex direction='column' w={{ base: '90%', lg: '30%' }}>
       <FinalForm
@@ -40,11 +43,13 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
         initialValues={{
           name: null,
           email: null,
+          profilePicture: null,
           password: null,
           currentPassword: undefined
         }}
+        debug={console.log}
         onSubmit={async (values) => {
-          await updateProfileMutation(values)
+          await updateProfileMutation({ ...values, profilePicture })
           setIsOpenUpdate(false)
           if (values.email || values.password) {
             setIsOpenResultInformer({ status: true, reload: false })
@@ -54,6 +59,31 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
         }}
         render={({ form, handleSubmit, submitting, values }) => (
           <form onSubmit={handleSubmit}>
+            <VStack>
+              <Img
+                src={profilePicture || '/images/sidebar/profile.png'}
+                maxWidth='150px'
+                maxHeight='150px'
+                mb={2}
+                borderRadius='full'
+                onClick={() => setIsUploading(true)}
+              />
+              <Button leftIcon={<BiEdit />} variant='ghost' onClick={() => setIsUploading(true)}>
+                Edit profile picture
+              </Button>
+              {isUploading && (
+                <PickerOverlay
+                  apikey='AzwEASTdfQ5OYbBHxlAxrz'
+                  onSuccess={(res) => {
+                    setIsUploading(false)
+                    setProfilePicture(res.filesUploaded[0].url)
+                  }}
+                  onUploadDone={(res) => res}
+                  pickerOptions={{ accept: 'image/*', imageDim: [300, 300] }}
+                />
+              )}
+            </VStack>
+
             <VStack spacing={4} mb={6} w='100%'>
               <LabeledTogglebleTextField
                 label='Name'
@@ -72,7 +102,13 @@ export const EditProfileForm = ({ defaultValues, onSuccess }: EditProfileFormPro
                 onClick={() => {
                   setIsOpenUpdate(true)
                 }}
-                disabled={(!values.name && !values.email && !values.password) || submitting}
+                disabled={
+                  (!values.name &&
+                    !values.email &&
+                    !values.password &&
+                    profilePicture == defaultValues?.profilePicture) ||
+                  submitting
+                }
                 colorScheme='teal'
                 w={{ base: '90%', lg: '60%' }}
               >

@@ -12,6 +12,7 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import getCourse from 'app/courses/queries/getCourse'
 import CourseReview from 'app/courses/components/CourseReview'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 const CourseReviews: BlitzPage = () => {
   const router = useRouter()
@@ -31,9 +32,9 @@ const CourseReviews: BlitzPage = () => {
     >
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
-          <BreadcrumbLink href={Routes.CourseView({ id: course.id.toString() }).pathname}>
+          <StyledLink href={Routes.CourseView({ id: course.id.toString() })}>
             {course.title} by {course.author.name}
-          </BreadcrumbLink>
+          </StyledLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink href=''>Reviews</BreadcrumbLink>
