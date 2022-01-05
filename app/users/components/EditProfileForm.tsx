@@ -4,13 +4,16 @@ import { validateZodSchema, useMutation, useRouter, Routes } from 'blitz'
 
 import { UpdateProfileFormPlaceholders, UpdateProfile } from 'app/auth/validations'
 import { Form as FinalForm } from 'react-final-form'
-import { Flex, HStack, VStack, Button } from '@chakra-ui/react'
+import { Flex, HStack, VStack, Button, Img } from '@chakra-ui/react'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTogglebleTextField } from 'app/core/components/forms/LabeledTogglebleTextField'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 import updateProfile from 'app/auth/mutations/updateProfile'
 import deleteAccount from 'app/auth/mutations/deleteAccount'
 import logout from 'app/auth/mutations/logout'
+
+import { PickerOverlay } from 'filestack-react'
+import { BiEdit } from 'react-icons/bi'
 
 type EditProfileFormProps = {
   onSuccess?: () => void
