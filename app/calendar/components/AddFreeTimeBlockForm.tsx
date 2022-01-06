@@ -108,10 +108,24 @@ const AddFreeTimeBlockForm = (props) => {
                 </Container>
               </VStack>
               <VStack w='100%' spacing={2}>
-                <LabeledTextField type='time' label='Starting time' name='startTime' />
+                <LabeledTextField
+                  type='time'
+                  step='900'
+                  min='07:00'
+                  max='23:00'
+                  label='Starting time'
+                  name='startTime'
+                />
               </VStack>
               <VStack w='100%' spacing={2}>
-                <LabeledTextField type='time' label='Ending time' name='endTime' />
+                <LabeledTextField
+                  type='time'
+                  step='900'
+                  min='07:00'
+                  max='23:00'
+                  label='Ending time'
+                  name='endTime'
+                />
               </VStack>
               <Button type='submit' w='60%' colorScheme='teal'>
                 Add free time block
