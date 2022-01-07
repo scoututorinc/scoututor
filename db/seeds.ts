@@ -235,14 +235,15 @@ async function createWeeklySessions(
 ) {
   const weeklySessions: Prisma.WeeklySessionCreateManyInput[] = []
 
-  for (const _ in range(100)) {
+  for (const i in range(100)) {
     weeklySessions.push({
       days: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(
         randomInt(0, 4)
       ) as Prisma.Enumerable<WeekDay>,
       startTime: new Date(2021, 12, 12, 15),
       endTime: new Date(2021, 12, 12, 16),
-      availableSessionId: availableSessions[randomInt(0, availableSessions.length)]?.id || 0,
+      // availableSessionId: availableSessions[randomInt(0, availableSessions.length)]?.id || 0,
+      availableSessionId: availableSessions[i]?.id || 0,
       courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
     })
   }
