@@ -24,6 +24,7 @@ import { CourseCreationForm } from 'app/courses/components/CourseCreationForm'
 
 import getCourse from 'app/courses/queries/getCourse'
 import editCourse from 'app/courses/mutations/editCourse'
+import { paramToInt } from 'utils'
 
 const EditCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
@@ -74,11 +75,6 @@ const EditCourse: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   ) : (
     <p>{JSON.stringify(error)}</p>
   )
-}
-
-const paramToInt = (param: string | string[] | undefined) => {
-  if (typeof param == 'string') return parseInt(param)
-  else return -1
 }
 
 export const getServerSideProps: GetServerSideProps<{

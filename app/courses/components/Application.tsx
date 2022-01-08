@@ -17,12 +17,15 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  ModalContent
+  ModalContent,
+  ListItem,
+  UnorderedList
 } from '@chakra-ui/react'
 import { AiFillMessage } from 'react-icons/ai'
 import acceptApplication from 'app/courses/mutations/acceptApplication'
 import declineApplication from 'app/courses/mutations/declineApplication'
 import { ApplicationMessages } from 'app/courses/components/ApplicationMessages'
+import { dateToHourMinString } from 'utils'
 
 type MessageProps = {
   content: string
@@ -36,7 +39,7 @@ type ApplicationProps = {
   isAuthor: boolean
   id: number
   description: string
-  availableSchedule: string
+  availableSessions: { id: number; day: string; startTime: Date; endTime: Date; userId: number }[]
   applicant: {
     name: string
     profilePicture: string | null
@@ -50,7 +53,7 @@ const Application = ({
   isAuthor,
   id,
   description,
-  availableSchedule,
+  availableSessions,
   applicant,
   applicantId,
   courseId,
@@ -89,7 +92,13 @@ const Application = ({
               Availability
             </Heading>
             <Divider />
-            <Text fontWeight='bold'>{availableSchedule}</Text>
+            <UnorderedList>
+              {availableSessions?.map((s) => (
+                <ListItem key={s.id}>
+                  {`${s.day} ${dateToHourMinString(s.startTime)}-${dateToHourMinString(s.endTime)}`}
+                </ListItem>
+              ))}
+            </UnorderedList>
           </VStack>
           {!isAuthor && (
             <HStack justifyContent='center' mb={6}>
@@ -152,7 +161,15 @@ const Application = ({
                     Availability
                   </Heading>
                   <Divider />
-                  <Text fontWeight='bold'>{availableSchedule}</Text>
+                  <UnorderedList>
+                    {availableSessions?.map((s) => (
+                      <ListItem key={s.id}>
+                        {`${s.day} ${dateToHourMinString(s.startTime)}-${dateToHourMinString(
+                          s.endTime
+                        )}`}
+                      </ListItem>
+                    ))}
+                  </UnorderedList>
                 </VStack>
                 <HStack justifyContent='center' mb={6}>
                   <Button

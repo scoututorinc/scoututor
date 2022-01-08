@@ -10,7 +10,8 @@ import {
   Text,
   Center,
   Button,
-  Icon
+  Icon,
+  Grid
 } from '@chakra-ui/react'
 
 import Form from 'app/core/components/forms/Form'
@@ -20,10 +21,16 @@ import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaF
 import { CourseApplication } from 'app/courses/validations'
 
 import { RiErrorWarningFill } from 'react-icons/ri'
+import {
+  CheckboxArrayControl,
+  LabeledCheckboxArray
+} from 'app/core/components/forms/LabeledCheckboxArray'
+import { dateToHourMinString } from 'utils'
 
 type CourseApplicationFormProps = {
   onSuccess?: (id: number) => void
   courseId: number
+  availableSessions: { id: number; day: string; startTime: Date; endTime: Date; userId: number }[]
 }
 
 export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
@@ -44,7 +51,7 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
         </Stack>
         <Form
           schema={CourseApplication}
-          initialValues={{ description: '', availableSchedule: '', courseId: props.courseId }}
+          initialValues={{ description: '', availableSessions: [], courseId: props.courseId }}
           onSubmit={async (values) => {
             try {
               console.log(values)
@@ -63,13 +70,27 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
             size='sm'
             type='text'
           />
-          <LabeledTextAreaField
+          {/* <LabeledTextAreaField
             name='availableSchedule'
             label='Availability'
             placeholder='When are you available for classes ?'
             size='sm'
             type='text'
-          />
+          /> */}
+          <LabeledCheckboxArray name='availableSessions' label='Available sessions' my={4}>
+            <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+              {props.availableSessions?.map((s) => (
+                <CheckboxArrayControl
+                  key={s.id}
+                  name='availableSessions'
+                  label={`${s.day} ${dateToHourMinString(s.startTime)}-${dateToHourMinString(
+                    s.endTime
+                  )}`}
+                  value={s.id}
+                />
+              ))}
+            </Grid>
+          </LabeledCheckboxArray>
           <HStack p={4} mb={2}>
             <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
             <Text fontSize='md'>

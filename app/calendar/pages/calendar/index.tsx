@@ -7,19 +7,18 @@ import {
   PromiseReturnType
 } from 'blitz'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import { Flex, Heading, VStack, Divider, Container, Text } from '@chakra-ui/react'
+import { Flex, Heading, VStack, Divider, Container } from '@chakra-ui/react'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import getCalendarEvents from 'app/calendar/queries/getCalendarEvents'
 import AddFreeTimeBlockForm from 'app/calendar/components/AddFreeTimeBlockForm'
-import getAvailableSessions from 'app/calendar/queries/getAvailableSessions'
+import getAvailableSessions from 'app/calendar/queries/getCurrentUserAvailableSessions'
 
 const Calendar: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   events,
   availableSessions,
   error
 }) => {
-  const fake_event = {}
   return events && availableSessions ? (
     <Flex direction='column' p={{ base: 6, md: 10 }} width='100%' maxH='100vh'>
       <AddFreeTimeBlockForm scheduleSessions={events} />

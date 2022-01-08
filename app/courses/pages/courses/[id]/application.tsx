@@ -1,4 +1,14 @@
-import { BlitzPage, useQuery, useParam, useRouter, Router, Routes } from 'blitz'
+import {
+  BlitzPage,
+  useQuery,
+  useParam,
+  useRouter,
+  Routes,
+  GetServerSideProps,
+  PromiseReturnType,
+  invokeWithMiddleware,
+  InferGetServerSidePropsType
+} from 'blitz'
 import {
   Flex,
   Breadcrumb,
@@ -12,8 +22,12 @@ import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { CourseApplicationForm } from 'app/courses/components/CourseApplicationForm'
 import getCourse from 'app/courses/queries/getCourse'
+import { dateToHourMinString, paramToInt } from 'utils'
+import getCourseOwnerAvailableSessions from 'app/calendar/queries/getCourseOwnerAvailableSessions'
 
-const CourseApplication: BlitzPage = () => {
+const CourseApplication: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  availableSessions
+}) => {
   const router = useRouter()
   const courseId = useParam('id', 'number')
   const [course, status] = useQuery(getCourse, courseId, {
@@ -39,10 +53,15 @@ const CourseApplication: BlitzPage = () => {
         <Divider />
       </VStack>
       <Flex width='100%' justifyContent='center'>
-        <CourseApplicationForm
-          courseId={course.id}
-          onSuccess={(id) => router.push(Routes.Applications({ id: courseId || 0 }))}
-        />
+        {availableSessions ? (
+          <CourseApplicationForm
+            courseId={course.id}
+            availableSessions={availableSessions}
+            onSuccess={(id) => router.push(Routes.Applications({ id: courseId || 0 }))}
+          />
+        ) : (
+          'No sessions available :^('
+        )}
       </Flex>
     </Flex>
   ) : (
@@ -50,8 +69,41 @@ const CourseApplication: BlitzPage = () => {
   )
 }
 
+export const getServerSideProps: GetServerSideProps<{
+  availableSessions?: PromiseReturnType<typeof getCourseOwnerAvailableSessions>
+  error?: any
+}> = async (context) => {
+  try {
+    const availableSessions = await invokeWithMiddleware(
+      getCourseOwnerAvailableSessions,
+      paramToInt(context.params?.id),
+      context
+    )
+    console.log(
+      JSON.stringify(
+        availableSessions?.map((s) => ({
+          ...s,
+          startTime: dateToHourMinString(s.startTime),
+          endTime: dateToHourMinString(s.endTime)
+        })),
+        null,
+        2
+      )
+    )
+
+    return {
+      props: { availableSessions }
+    }
+  } catch (e) {
+    return {
+      props: { error: e }
+    }
+  }
+}
+
 CourseApplication.suppressFirstRenderFlicker = true
 CourseApplication.getLayout = (page) => (
   <LoggedInLayout title='Course Application'>{page}</LoggedInLayout>
 )
+
 export default CourseApplication

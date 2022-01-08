@@ -17,6 +17,7 @@ import { StyledLink } from 'app/core/components/StyledLink'
 
 import getCourse from 'app/courses/queries/getCourse'
 import getAbility from 'app/guard/queries/getAbility'
+import { paramToInt } from 'utils'
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
@@ -86,11 +87,6 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   ) : (
     <p>{JSON.stringify(error)}</p>
   )
-}
-
-const paramToInt = (param: string | string[] | undefined) => {
-  if (typeof param == 'string') return parseInt(param)
-  else return -1
 }
 
 export const getServerSideProps: GetServerSideProps<{
