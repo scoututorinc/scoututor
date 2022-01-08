@@ -9,7 +9,7 @@ export default async function getCurrentUserCreatedCourses(_ = null, { session }
     select: {
       id: true,
       description: true,
-      availableSchedule: true,
+      availableSessions: true,
       applicantId: true,
       applicant: { select: { id: true, name: true, profilePicture: true } },
       courseId: true,
