@@ -18,5 +18,12 @@ export default resolver.pipe(
         courseId: courseId
       }
     })
+    const notification = await db.notification.create({
+      data: {
+        type: 'APPLICATION',
+        courseId: courseId,
+        entityId: applicantId
+      }
+    })
   }
 )

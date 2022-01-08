@@ -64,8 +64,9 @@ model Course {
   applications  CourseApplication[]
   usersEnrolled CourseMembership[]
 
-  posts   Post[]
-  reviews CourseReview[]
+  posts        Post[]
+  reviews      CourseReview[]
+  Notification Notification[]
 }
 
 model Discipline {
@@ -265,6 +266,17 @@ model Token {
   @@unique([hashedToken, type])
 }
 
+model Notification {
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  type      NotificationType
+  courseId  Int
+  course    Course           @relation(fields: [courseId], references: [id])
+  entityId  Int
+
+  @@unique([type, entityId])
+}
+
 enum Role {
   USER
   ADMIN
@@ -309,4 +321,9 @@ enum CourseStatus {
   HIDDEN
   ACTIVE
   INACTIVE
+}
+
+enum NotificationType {
+  APPLICATION
+  MEMBERSHIP
 }
