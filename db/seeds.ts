@@ -263,7 +263,8 @@ async function createCourseApplications(users: User[], courses: Course[]) {
 
     courseApplications.push({
       description: faker.lorem.paragraphs(2),
-      availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
+      //TODO: Add available sessions
+      // availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
       courseId,
       applicantId,
       messages: {
