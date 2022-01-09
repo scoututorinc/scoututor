@@ -38,8 +38,9 @@ model User {
   chats    Chat[]
   messages Message[]
 
-  tokens   Token[]
-  sessions Session[]
+  tokens        Token[]
+  sessions      Session[]
+  notifications Notification[]
 }
 
 model Course {
@@ -64,9 +65,9 @@ model Course {
   applications  CourseApplication[]
   usersEnrolled CourseMembership[]
 
-  posts        Post[]
-  reviews      CourseReview[]
-  Notification Notification[]
+  posts         Post[]
+  reviews       CourseReview[]
+  notifications Notification[]
 }
 
 model Discipline {
@@ -271,8 +272,10 @@ model Notification {
   createdAt DateTime         @default(now())
   type      NotificationType
   courseId  Int
-  course    Course           @relation(fields: [courseId], references: [id])
+  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   entityId  Int
+  userId    Int
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([type, entityId])
 }

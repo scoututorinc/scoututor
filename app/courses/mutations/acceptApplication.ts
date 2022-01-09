@@ -22,7 +22,8 @@ export default resolver.pipe(
       data: {
         type: 'APPLICATION',
         courseId: courseId,
-        entityId: applicantId
+        userId: applicantId,
+        entityId: membership.id
       }
     })
   }

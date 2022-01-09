@@ -13,6 +13,7 @@ import {
   VStack,
   Button,
   Heading,
+  Text,
   Input,
   Divider,
   Box
@@ -23,18 +24,21 @@ import { StyledLink } from 'app/core/components/StyledLink'
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
+import getNotifications from 'app/users/queries/getNotifications'
 
 const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
+  notifications,
   error
 }) => {
   const [filterText, setFilterText] = useState('')
-
+  console.log(notifications)
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
         <VStack spacing={2}>
           <Heading>This is what is happening</Heading>
+          <Text> You have {notifications?.length} notifications</Text>
           <Divider />
         </VStack>
       </Flex>
@@ -91,12 +95,14 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
 
 export const getServerSideProps: GetServerSideProps<{
   courses?: PromiseReturnType<typeof getUserEnrolledCourses>
+  notifications?: PromiseReturnType<typeof getNotifications>
   error?: any
 }> = async (context) => {
   try {
     const courses = await invokeWithMiddleware(getUserEnrolledCourses, null, context)
+    const notifications = await invokeWithMiddleware(getNotifications, null, context)
     return {
-      props: { courses }
+      props: { courses, notifications }
     }
   } catch (e) {
     console.log(e)

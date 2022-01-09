@@ -6,11 +6,23 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseApplication),
   async ({ ...props }, ctx) => {
-    return await db.courseApplication.create({
+    const course = await db.course.findFirst({ where: { id: props.courseId } })
+
+    const courseApplication = await db.courseApplication.create({
       data: {
         ...props,
         applicantId: ctx.session.$publicData.userId
       }
     })
+
+    await db.notification.create({
+      data: {
+        type: 'APPLICATION',
+        courseId: props.courseId,
+        userId: ctx.session.$publicData.userId,
+        entityId: courseApplication.id
+      }
+    })
+    return courseApplication
   }
 )
