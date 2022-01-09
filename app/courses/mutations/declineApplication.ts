@@ -13,7 +13,7 @@ export default resolver.pipe(
 
     const notification = await db.notification.create({
       data: {
-        type: 'APPLICATION',
+        type: 'APPLICATION_DECLINE',
         courseId: courseId,
         userId: userId,
         entityId: id

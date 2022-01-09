@@ -13,7 +13,7 @@ export default resolver.pipe(
       const userId = courseMembership ? courseMembership.userId : -1
       await db.notification.create({
         data: {
-          type: 'MEMBERSHIP',
+          type: 'MEMBERSHIP_CANCEL',
           courseId: courseId,
           userId: userId,
           entityId: id

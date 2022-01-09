@@ -32,13 +32,19 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   error
 }) => {
   const [filterText, setFilterText] = useState('')
-  console.log(notifications)
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
         <VStack spacing={2}>
           <Heading>This is what is happening</Heading>
-          <Text> You have {notifications?.length} notifications</Text>
+          {notifications && notifications?.length > 0 ? (
+            <StyledLink href={Routes.Notifications()}>
+              {' '}
+              You have {notifications?.length} notification(s)
+            </StyledLink>
+          ) : (
+            <></>
+          )}
           <Divider />
         </VStack>
       </Flex>

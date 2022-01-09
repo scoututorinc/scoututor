@@ -20,7 +20,7 @@ export default resolver.pipe(
     })
     const notification = await db.notification.create({
       data: {
-        type: 'APPLICATION',
+        type: 'APPLICATION_ACCEPT',
         courseId: courseId,
         userId: applicantId,
         entityId: membership.id

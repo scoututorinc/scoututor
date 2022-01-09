@@ -17,7 +17,7 @@ export default resolver.pipe(
 
     await db.notification.create({
       data: {
-        type: 'APPLICATION',
+        type: 'APPLICATION_CREATE',
         courseId: props.courseId,
         userId: ctx.session.$publicData.userId,
         entityId: courseApplication.id

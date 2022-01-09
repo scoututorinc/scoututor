@@ -1,6 +1,6 @@
 import { resolver } from 'blitz'
 import db from 'db'
-import { CreateCourseApplicationMessage } from 'app/courses/validations'
+import { CourseApplication, CreateCourseApplicationMessage } from 'app/courses/validations'
 
 export default resolver.pipe(
   resolver.authorize(),
@@ -23,12 +23,21 @@ export default resolver.pipe(
       }
     })
 
-    await db.courseApplication.update({
+    const couseApplication = await db.courseApplication.update({
       where: { id: applicationId },
       data: {
         messages: {
           connect: { id: applicationMessage.id }
         }
+      }
+    })
+
+    await db.notification.create({
+      data: {
+        type: 'APPLICATION_COMMENT',
+        courseId: couseApplication.courseId,
+        userId: couseApplication.applicantId,
+        entityId: applicationMessage.id
       }
     })
 
