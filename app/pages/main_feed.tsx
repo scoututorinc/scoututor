@@ -13,28 +13,49 @@ import {
   VStack,
   Button,
   Heading,
+  Icon,
+  Text,
   Input,
   Divider,
   Box
 } from '@chakra-ui/react'
 import { PromiseReturnType } from 'next/dist/types/utils'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { MdNotificationsActive } from 'react-icons/md'
 
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import getUserEnrolledCourses from 'app/users/queries/getUserMainPageData'
+import getNotifications from 'app/users/queries/getNotifications'
 
 const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   courses,
+  notifications,
   error
 }) => {
   const [filterText, setFilterText] = useState('')
-
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
-        <VStack spacing={2}>
-          <Heading>This is what is happening</Heading>
+        <VStack w='100%' spacing={2}>
+          <HStack w='100%' justifyContent='space-between'>
+            <Heading>This is what is happening</Heading>
+            {notifications && notifications?.length > 0 ? (
+              <StyledLink href={Routes.Notifications()}>
+                <Button colorScheme='red'>
+                  <HStack spacing={2}>
+                    <Icon as={MdNotificationsActive} />
+                    <Text>
+                      You have {notifications?.length}{' '}
+                      {notifications?.length > 1 ? 'notifications' : 'notification'}
+                    </Text>
+                  </HStack>
+                </Button>
+              </StyledLink>
+            ) : (
+              <div></div>
+            )}
+          </HStack>
           <Divider />
         </VStack>
       </Flex>
@@ -91,12 +112,14 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
 
 export const getServerSideProps: GetServerSideProps<{
   courses?: PromiseReturnType<typeof getUserEnrolledCourses>
+  notifications?: PromiseReturnType<typeof getNotifications>
   error?: any
 }> = async (context) => {
   try {
     const courses = await invokeWithMiddleware(getUserEnrolledCourses, null, context)
+    const notifications = await invokeWithMiddleware(getNotifications, null, context)
     return {
-      props: { courses }
+      props: { courses, notifications }
     }
   } catch (e) {
     console.log(e)

@@ -31,8 +31,14 @@ const Sidebar: FC = () => {
         icon_text: 'Courses'
       }
     ],
+    notifications: {
+      href: Routes.Notifications().pathname,
+      image_src: '/images/sidebar/notifications.png',
+      image_alt: 'notifications',
+      icon_text: 'Alerts'
+    },
     profile: {
-      href: Routes.Profile().pathname,
+      href: Routes.Activity().pathname,
       image_src: '/images/sidebar/profile.png',
       image_alt: 'profile',
       icon_text: 'Profile'
@@ -65,6 +71,21 @@ const Sidebar: FC = () => {
       </VStack>
       <Spacer />
       <VStack mb={10}>
+        <VStack pt={5}>
+          <StyledLink
+            href={items.notifications.href}
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+          >
+            <Img
+              src={items.notifications.image_src}
+              alt={items.notifications.image_alt}
+              maxWidth='50%'
+            />
+            <Heading size='xs'>{items.notifications.icon_text}</Heading>
+          </StyledLink>
+        </VStack>
         <VStack pt={5}>
           <StyledLink
             href={items.profile.href}

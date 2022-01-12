@@ -38,8 +38,9 @@ model User {
   chats    Chat[]
   messages Message[]
 
-  tokens   Token[]
-  sessions Session[]
+  tokens        Token[]
+  sessions      Session[]
+  notifications Notification[]
 }
 
 model Course {
@@ -64,8 +65,9 @@ model Course {
   applications  CourseApplication[]
   usersEnrolled CourseMembership[]
 
-  posts   Post[]
-  reviews CourseReview[]
+  posts         Post[]
+  reviews       CourseReview[]
+  notifications Notification[]
 }
 
 model Discipline {
@@ -265,6 +267,19 @@ model Token {
   @@unique([hashedToken, type])
 }
 
+model Notification {
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  type      NotificationType
+  courseId  Int
+  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  entityId  Int
+  userId    Int
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([type, entityId])
+}
+
 enum Role {
   USER
   ADMIN
@@ -309,4 +324,12 @@ enum CourseStatus {
   HIDDEN
   ACTIVE
   INACTIVE
+}
+
+enum NotificationType {
+  APPLICATION_CREATE
+  APPLICATION_ACCEPT
+  APPLICATION_DECLINE
+  APPLICATION_COMMENT
+  MEMBERSHIP_CANCEL
 }
