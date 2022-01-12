@@ -6,6 +6,7 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseAcceptance),
   async ({ applicationId, applicantId, courseId }) => {
+    //TODO: Checkar colisões de horário
     const application = await db.courseApplication.update({
       where: { id: applicationId },
       data: { status: 'ACCEPTED' },
