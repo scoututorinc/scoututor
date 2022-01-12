@@ -111,7 +111,7 @@ export const PostCreationForm = () => {
         </Box>
         <SimpleAlertDialog
           header='Create post'
-          body='Your post was created successfuly'
+          body='Your post was created successfully'
           leastDestructiveRef={cancelRef}
           isOpen={isResultAlertOpen}
           onClose={onCloseResultAlert}

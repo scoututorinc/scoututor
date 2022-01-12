@@ -13,6 +13,7 @@ import {
   VStack,
   Button,
   Heading,
+  Icon,
   Text,
   Input,
   Divider,
@@ -20,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { PromiseReturnType } from 'next/dist/types/utils'
 import { StyledLink } from 'app/core/components/StyledLink'
+import { MdNotificationsActive } from 'react-icons/md'
 
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
@@ -35,16 +37,25 @@ const MainFeed: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   return courses ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
-        <VStack spacing={2}>
-          <Heading>This is what is happening</Heading>
-          {notifications && notifications?.length > 0 ? (
-            <StyledLink href={Routes.Notifications()}>
-              {' '}
-              You have {notifications?.length} notification(s)
-            </StyledLink>
-          ) : (
-            <></>
-          )}
+        <VStack w='100%' spacing={2}>
+          <HStack w='100%' justifyContent='space-between'>
+            <Heading>This is what is happening</Heading>
+            {notifications && notifications?.length > 0 ? (
+              <StyledLink href={Routes.Notifications()}>
+                <Button colorScheme='red'>
+                  <HStack spacing={2}>
+                    <Icon as={MdNotificationsActive} />
+                    <Text>
+                      You have {notifications?.length}{' '}
+                      {notifications?.length > 1 ? 'notifications' : 'notification'}
+                    </Text>
+                  </HStack>
+                </Button>
+              </StyledLink>
+            ) : (
+              <div></div>
+            )}
+          </HStack>
           <Divider />
         </VStack>
       </Flex>

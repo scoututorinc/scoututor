@@ -1,4 +1,5 @@
-import { Button, Divider, Flex, Heading, HStack, Spacer, VStack } from '@chakra-ui/react'
+import React, { useState, useRef } from 'react'
+import { Button, Divider, Flex, Heading, HStack, VStack } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import {
   BlitzPage,
@@ -6,35 +7,33 @@ import {
   GetServerSideProps,
   PromiseReturnType,
   invokeWithMiddleware,
-  useMutation,
-  useRouter,
-  Routes
+  useMutation
 } from 'blitz'
-import dismissAllNotifications from '../mutations/dismissAllNotifications'
-import dismissNotification from '../mutations/dismissNotification'
-import getCurrentUser from '../queries/getCurrentUser'
-import getNotifications from '../queries/getNotifications'
+import dismissAllNotifications from 'app/users/mutations/dismissAllNotifications'
+import getCurrentUser from 'app/users/queries/getCurrentUser'
+import getNotifications from 'app/users/queries/getNotifications'
+import Notification from 'app/users/components/Notification'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
   notifications,
   error
 }) => {
-  const router = useRouter()
-  const [dismissNotificationMutation] = useMutation(dismissNotification)
   const [dismissAllNotificationsMutation] = useMutation(dismissAllNotifications)
+  const [isDialogOpen, setDialogOpen] = useState(false)
+  const onCloseDialog = () => setDialogOpen(false)
+  const cancelRef = useRef(null)
   return currentUser && notifications ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
       <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
-        <VStack spacing={2}>
+        <VStack w='100%' spacing={2}>
           <HStack w='100%' spacing={45} justifyContent='space-between' alignItems='center'>
-            <Heading size='lg'>Your Notifications</Heading>
-            <Spacer />
+            <Heading size='lg'>Your notifications</Heading>
             <Button
               colorScheme='red'
               onClick={async () => {
-                dismissAllNotificationsMutation()
-                notifications.splice(0, notifications.length)
+                setDialogOpen(true)
               }}
             >
               Dismiss All
@@ -44,23 +43,33 @@ const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideP
         </VStack>
       </Flex>
       <Flex direction={{ base: 'column', sm: 'row' }} gap={4} mt={4} wrap='wrap'>
-        {notifications.map((notif) => {
-          return (
-            <VStack key={notif.id}>
-              <p>{JSON.stringify(notif)}</p>
-              <Button
-                colorScheme='red'
-                onClick={async () => {
-                  dismissNotificationMutation(notif.id)
-                  notifications.splice(notifications.indexOf(notif), 1)
-                }}
-              >
-                {' '}
-                Dismiss
-              </Button>
-            </VStack>
-          )
-        })}
+        <VStack w='100%' spacing={2}>
+          {notifications.map((notif) => {
+            return <Notification key={notif.id} notif={notif} notifications={notifications} />
+          })}
+        </VStack>
+        <SimpleAlertDialog
+          header="You're dismissing all notifications"
+          body='Are you sure you want to dismiss all notifications?'
+          leastDestructiveRef={cancelRef}
+          isOpen={isDialogOpen}
+          onClose={onCloseDialog}
+        >
+          <Button
+            w='150px'
+            onClick={() => {
+              dismissAllNotificationsMutation()
+              notifications.splice(0, notifications.length)
+              onCloseDialog()
+            }}
+            colorScheme='red'
+          >
+            Yes, dismiss all
+          </Button>
+          <Button w='150px' onClick={() => onCloseDialog()} colorScheme='teal'>
+            No, cancel
+          </Button>
+        </SimpleAlertDialog>
       </Flex>
     </Flex>
   ) : (
