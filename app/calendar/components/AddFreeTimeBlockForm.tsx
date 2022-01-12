@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useMutation, validateZodSchema } from 'blitz'
+import { useMutation } from 'blitz'
 import { Box, Button, Container, Divider, Heading, HStack, Input, VStack } from '@chakra-ui/react'
 import { Form } from 'app/core/components/forms/Form'
 import { SelectField } from 'app/core/components/forms/SelectField'
@@ -9,7 +9,7 @@ import createAvailableTimeBlock from 'app/calendar/mutations/createAvailableTime
 import { WeekDay } from '@prisma/client'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
-const AddFreeTimeBlockForm = (props) => {
+const AddFreeTimeBlockForm = (props: { scheduleSessions: any }) => {
   const [createAvailableTimeBlockMutation] = useMutation(createAvailableTimeBlock)
   const [dialogActive, setDialogActive] = useState({ state: false, text: '' })
   const cancelRef = useRef(null)
@@ -23,30 +23,44 @@ const AddFreeTimeBlockForm = (props) => {
   }
 
   const overlappingTimeBlocks = (block_1, block_2) => {
-    let b1 =
+    let beg1 =
       parseInt(block_1.startTime.split(':').at(0)) * 60 +
       parseInt(block_1.startTime.split(':').at(1))
-    let u1 =
+    let end1 =
       parseInt(block_1.endTime.split(':').at(0)) * 60 + parseInt(block_1.endTime.split(':').at(1))
-    let b2 =
+    let beg2 =
       parseInt(block_2.startTime.split(':').at(0)) * 60 +
       parseInt(block_2.startTime.split(':').at(1))
-    let u2 =
+    let end2 =
       parseInt(block_2.endTime.split(':').at(0)) * 60 + parseInt(block_2.endTime.split(':').at(1))
 
-    if (b1 <= u2 && u1 && b2) return true
-    return false
+    console.log(
+      'Before',
+      beg1 <= beg2 && end1 <= beg2,
+      'After',
+      beg1 >= end2 && end1 >= end2,
+      beg1,
+      end1,
+      beg2,
+      end2
+    )
+
+    const isBefore = beg1 <= beg2 && end1 <= beg2
+    const isAfter = beg1 >= end2 && end1 >= end2
+
+    return isBefore == false && isAfter == false
   }
 
-  const testTimeBlockForOverlappingEvents = (timeBlock, events) => {
-    let r = false
-    events.forEach((event) => {
-      let event_days = event.daysOfWeek.map((day) => int_to_weekday_correspondence[day])
-      if (overlappingTimeBlocks(timeBlock, event) && event_days.includes(timeBlock.day)) {
-        r = true
-      }
+  const testTimeBlockForOverlappingEvents = (timeBlock, events: any[]) => {
+    return events.some((event) => {
+      if (
+        overlappingTimeBlocks(timeBlock, event) &&
+        int_to_weekday_correspondence[event.dayOfWeek] == timeBlock.day
+      ) {
+        console.log('Colidiu: ', timeBlock, event)
+        return true
+      } else return false
     })
-    return r
   }
 
   const validateTimeBlockInput = (timeBlock) => {

@@ -97,15 +97,14 @@ model CourseMembership {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
-  weeklyHours    Int
-  weeklySchedule String
+  weeklyHours Int
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  courseId      Int
-  course        Course          @relation(fields: [courseId], references: [id])
-  weeklySession WeeklySession[]
+  courseId       Int
+  course         Course             @relation(fields: [courseId], references: [id])
+  weeklySessions AvailableSession[]
 }
 
 model CourseApplication {
@@ -125,19 +124,6 @@ model CourseApplication {
   availableSessions AvailableSession[]
 }
 
-model WeeklySession {
-  id        Int       @id @default(autoincrement())
-  days      WeekDay[]
-  startTime DateTime  @db.Time
-  endTime   DateTime  @db.Time
-
-  availableSessionId Int              @unique
-  availableSession   AvailableSession @relation(fields: [availableSessionId], references: [id])
-
-  courseMembershipId Int
-  courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
-}
-
 model AvailableSession {
   id        Int      @id @default(autoincrement())
   day       WeekDay
@@ -148,7 +134,8 @@ model AvailableSession {
 
   courseApplications CourseApplication[]
 
-  weeklySession WeeklySession?
+  courseMembershipId Int?
+  courseMembership   CourseMembership? @relation(fields: [courseMembershipId], references: [id])
 }
 
 model CourseApplicationMessage {

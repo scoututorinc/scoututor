@@ -13,26 +13,22 @@ const convertDay = (day: string) => {
   }[day]
 }
 
-export default resolver.pipe(
-  resolver.authorize(),
-  resolver.zod(z.number()),
-  async (_, ctx: Ctx) => {
-    const vanilla_sessions = await db.availableSession.findMany({
-      where: { userId: ctx.session.userId! },
-      select: {
-        day: true,
-        startTime: true,
-        endTime: true
-      }
-    })
-    return vanilla_sessions.map((session) => {
-      return {
-        title: 'Free block',
-        startTime: dateToHourMinString(session.startTime),
-        endTime: dateToHourMinString(session.endTime),
-        daysOfWeek: [convertDay(session.day)],
-        color: 'green'
-      }
-    })
-  }
-)
+export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
+  const vanilla_sessions = await db.availableSession.findMany({
+    where: { userId: ctx.session.userId, courseMembershipId: { not: null } },
+    select: {
+      day: true,
+      startTime: true,
+      endTime: true
+    }
+  })
+  return vanilla_sessions.map((session) => {
+    return {
+      title: 'Free block',
+      startTime: dateToHourMinString(session.startTime),
+      endTime: dateToHourMinString(session.endTime),
+      daysOfWeek: [convertDay(session.day)],
+      color: 'green'
+    }
+  })
+})

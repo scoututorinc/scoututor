@@ -6,14 +6,15 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseAcceptance),
   async ({ applicationId, applicantId, courseId }) => {
-    await db.courseApplication.update({
+    const application = await db.courseApplication.update({
       where: { id: applicationId },
-      data: { status: 'ACCEPTED' }
+      data: { status: 'ACCEPTED' },
+      include: { availableSessions: true }
     })
-    const membership = await db.courseMembership.create({
+    return await db.courseMembership.create({
       data: {
         weeklyHours: -1,
-        weeklySchedule: '|--|--|--|',
+        weeklySessions: { connect: application.availableSessions.map((s) => ({ id: s.id })) },
         userId: applicantId,
         courseId: courseId
       }

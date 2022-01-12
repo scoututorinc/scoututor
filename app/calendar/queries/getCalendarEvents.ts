@@ -1,14 +1,15 @@
 import { Ctx, resolver } from 'blitz'
-import db from 'db'
+import db, { Course, CourseMembership, WeekDay } from 'db'
+
+const correspondence = {
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5
+}
 
 const convertDays = (days_array: Array<string>) => {
-  const correspondence = {
-    MONDAY: 1,
-    TUESDAY: 2,
-    WEDNESDAY: 3,
-    THURSDAY: 4,
-    FRIDAY: 5
-  }
   return days_array.map((element: string) => correspondence[element])
 }
 
@@ -23,14 +24,23 @@ const convertTime = (time: Date) => {
   return time.getHours().toString() + ':' + convertMinutes(time.getMinutes())
 }
 
-const weeklySessionsFromMemberships = (memberships: Array<Record<string, any>>) => {
+const weeklySessionsFromMemberships = (
+  memberships: (CourseMembership & {
+    weeklySessions: {
+      day: WeekDay
+      startTime: Date
+      endTime: Date
+    }[]
+    course: Course
+  })[]
+) => {
   return memberships.map((membership) => {
-    return membership.weeklySession.map((session) => {
+    return membership.weeklySessions.map((session) => {
       return {
         title: membership.course.title,
         startTime: convertTime(session.startTime),
         endTime: convertTime(session.endTime),
-        daysOfWeek: convertDays(session.days),
+        dayOfWeek: correspondence[session.day],
         color: 'red'
       }
     })
@@ -45,9 +55,9 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
     where: { userId: ctx.session.userId! },
     include: {
       course: true,
-      weeklySession: {
+      weeklySessions: {
         select: {
-          days: true,
+          day: true,
           startTime: true,
           endTime: true
         }
@@ -60,7 +70,17 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
   const tought_courses = await user.coursesCreated()
   const tought_courses_ids = tought_courses.map((course) => course.id)
   const memberships = await db.courseMembership.findMany({
-    where: { id: { in: tought_courses_ids } }
+    where: { id: { in: tought_courses_ids } },
+    include: {
+      course: true,
+      weeklySessions: {
+        select: {
+          day: true,
+          startTime: true,
+          endTime: true
+        }
+      }
+    }
   })
   const weeklyToughSessions = weeklySessionsFromMemberships(memberships)
   events.push(...weeklyToughSessions.flat(1))
