@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Divider, Flex, Heading, HStack, VStack, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, Heading, HStack, VStack } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import {
   BlitzPage,
