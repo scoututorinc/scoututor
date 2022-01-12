@@ -32,8 +32,7 @@ const Notification = (props) => {
           colorScheme='red'
           onClick={async () => {
             dismissNotificationMutation(props.notif.id)
-            // this is not reactive, how should we do this?
-            props.notifications.splice(props.notifications.indexOf(props.notif), 1)
+            props.onDismiss()
           }}
         >
           Dismiss

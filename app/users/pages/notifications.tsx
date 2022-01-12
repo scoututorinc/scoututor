@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Divider, Flex, Heading, HStack, VStack } from '@chakra-ui/react'
+import { Button, Divider, Flex, Heading, HStack, VStack, Text } from '@chakra-ui/react'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import {
   BlitzPage,
@@ -20,6 +20,7 @@ const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideP
   notifications,
   error
 }) => {
+  const [currentNotifications, setNotifications]: Array<any> = useState(notifications)
   const [dismissAllNotificationsMutation] = useMutation(dismissAllNotifications)
   const [isDialogOpen, setDialogOpen] = useState(false)
   const onCloseDialog = () => setDialogOpen(false)
@@ -44,8 +45,16 @@ const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideP
       </Flex>
       <Flex direction={{ base: 'column', sm: 'row' }} gap={4} mt={4} wrap='wrap'>
         <VStack w='100%' spacing={2}>
-          {notifications.map((notif) => {
-            return <Notification key={notif.id} notif={notif} notifications={notifications} />
+          {currentNotifications.map((notif) => {
+            return (
+              <Notification
+                key={notif.id}
+                notif={notif}
+                onDismiss={() =>
+                  setNotifications(currentNotifications.filter((n) => n.id != notif.id))
+                }
+              />
+            )
           })}
         </VStack>
         <SimpleAlertDialog
