@@ -29,6 +29,7 @@ const seed = async () => {
   await db.user.deleteMany({})
   await db.knowledgeArea.deleteMany({})
   await db.discipline.deleteMany({})
+  await db.notification.deleteMany({})
 
   const disciplines = await createDisciplines()
   const knowledgeAreas = await createKnowledgeAreas(disciplines)
@@ -189,17 +190,30 @@ async function createCourses(
 
 async function createCourseMemberships(users: User[], courses: Course[]) {
   const courseMemberships: Prisma.CourseMembershipCreateManyInput[] = []
+  const notifications: Prisma.NotificationCreateManyInput[] = []
 
   for (const _ in range(20)) {
+    const course_index = randomInt(0, 14)
     courseMemberships.push({
       weeklyHours: randomInt(4, 8),
       userId: users[randomInt(0, 5)]?.id || 0,
-      courseId: courses[randomInt(0, 14)]?.id || 0
+      courseId: courses[course_index]?.id || 0
+    })
+    notifications.push({
+      type: 'APPLICATION_ACCEPT',
+      courseId: courses[course_index]?.id || 0,
+      entityId: -1,
+      userId: courses[course_index]?.authorId || 0
     })
   }
 
   await db.courseMembership.createMany({
     data: courseMemberships,
+    skipDuplicates: true
+  })
+
+  await db.notification.createMany({
+    data: notifications,
     skipDuplicates: true
   })
 
@@ -229,10 +243,11 @@ async function createAvailableSessions(users: User[], courseMemberships: CourseM
 
 async function createCourseApplications(users: User[], courses: Course[]) {
   const courseApplications: Prisma.CourseApplicationUncheckedCreateInput[] = []
+  const notifications: Prisma.NotificationCreateManyInput[] = []
 
   for (const _ in range(20)) {
     const courseId = courses[randomInt(15, 19)]?.id || 0
-    const courseAuthorId = courses.find((c) => c.id == courseId)?.authorId
+    const courseAuthorId = courses.find((c) => c.id == courseId)?.authorId || 0
     const applicantId = users[randomInt(5, 10)]?.id || 0
 
     courseApplications.push({
@@ -248,9 +263,21 @@ async function createCourseApplications(users: User[], courses: Course[]) {
         }))
       }
     })
+
+    notifications.push({
+      type: 'APPLICATION_CREATE',
+      courseId: courseId,
+      entityId: -1,
+      userId: courseAuthorId
+    })
   }
 
   await Promise.all(courseApplications.map((c) => db.courseApplication.create({ data: c })))
+
+  await db.notification.createMany({
+    data: notifications,
+    skipDuplicates: true
+  })
 }
 
 async function createCourseReviews(users: User[], courses: Course[]) {

@@ -50,6 +50,7 @@
     "html-to-text": "8.1.0",
     "jquery": "3.6.0",
     "next-transpile-modules": "9.0.0",
+    "passport-google-oauth20": "2.0.0",
     "react": "alpha",
     "react-chat-engine": "1.11.22",
     "react-dom": "alpha",
