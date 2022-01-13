@@ -15,10 +15,12 @@ import {
 import { Search2Icon } from '@chakra-ui/icons'
 import { BsLightning } from 'react-icons/bs'
 import { FaReact } from 'react-icons/fa'
+import { AiFillGoogleCircle } from 'react-icons/ai'
 
 import MixedLayout from 'app/core/layouts/MixedLayout'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import logout from 'app/auth/mutations/logout'
+import { StyledLink } from 'app/core/components/StyledLink'
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -51,6 +53,12 @@ const UserInfo = () => {
         <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
           <strong>Login</strong>
         </Link>
+        <StyledLink href={'/api/auth/google'}>
+          <Button>
+            <Icon as={AiFillGoogleCircle} />
+            <Text>Login with Google</Text>
+          </Button>
+        </StyledLink>
       </>
     )
   }
@@ -91,14 +99,24 @@ const Home: BlitzPage = () => {
         </VStack>
       </Flex>
       <Center pt='50px' pb='40px'>
-        <HStack spacing={6}>
-          <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
-            <Button colorScheme='teal'>Sign Up</Button>
-          </Link>
-          <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
-            <Button variant='outline'>Log In</Button>
-          </Link>
-        </HStack>
+        <VStack spacing={4}>
+          <HStack spacing={6}>
+            <Link as={BlitzLink} href={Routes.SignupPage().pathname}>
+              <Button colorScheme='teal'>Sign Up</Button>
+            </Link>
+            <Link as={BlitzLink} href={Routes.LoginPage().pathname}>
+              <Button variant='outline'>Log In</Button>
+            </Link>
+          </HStack>
+          <StyledLink href={'/api/auth/google'}>
+            <Button>
+              <HStack spacing={2}>
+                <Icon as={AiFillGoogleCircle} />
+                <Text>Authenticate with Google</Text>
+              </HStack>
+            </Button>
+          </StyledLink>
+        </VStack>
       </Center>
     </Box>
   )
