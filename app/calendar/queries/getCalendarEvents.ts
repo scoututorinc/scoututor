@@ -32,7 +32,8 @@ const weeklySessionsFromMemberships = (
       endTime: Date
     }[]
     course: Course
-  })[]
+  })[],
+  color: 'red' | 'blue'
 ) => {
   return memberships.map((membership) => {
     return membership.weeklySessions.map((session) => {
@@ -41,7 +42,7 @@ const weeklySessionsFromMemberships = (
         startTime: convertTime(session.startTime),
         endTime: convertTime(session.endTime),
         daysOfWeek: [correspondence[session.day]],
-        color: 'red'
+        color: color
       }
     })
   })
@@ -64,7 +65,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
       }
     }
   })
-  const weeklySessions = weeklySessionsFromMemberships(courseMemberships)
+  const weeklySessions = weeklySessionsFromMemberships(courseMemberships, 'blue')
   events.push(...weeklySessions.flat(1))
   // Courses in which the user is the teacher
   const tought_courses = await user.coursesCreated()
@@ -82,7 +83,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
       }
     }
   })
-  const weeklyToughSessions = weeklySessionsFromMemberships(memberships)
+  const weeklyToughSessions = weeklySessionsFromMemberships(memberships, 'red')
   events.push(...weeklyToughSessions.flat(1))
 
   return events
