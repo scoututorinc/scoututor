@@ -13,7 +13,6 @@ import NewChatForm from 'app/chat/components/ChatList/NewChatForm'
 import ChatCard from 'app/chat/components/ChatList/ChatCard'
 import ChatList from 'app/chat/components/ChatList/ChatList'
 import ChatHeader from 'app/chat/components/ChatFeed/ChatHeader'
-import IsTyping from 'app/chat/components/ChatFeed/IsTyping'
 import ConnectionBar from 'app/chat/components/ChatFeed/ConnectionBar'
 import ScrollDownBar from 'app/chat/components/ChatFeed/ScrollDownBar'
 import NewMessageForm from 'app/chat/components/ChatFeed/NewMessageForm'
@@ -41,31 +40,28 @@ const Chat: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = 
             userName={currentUser?.name}
             userSecret={currentUser?.email}
             renderChatList={(chatAppState) => {
-              return ChatList(chatAppState)
+              return <ChatList chatAppState={chatAppState} />
             }}
             renderChatCard={(chat, index) => {
-              return ChatCard(chat)
+              return <ChatCard {...chat} />
             }}
             renderNewChatForm={(creds) => {
-              return NewChatForm(creds)
+              return <NewChatForm creds={creds} />
             }}
             renderChatHeader={(chat) => {
-              return ChatHeader(chat)
-            }}
-            renderIsTyping={(typers) => {
-              return IsTyping(typers)
+              return <ChatHeader chat={chat} />
             }}
             renderConnectionBar={(chat) => {
-              return ConnectionBar(chat)
+              return <ConnectionBar chat={chat} />
             }}
             renderScrollDownBar={(chat) => {
-              return ScrollDownBar(chat)
+              return <ScrollDownBar chat={chat} />
             }}
             renderNewMessageForm={(creds, chatId) => {
-              return NewMessageForm({ creds: creds, chatId: chatId })
+              return <NewMessageForm creds={creds} chatId={chatId} />
             }}
             renderChatSettings={(chatAppState) => {
-              return ChatSettings(chatAppState)
+              return <ChatSettings chatAppState={chatAppState} />
             }}
           />
         </div>
