@@ -9,10 +9,10 @@ export default passportAuth({
     {
       strategy: new GoogleStrategy(
         {
-          clientID: process.env.GOOGLE_OAUTH2_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_OAUTH2_CLIENT_SECRET,
+          clientID: process.env.GOOGLE_OAUTH2_CLIENT_ID!,
+          clientSecret: process.env.GOOGLE_OAUTH2_CLIENT_SECRET!,
           callbackURL: 'http://localhost:3000/api/auth/google/callback',
-          includeEmail: true,
+          // includeEmail: true,
           scope: ['email', 'profile']
         },
         async function (accessToken, refreshToken, params, profile, done) {
