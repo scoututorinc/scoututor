@@ -12,7 +12,8 @@ export default resolver.pipe(
       data: { status: 'ACCEPTED' },
       include: { availableSessions: true }
     })
-    return await db.courseMembership.create({
+
+    const membership = await db.courseMembership.create({
       data: {
         weeklyHours: -1,
         weeklySessions: { connect: application.availableSessions.map((s) => ({ id: s.id })) },
@@ -20,7 +21,8 @@ export default resolver.pipe(
         courseId: courseId
       }
     })
-    const notification = await db.notification.create({
+
+    await db.notification.create({
       data: {
         type: 'APPLICATION_ACCEPT',
         courseId: courseId,
@@ -28,5 +30,7 @@ export default resolver.pipe(
         entityId: membership.id
       }
     })
+
+    return membership
   }
 )
