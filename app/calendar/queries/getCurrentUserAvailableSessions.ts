@@ -15,13 +15,14 @@ const convertDay = (day: string) => {
 
 export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
   const vanilla_sessions = await db.availableSession.findMany({
-    where: { userId: ctx.session.userId, courseMembershipId: { not: null } },
+    where: { userId: ctx.session.userId, courseMembershipId: null },
     select: {
       day: true,
       startTime: true,
       endTime: true
     }
   })
+
   return vanilla_sessions.map((session) => {
     return {
       title: 'Free block',

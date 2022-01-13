@@ -9,7 +9,7 @@ export default resolver.pipe(
     const course = await db.course.findFirst({
       where: { id: courseId },
       select: {
-        author: { select: { availableSessions: { where: { courseMembershipId: { not: null } } } } }
+        author: { select: { availableSessions: { where: { courseMembershipId: null } } } }
       }
     })
 

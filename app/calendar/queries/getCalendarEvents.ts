@@ -40,19 +40,19 @@ const weeklySessionsFromMemberships = (
         title: membership.course.title,
         startTime: convertTime(session.startTime),
         endTime: convertTime(session.endTime),
-        dayOfWeek: correspondence[session.day],
+        daysOfWeek: [correspondence[session.day]],
         color: 'red'
       }
     })
   })
 }
 
-export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
+export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
   const user = db.user.findFirst({ where: { id: ctx.session.userId! } })
   const events = [] as Array<Record<string, any>>
   // Courses in which the user is the student
   const courseMemberships = await db.courseMembership.findMany({
-    where: { userId: ctx.session.userId! },
+    where: { userId: ctx.session.userId },
     include: {
       course: true,
       weeklySessions: {
@@ -70,7 +70,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
   const tought_courses = await user.coursesCreated()
   const tought_courses_ids = tought_courses.map((course) => course.id)
   const memberships = await db.courseMembership.findMany({
-    where: { id: { in: tought_courses_ids } },
+    where: { courseId: { in: tought_courses_ids } },
     include: {
       course: true,
       weeklySessions: {
@@ -84,5 +84,6 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx: Ctx) => {
   })
   const weeklyToughSessions = weeklySessionsFromMemberships(memberships)
   events.push(...weeklyToughSessions.flat(1))
+
   return events
 })

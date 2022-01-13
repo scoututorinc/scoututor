@@ -51,6 +51,7 @@ export const CourseApplicationForm = (props: CourseApplicationFormProps) => {
         </Stack>
         <Form
           schema={CourseApplication}
+          keepDirtyOnReinitialize={true}
           initialValues={{ description: '', availableSessions: [], courseId: props.courseId }}
           onSubmit={async (values) => {
             try {
