@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { PromiseReturnType } from 'next/dist/types/utils'
 import {
   BlitzPage,
@@ -29,6 +29,7 @@ import { StyledLink } from 'app/core/components/StyledLink'
 import getCurrentUser from 'app/users/queries/getCurrentUser'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { MdEmail, MdLocationPin } from 'react-icons/md'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   currentUser,
@@ -36,6 +37,8 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   currentUserApplications,
   error
 }) => {
+  const [premiumMembershipDialog, setPremiumMembershipDialog] = useState(false)
+  const cancelRef = useRef(null)
   return currentUserCourses && currentUserApplications ? (
     <Flex direction='column' p={{ base: 6, md: 10 }} width='100%' height='100vh'>
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon color='gray.500' />}>
@@ -72,6 +75,24 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           <StyledLink href={Routes.Profile()}>
             <Button colorScheme='teal'>Edit profile</Button>
           </StyledLink>
+          <Button colorScheme='green' onClick={() => setPremiumMembershipDialog(true)}>
+            Become premium
+          </Button>
+          <SimpleAlertDialog
+            header='Become a Scoututor premium member'
+            body='If you become a premium member of this platform your courses will be placed higher in search results as well as course suggestions. This obviously increase the chances of you being contacted in order to provide classes to potential students. Keep in mind that if you have not created any courses this feature has no advantage to you. The price of this functionality is 20,00€ a month.'
+            isOpen={premiumMembershipDialog}
+            leastDestructiveRef={cancelRef}
+            onClose={() => setPremiumMembershipDialog(false)}
+          >
+            {/* This should obviously take the user to a subscription page in which he enters payment details */}
+            <Button w='175px' colorScheme='teal' onClick={() => setPremiumMembershipDialog(false)}>
+              Proceed to payment
+            </Button>
+            <Button w='175px' colorScheme='red' onClick={() => setPremiumMembershipDialog(false)}>
+              Discard
+            </Button>
+          </SimpleAlertDialog>
         </VStack>
         <Divider orientation='vertical' mx={6} />
         <VStack alignItems='start' w='100%' h='100%' overflowY='scroll'>

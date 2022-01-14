@@ -9,18 +9,14 @@ import {
 } from 'blitz'
 import {
   Flex,
-  Button,
   VStack,
-  HStack,
   Heading,
   Divider,
-  Img,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Spacer
 } from '@chakra-ui/react'
-import { BiEdit } from 'react-icons/bi'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
