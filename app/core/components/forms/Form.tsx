@@ -7,6 +7,7 @@ export { FORM_ERROR } from 'final-form'
 
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<typeof Box>, 'onSubmit'> {
+  keepDirtyOnReinitialize?: boolean
   children?: ReactNode
   submitText?: string
   schema?: S
@@ -17,6 +18,7 @@ export interface FormProps<S extends z.ZodType<any, any>>
 export function Form<S extends z.ZodType<any, any>>({
   children,
   submitText,
+  keepDirtyOnReinitialize,
   schema,
   initialValues,
   onSubmit,
@@ -25,9 +27,9 @@ export function Form<S extends z.ZodType<any, any>>({
   return (
     <FinalForm
       initialValues={initialValues}
+      keepDirtyOnReinitialize={keepDirtyOnReinitialize}
       validate={validateZodSchema(schema)}
       onSubmit={onSubmit}
-
       //debug={console.log}
 
       render={({ handleSubmit, submitting, submitError, values }) => (

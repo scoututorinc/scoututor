@@ -5,24 +5,25 @@ import { CourseApplication } from 'app/courses/validations'
 export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseApplication),
-  async ({ ...props }, ctx) => {
-    const course = await db.course.findFirst({ where: { id: props.courseId } })
-
+  async ({ description, availableSessions, courseId }, ctx) => {
     const courseApplication = await db.courseApplication.create({
       data: {
-        ...props,
-        applicantId: ctx.session.$publicData.userId
+        description,
+        course: { connect: { id: courseId } },
+        applicant: { connect: { id: ctx.session.userId } },
+        availableSessions: { connect: availableSessions.map((s) => ({ id: s })) }
       }
     })
 
     await db.notification.create({
       data: {
         type: 'APPLICATION_CREATE',
-        courseId: props.courseId,
-        userId: ctx.session.$publicData.userId,
+        courseId: courseId,
+        userId: ctx.session.userId,
         entityId: courseApplication.id
       }
     })
+
     return courseApplication
   }
 )

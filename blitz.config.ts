@@ -5,6 +5,16 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 })
 
+const withTM = require('next-transpile-modules')([
+  '@fullcalendar/common',
+  '@babel/preset-react',
+  '@fullcalendar/common',
+  '@fullcalendar/daygrid',
+  '@fullcalendar/interaction',
+  '@fullcalendar/react',
+  '@fullcalendar/timegrid'
+])
+
 const config: BlitzConfig = {
   middleware: [
     sessionMiddleware({
@@ -25,4 +35,4 @@ const config: BlitzConfig = {
   },
   */
 }
-module.exports = withBundleAnalyzer(config)
+module.exports = withBundleAnalyzer(withTM(config))

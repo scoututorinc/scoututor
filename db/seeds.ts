@@ -1,3 +1,5 @@
+import { PrismaModelsType } from '@blitz-guard/core'
+import { AvailableSession, CourseMembership, WeekDay } from '@prisma/client'
 import { SecurePassword } from 'blitz'
 import db, { Course, Discipline, KnowledgeArea, Prisma, User } from 'db'
 
@@ -21,6 +23,7 @@ const pickN = (values: any[], count: number) => {
 }
 
 const seed = async () => {
+  await db.availableSession.deleteMany({})
   await db.courseMembership.deleteMany({})
   await db.course.deleteMany({})
   await db.user.deleteMany({})
@@ -33,7 +36,8 @@ const seed = async () => {
 
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
-  await createCourseMemberships(users, courses)
+  const courseMemberships = await createCourseMemberships(users, courses)
+  const availableSessions = await createAvailableSessions(users, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
 }
@@ -192,7 +196,6 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
     const course_index = randomInt(0, 14)
     courseMemberships.push({
       weeklyHours: randomInt(4, 8),
-      weeklySchedule: faker.lorem.paragraph(randomInt(1, 3)),
       userId: users[randomInt(0, 5)]?.id || 0,
       courseId: courses[course_index]?.id || 0
     })
@@ -213,6 +216,29 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
     data: notifications,
     skipDuplicates: true
   })
+
+  return db.courseMembership.findMany({})
+}
+
+async function createAvailableSessions(users: User[], courseMemberships: CourseMembership[]) {
+  const availableSessions: Prisma.AvailableSessionCreateManyInput[] = []
+
+  for (const _ in range(200)) {
+    availableSessions.push({
+      day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
+      startTime: new Date(2021, 12, 12, 21, 0),
+      endTime: new Date(2021, 12, 12, 22, 0),
+      userId: users[randomInt(0, 5)]?.id || 0,
+      courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
+    })
+  }
+
+  await db.availableSession.createMany({
+    data: availableSessions,
+    skipDuplicates: true
+  })
+
+  return db.availableSession.findMany({})
 }
 
 async function createCourseApplications(users: User[], courses: Course[]) {
@@ -226,7 +252,8 @@ async function createCourseApplications(users: User[], courses: Course[]) {
 
     courseApplications.push({
       description: faker.lorem.paragraphs(2),
-      availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
+      //TODO: Add available sessions
+      // availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
       courseId,
       applicantId,
       messages: {

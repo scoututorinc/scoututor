@@ -38,9 +38,11 @@ model User {
   chats    Chat[]
   messages Message[]
 
-  tokens        Token[]
-  sessions      Session[]
-  notifications Notification[]
+  availableSessions AvailableSession[]
+  notifications     Notification[]
+  tokens            Token[]
+  sessions          Session[]
+
 }
 
 model Course {
@@ -98,31 +100,20 @@ model CourseMembership {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
-  weeklyHours    Int
-  weeklySchedule String
+  weeklyHours Int
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
+  courseId       Int
+  course         Course             @relation(fields: [courseId], references: [id])
+  weeklySessions AvailableSession[]
 }
 
-// model WeeklySession {
-//   id        Int      @id @default(autoincrement())
-//   day       WeekDay
-//   startTime DateTime @db.Time
-//   endTime   DateTime @db.Time
-
-//   courseMembershipId Int
-//   courseMembership   CourseMembership @relation(fields: [courseMembershipId], references: [id])
-// }
-
 model CourseApplication {
-  id                Int      @id @default(autoincrement())
-  createdAt         DateTime @default(now())
-  description       String
-  availableSchedule String
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String
 
   status   CourseApplicationStatus    @default(PENDING)
   messages CourseApplicationMessage[]
@@ -132,17 +123,23 @@ model CourseApplication {
 
   applicantId Int
   applicant   User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  availableSessions AvailableSession[]
 }
 
-// model AvailableSession {
-//   id        Int      @id @default(autoincrement())
-//   day       WeekDay
-//   startTime DateTime @db.Time
-//   endTime   DateTime @db.Time
+model AvailableSession {
+  id        Int      @id @default(autoincrement())
+  day       WeekDay
+  startTime DateTime @db.Time
+  endTime   DateTime @db.Time
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 
-//   courseApplication   CourseApplication? @relation(fields: [courseApplicationId], references: [id])
-//   courseApplicationId Int?
-// }
+  courseApplications CourseApplication[]
+
+  courseMembershipId Int?
+  courseMembership   CourseMembership? @relation(fields: [courseMembershipId], references: [id])
+}
 
 model CourseApplicationMessage {
   id        Int      @id @default(autoincrement())

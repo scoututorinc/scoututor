@@ -31,7 +31,7 @@ export const UpdateCourseInput = CreateCourseInput.partial().extend({
 
 export const CourseApplication = z.object({
   description: z.string().min(20),
-  availableSchedule: z.string().min(20),
+  availableSessions: z.array(z.number().min(0)).min(1),
   courseId: z.number().int().min(0)
 })
 

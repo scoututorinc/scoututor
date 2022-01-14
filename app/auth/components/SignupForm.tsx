@@ -15,7 +15,6 @@ import {
   FormControl,
   Spacer
 } from '@chakra-ui/react'
-import { Select } from 'chakra-react-select'
 import { BsFillPersonFill } from 'react-icons/bs'
 import { AiOutlineMail } from 'react-icons/ai'
 import { RiLockPasswordFill } from 'react-icons/ri'
@@ -27,6 +26,8 @@ import { Signup } from 'app/auth/validations'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { StyledLink } from 'app/core/components/StyledLink'
 import { portugal } from 'app/auth/data/portugal'
+import { SelectField } from 'app/core/components/forms/SelectField'
+
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -34,9 +35,7 @@ type SignupFormProps = {
 
 export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
-  const [selectableConselhos, setSelectableConselhos] = useState(
-    [] as Array<Record<string, string>> | undefined
-  )
+  const [selectableConselhos, setSelectableConselhos] = useState([] as Array<any> | undefined)
 
   const [isUploading, setIsUploading] = useState(false)
   const [profilePicture, setProfilePicture] = useState(null)
@@ -68,7 +67,8 @@ export const SignupForm = (props: SignupFormProps) => {
           }}
           onSubmit={async (values) => {
             try {
-              await signupMutation({ ...values, profilePicture })
+              console.log(values)
+              await signupMutation(values)
               props.onSuccess?.()
             } catch (error: any) {
               if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
@@ -131,40 +131,39 @@ export const SignupForm = (props: SignupFormProps) => {
                   <Heading size='sm' mb={2}>
                     Location
                   </Heading>
-                  <FormLabel>
-                    <strong>District</strong>
-                  </FormLabel>
-                  <Select
+                  <SelectField
                     mb={2}
-                    selectedOptionStyle='check'
+                    label='District'
                     placeholder='Select ...'
                     name='district'
                     onChange={(event) => {
                       const chosen_district = portugal.find(
-                        (element) => element.name == event.value
+                        (element) => element.name == event.target.value
                       )
                       const selectableConselhos_ = chosen_district?.conselhos.map((conselho) => {
-                        return {
-                          label: conselho.name,
-                          value: conselho.name
-                        }
+                        return (
+                          <option key={conselho.name} value={conselho.name}>
+                            {conselho.name}
+                          </option>
+                        )
                       })
                       setSelectableConselhos(selectableConselhos_)
                     }}
-                    options={portugal.map((district) => {
-                      return { label: district.name, value: district.name }
-                    })}
-                  />
-                  <FormLabel mt={2}>
-                    <strong>Municipality</strong>
-                  </FormLabel>
-                  <Select
-                    isDisabled={selectableConselhos?.length == 0}
+                  >
+                    {portugal.map((district) => (
+                      <option key={district.name} value={district.name}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </SelectField>
+                  <SelectField
+                    label='Municipality'
                     name='municipality'
-                    selectedOptionStyle='check'
                     placeholder='Select ...'
                     options={selectableConselhos}
-                  />
+                  >
+                    {selectableConselhos}
+                  </SelectField>
                 </Container>
               </VStack>
 

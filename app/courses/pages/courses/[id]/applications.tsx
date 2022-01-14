@@ -20,6 +20,7 @@ import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
 import Application from 'app/courses/components/Application'
 import getCourseApplications from 'app/courses/queries/getCourseApplications'
 import { PromiseReturnType } from 'next/dist/types/utils'
+import { paramToInt } from 'utils'
 
 const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course
@@ -58,11 +59,6 @@ const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
   ) : (
     <p>Error fetching course</p>
   )
-}
-
-const paramToInt = (param: string | string[] | undefined) => {
-  if (typeof param == 'string') return parseInt(param)
-  else return -1
 }
 
 export const getServerSideProps: GetServerSideProps<{

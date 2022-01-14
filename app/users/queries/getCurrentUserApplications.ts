@@ -5,11 +5,11 @@ export default async function getCurrentUserCreatedCourses(_ = null, { session }
   if (!session.userId) return null
 
   const applications = await db.courseApplication.findMany({
-    where: { applicantId: session.userId },
+    where: { applicantId: session.userId, status: 'PENDING' },
     select: {
       id: true,
       description: true,
-      availableSchedule: true,
+      availableSessions: true,
       applicantId: true,
       applicant: { select: { id: true, name: true, profilePicture: true } },
       courseId: true,
