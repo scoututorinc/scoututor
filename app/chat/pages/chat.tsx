@@ -13,6 +13,7 @@ import NewChatForm from 'app/chat/components/ChatList/NewChatForm'
 import ChatCard from 'app/chat/components/ChatList/ChatCard'
 import ChatList from 'app/chat/components/ChatList/ChatList'
 import ChatHeader from 'app/chat/components/ChatFeed/ChatHeader'
+import IsTyping from 'app/chat/components/ChatFeed/IsTyping'
 import ConnectionBar from 'app/chat/components/ChatFeed/ConnectionBar'
 import ScrollDownBar from 'app/chat/components/ChatFeed/ScrollDownBar'
 import NewMessageForm from 'app/chat/components/ChatFeed/NewMessageForm'
@@ -50,6 +51,9 @@ const Chat: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = 
             }}
             renderChatHeader={(chat) => {
               return <ChatHeader chat={chat} />
+            }}
+            renderIsTyping={(typers) => {
+              return <IsTyping typers={typers} />
             }}
             renderConnectionBar={(chat) => {
               return <ConnectionBar chat={chat} />
