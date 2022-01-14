@@ -8,12 +8,12 @@ const ConnectionBar = (props) => {
   const [isVisible, setIsVisible] = useState(false)
   const { connecting } = useContext(ChatEngineContext)
 
-  // useEffect(() => {
-  //   if (!didMountRef.current) {
-  //     didMountRef.current = true
-  //     setTimeout(() => setIsVisible(true), props && props.renderDelay ? props.renderDelay : 0)
-  //   }
-  // })
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true
+      setTimeout(() => setIsVisible(true), props && props.renderDelay ? props.renderDelay : 0)
+    }
+  })
 
   if (!connecting || !isVisible) return <div />
 
