@@ -47,6 +47,7 @@ type ApplicationProps = {
   applicantId: number
   courseId: number
   messages: MessageProps[]
+  onConclude?: () => void
 }
 
 const Application = ({
@@ -57,7 +58,8 @@ const Application = ({
   applicant,
   applicantId,
   courseId,
-  messages: propsMessages
+  messages: propsMessages,
+  onConclude
 }: ApplicationProps) => {
   const [acceptApplicationMutation] = useMutation(acceptApplication)
   const [declineApplicationMutation] = useMutation(declineApplication)
@@ -110,11 +112,18 @@ const Application = ({
                     applicantId: applicantId,
                     courseId: courseId
                   })
+                  onConclude?.()
                 }}
               >
                 Accept
               </Button>
-              <Button colorScheme='red' onClick={async () => await declineApplicationMutation(id)}>
+              <Button
+                colorScheme='red'
+                onClick={async () => {
+                  await declineApplicationMutation(id)
+                  onConclude?.()
+                }}
+              >
                 Decline
               </Button>
             </HStack>
@@ -181,13 +190,17 @@ const Application = ({
                           applicantId: applicantId,
                           courseId: courseId
                         })
+                        onConclude?.()
                       }}
                     >
                       Accept
                     </Button>
                     <Button
                       colorScheme='red'
-                      onClick={async () => await declineApplicationMutation(id)}
+                      onClick={async () => {
+                        await declineApplicationMutation(id)
+                        onConclude?.()
+                      }}
                     >
                       Decline
                     </Button>
