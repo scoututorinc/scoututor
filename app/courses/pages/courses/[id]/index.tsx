@@ -45,13 +45,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
           )}
           <VStack maxH='40vh' overflowY='hidden'>
             {course.reviews.map((review) => (
-              <CourseReview
-                key={review.content}
-                version='small'
-                authorId={review.authorId}
-                content={review.content}
-                rating={review.rating}
-              />
+              <CourseReview key={review.content} version='small' {...review} />
             ))}
           </VStack>
           <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })}>

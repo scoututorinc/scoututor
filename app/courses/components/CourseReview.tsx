@@ -7,14 +7,20 @@ import getReviewAuthor from 'app/courses/queries/getReviewAuthor'
 
 type CourseReviewProps = {
   authorId: number
+  author: {
+    name: string
+    profilePicture: string | null
+    district: string | null
+    municipality: string | null
+  }
   content: string
   rating: number
   version: 'small' | 'large'
 }
 
 const CourseReview = (props: CourseReviewProps) => {
-  const [author, status] = useQuery(getReviewAuthor, props.authorId, { suspense: false })
-  return status.isError == false && author ? (
+  // const [author, status] = useQuery(getReviewAuthor, props.authorId, { suspense: false })
+  return (
     <Box
       borderWidth='1px'
       borderRadius='md'
@@ -25,25 +31,25 @@ const CourseReview = (props: CourseReviewProps) => {
       <Flex direction='row' justifyContent='space-between' pb={1}>
         {props.version == 'small' ? (
           <Heading as='h6' size='xs'>
-            {author.name}
+            {props.author.name}
           </Heading>
         ) : (
           <HStack spacing={4}>
             <Img
-              src={author.profilePicture || '/images/profile.png'}
+              src={props.author.profilePicture || '/images/profile.png'}
               alt='profile_pic'
               maxW='50px'
               borderRadius='full'
             />
             <Heading as='h6' size='xs'>
-              {author.name}
+              {props.author.name}
             </Heading>
             <HStack spacing={1}>
               <Icon as={MdLocationPin} />
               <Heading as='h6' size='xs'>
-                {author.municipality
-                  ? author.district + ', ' + author.municipality
-                  : author.district}
+                {props.author.municipality
+                  ? props.author.district + ', ' + props.author.municipality
+                  : props.author.district}
               </Heading>
             </HStack>
             <HStack spacing={0}>
@@ -63,8 +69,6 @@ const CourseReview = (props: CourseReviewProps) => {
         {props.content}
       </Text>
     </Box>
-  ) : (
-    <p>Error</p>
   )
 }
 

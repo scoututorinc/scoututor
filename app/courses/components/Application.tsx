@@ -171,26 +171,28 @@ const Application = ({
                     ))}
                   </UnorderedList>
                 </VStack>
-                <HStack justifyContent='center' mb={6}>
-                  <Button
-                    colorScheme='teal'
-                    onClick={async () => {
-                      await acceptApplicationMutation({
-                        applicationId: id,
-                        applicantId: applicantId,
-                        courseId: courseId
-                      })
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    colorScheme='red'
-                    onClick={async () => await declineApplicationMutation(id)}
-                  >
-                    Decline
-                  </Button>
-                </HStack>
+                {!isAuthor && (
+                  <HStack justifyContent='center' mb={6}>
+                    <Button
+                      colorScheme='teal'
+                      onClick={async () => {
+                        await acceptApplicationMutation({
+                          applicationId: id,
+                          applicantId: applicantId,
+                          courseId: courseId
+                        })
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      colorScheme='red'
+                      onClick={async () => await declineApplicationMutation(id)}
+                    >
+                      Decline
+                    </Button>
+                  </HStack>
+                )}
               </Flex>
               <Divider orientation='vertical' mx={4} />
               <ApplicationMessages

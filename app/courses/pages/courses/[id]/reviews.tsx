@@ -46,13 +46,7 @@ const CourseReviews: BlitzPage = () => {
       </VStack>
       <Flex w='100%' direction='column' justifyContent='center'>
         {course.reviews.map((review) => (
-          <CourseReview
-            key={review.content}
-            version='large'
-            authorId={review.authorId}
-            content={review.content}
-            rating={review.rating}
-          />
+          <CourseReview key={review.content} version='large' {...review} />
         ))}
       </Flex>
     </Flex>
