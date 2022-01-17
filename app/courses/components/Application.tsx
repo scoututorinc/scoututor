@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useMutation } from 'blitz'
 import {
   Flex,
@@ -27,6 +27,7 @@ import declineApplication from 'app/courses/mutations/declineApplication'
 import { ApplicationMessages } from 'app/courses/components/ApplicationMessages'
 import { dateToHourMinString } from 'utils'
 import cancelApplication from '../mutations/cancelApplication'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 type MessageProps = {
   content: string
@@ -51,7 +52,14 @@ type ApplicationProps = {
   onConclude?: () => void
 }
 
-const ApplicationActions = ({ isAuthor, applicationId, applicantId, courseId, onConclude }) => {
+const ApplicationActions = ({
+  isAuthor,
+  applicationId,
+  applicantId,
+  courseId,
+  onConclude,
+  setDialogState
+}) => {
   const [cancelApplicationMutation] = useMutation(cancelApplication)
   const [acceptApplicationMutation] = useMutation(acceptApplication)
   const [declineApplicationMutation] = useMutation(declineApplication)
@@ -60,10 +68,16 @@ const ApplicationActions = ({ isAuthor, applicationId, applicantId, courseId, on
     <HStack justifyContent='center' mb={6}>
       <Button
         colorScheme='red'
-        onClick={async () => {
-          await cancelApplicationMutation(applicationId)
-          onConclude?.()
-        }}
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to cancel the application?',
+            action: async () => {
+              await cancelApplicationMutation(applicationId)
+              onConclude?.()
+            }
+          })
+        }
       >
         Cancel
       </Button>
@@ -72,23 +86,35 @@ const ApplicationActions = ({ isAuthor, applicationId, applicantId, courseId, on
     <HStack justifyContent='center' mb={6}>
       <Button
         colorScheme='teal'
-        onClick={async () => {
-          await acceptApplicationMutation({
-            applicationId,
-            applicantId,
-            courseId
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to accept the application?',
+            action: async () => {
+              await acceptApplicationMutation({
+                applicationId,
+                applicantId,
+                courseId
+              })
+              onConclude?.()
+            }
           })
-          onConclude?.()
-        }}
+        }
       >
         Accept
       </Button>
       <Button
         colorScheme='red'
-        onClick={async () => {
-          await declineApplicationMutation(applicationId)
-          onConclude?.()
-        }}
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to reject the application?',
+            action: async () => {
+              await declineApplicationMutation(applicationId)
+              onConclude?.()
+            }
+          })
+        }
       >
         Decline
       </Button>
@@ -107,6 +133,13 @@ const Application = ({
   messages: propsMessages,
   onConclude
 }: ApplicationProps) => {
+  const [dialogState, setDialogState] = useState<{
+    open: boolean
+    text: string
+    action: (() => void) | null
+  }>({ open: false, text: '', action: null })
+  const cancelRef = useRef(null)
+
   const [messages, setMessages] = useState(propsMessages)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -150,6 +183,7 @@ const Application = ({
             applicationId={id}
             applicantId={applicantId}
             courseId={courseId}
+            setDialogState={setDialogState}
             onConclude={onConclude}
           />
           <HStack justifyContent='center' mb={2}>
@@ -209,6 +243,7 @@ const Application = ({
                   applicationId={id}
                   applicantId={applicantId}
                   courseId={courseId}
+                  setDialogState={setDialogState}
                   onConclude={onConclude}
                 />
               </Flex>
@@ -222,6 +257,30 @@ const Application = ({
           </ModalBody>
         </ModalContent>
       </Modal>
+      <SimpleAlertDialog
+        header='Application Update'
+        body={dialogState.text}
+        isOpen={dialogState.open}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setDialogState({ open: false, text: '', action: null })}
+      >
+        <Button
+          colorScheme='teal'
+          onClick={() => {
+            dialogState.action?.()
+            setDialogState({ open: false, text: '', action: null })
+          }}
+        >
+          Confirm
+        </Button>
+        <Button
+          colorScheme='red'
+          ref={cancelRef}
+          onClick={() => setDialogState({ open: false, text: '', action: null })}
+        >
+          Close
+        </Button>
+      </SimpleAlertDialog>
     </VStack>
   )
 }
