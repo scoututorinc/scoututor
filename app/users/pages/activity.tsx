@@ -94,7 +94,7 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           <VStack spacing={2} alignItems='start' w='100%' mt={10} mb={4}>
             <Heading size='lg'>Your applications</Heading>
             <Divider />
-            {applications.map((application, i) => (
+            {applications?.map((application, i) => (
               <Application
                 isAuthor
                 key={application.id || i}
