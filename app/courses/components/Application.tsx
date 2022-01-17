@@ -26,6 +26,7 @@ import acceptApplication from 'app/courses/mutations/acceptApplication'
 import declineApplication from 'app/courses/mutations/declineApplication'
 import { ApplicationMessages } from 'app/courses/components/ApplicationMessages'
 import { dateToHourMinString } from 'utils'
+import cancelApplication from '../mutations/cancelApplication'
 
 type MessageProps = {
   content: string
@@ -50,6 +51,51 @@ type ApplicationProps = {
   onConclude?: () => void
 }
 
+const ApplicationActions = ({ isAuthor, applicationId, applicantId, courseId, onConclude }) => {
+  const [cancelApplicationMutation] = useMutation(cancelApplication)
+  const [acceptApplicationMutation] = useMutation(acceptApplication)
+  const [declineApplicationMutation] = useMutation(declineApplication)
+
+  return isAuthor ? (
+    <HStack justifyContent='center' mb={6}>
+      <Button
+        colorScheme='red'
+        onClick={async () => {
+          await cancelApplicationMutation(applicationId)
+          onConclude?.()
+        }}
+      >
+        Cancel
+      </Button>
+    </HStack>
+  ) : (
+    <HStack justifyContent='center' mb={6}>
+      <Button
+        colorScheme='teal'
+        onClick={async () => {
+          await acceptApplicationMutation({
+            applicationId,
+            applicantId,
+            courseId
+          })
+          onConclude?.()
+        }}
+      >
+        Accept
+      </Button>
+      <Button
+        colorScheme='red'
+        onClick={async () => {
+          await declineApplicationMutation(applicationId)
+          onConclude?.()
+        }}
+      >
+        Decline
+      </Button>
+    </HStack>
+  )
+}
+
 const Application = ({
   isAuthor,
   id,
@@ -61,9 +107,6 @@ const Application = ({
   messages: propsMessages,
   onConclude
 }: ApplicationProps) => {
-  const [acceptApplicationMutation] = useMutation(acceptApplication)
-  const [declineApplicationMutation] = useMutation(declineApplication)
-
   const [messages, setMessages] = useState(propsMessages)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -102,32 +145,13 @@ const Application = ({
               ))}
             </UnorderedList>
           </VStack>
-          {!isAuthor && (
-            <HStack justifyContent='center' mb={6}>
-              <Button
-                colorScheme='teal'
-                onClick={async () => {
-                  await acceptApplicationMutation({
-                    applicationId: id,
-                    applicantId: applicantId,
-                    courseId: courseId
-                  })
-                  onConclude?.()
-                }}
-              >
-                Accept
-              </Button>
-              <Button
-                colorScheme='red'
-                onClick={async () => {
-                  await declineApplicationMutation(id)
-                  onConclude?.()
-                }}
-              >
-                Decline
-              </Button>
-            </HStack>
-          )}
+          <ApplicationActions
+            isAuthor={isAuthor}
+            applicationId={id}
+            applicantId={applicantId}
+            courseId={courseId}
+            onConclude={onConclude}
+          />
           <HStack justifyContent='center' mb={2}>
             <Button
               leftIcon={<Icon as={AiFillMessage} />}
@@ -142,7 +166,7 @@ const Application = ({
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} scrollBehavior='inside' size='xl'>
         <ModalOverlay />
         <ModalContent maxW='80%' maxH='80%'>
-          <ModalHeader></ModalHeader>
+          <ModalHeader />
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
             <Flex direction='row' w='100%'>
@@ -180,32 +204,13 @@ const Application = ({
                     ))}
                   </UnorderedList>
                 </VStack>
-                {!isAuthor && (
-                  <HStack justifyContent='center' mb={6}>
-                    <Button
-                      colorScheme='teal'
-                      onClick={async () => {
-                        await acceptApplicationMutation({
-                          applicationId: id,
-                          applicantId: applicantId,
-                          courseId: courseId
-                        })
-                        onConclude?.()
-                      }}
-                    >
-                      Accept
-                    </Button>
-                    <Button
-                      colorScheme='red'
-                      onClick={async () => {
-                        await declineApplicationMutation(id)
-                        onConclude?.()
-                      }}
-                    >
-                      Decline
-                    </Button>
-                  </HStack>
-                )}
+                <ApplicationActions
+                  isAuthor={isAuthor}
+                  applicationId={id}
+                  applicantId={applicantId}
+                  courseId={courseId}
+                  onConclude={onConclude}
+                />
               </Flex>
               <Divider orientation='vertical' mx={4} />
               <ApplicationMessages

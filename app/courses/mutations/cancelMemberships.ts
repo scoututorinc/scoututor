@@ -11,14 +11,19 @@ export default resolver.pipe(
     courseMembership.forEach(async (courseMembership) => {
       const courseId = courseMembership ? courseMembership.courseId : -1
       const userId = courseMembership ? courseMembership.userId : -1
-      await db.notification.create({
-        data: {
-          type: 'MEMBERSHIP_CANCEL',
-          courseId: courseId,
-          userId: userId,
-          entityId: id
-        }
-      })
+
+      try {
+        await db.notification.create({
+          data: {
+            type: 'MEMBERSHIP_CANCEL',
+            courseId: courseId,
+            userId: userId,
+            entityId: id
+          }
+        })
+      } catch (e) {
+        console.log(`Error creating notif on cancel Membership`)
+      }
     })
 
     await db.courseMembership.deleteMany({ where: { courseId: id } })
