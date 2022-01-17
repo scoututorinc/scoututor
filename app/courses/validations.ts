@@ -73,3 +73,9 @@ export const CreateCourseApplicationMessage = z.object({
   applicationId: z.number(),
   content: z.string().min(1)
 })
+
+export const CreateCourseReview = z.object({
+  classification: z.number().int().min(1).max(5),
+  comment: z.string().min(10),
+  courseId: z.number().int().min(0)
+})
