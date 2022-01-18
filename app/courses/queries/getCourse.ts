@@ -12,7 +12,19 @@ export default resolver.pipe(
       where: { id },
       include: {
         author: { select: { name: true, profilePicture: true } },
-        reviews: true,
+        reviews: {
+          select: {
+            createdAt: true,
+            rating: true,
+            content: true,
+            courseId: true,
+            course: true,
+            authorId: true,
+            author: {
+              select: { name: true, profilePicture: true, district: true, municipality: true }
+            }
+          }
+        },
         discipline: true,
         knowledgeAreas: true,
         posts: {

@@ -37,8 +37,10 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
   currentUserApplications,
   error
 }) => {
+  const [applications, setapplications] = useState(currentUserApplications)
   const [premiumMembershipDialog, setPremiumMembershipDialog] = useState(false)
   const cancelRef = useRef(null)
+
   return currentUserCourses && currentUserApplications ? (
     <Flex direction='column' p={{ base: 6, md: 10 }} width='100%' height='100vh'>
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon color='gray.500' />}>
@@ -113,8 +115,15 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           <VStack spacing={2} alignItems='start' w='100%' mt={10} mb={4}>
             <Heading size='lg'>Your applications</Heading>
             <Divider />
-            {currentUserApplications.map((application, i) => (
-              <Application isAuthor key={application.id || i} {...application} />
+            {applications?.map((application, i) => (
+              <Application
+                isAuthor
+                key={application.id || i}
+                {...application}
+                onConclude={() =>
+                  setapplications(applications?.filter((a) => a.id != application.id))
+                }
+              />
             ))}
           </VStack>
         </VStack>

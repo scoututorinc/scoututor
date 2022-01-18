@@ -9,15 +9,19 @@ export default resolver.pipe(
     const courseApplication = await db.courseApplication.findFirst({ where: { id } })
     const courseId = courseApplication ? courseApplication.courseId : -1
     const userId = courseApplication ? courseApplication.applicantId : -1
-    await db.courseApplication.update({ where: { id }, data: { status: 'REJECTED' } })
+    await db.courseApplication.update({ where: { id }, data: { status: 'CANCELED' } })
 
-    await db.notification.create({
-      data: {
-        type: 'APPLICATION_DECLINE',
-        courseId: courseId,
-        userId: userId,
-        entityId: id
-      }
-    })
+    try {
+      await db.notification.create({
+        data: {
+          type: 'APPLICATION_CANCEL',
+          courseId: courseId,
+          userId: userId,
+          entityId: id
+        }
+      })
+    } catch (e) {
+      console.log(`Error creating notif on cancel Application`)
+    }
   }
 )

@@ -57,7 +57,7 @@ const CourseApplication: BlitzPage<InferGetServerSidePropsType<typeof getServerS
           <CourseApplicationForm
             courseId={course.id}
             availableSessions={availableSessions}
-            onSuccess={(id) => router.push(Routes.Applications({ id: courseId || 0 }))}
+            onSuccess={(id) => router.push(Routes.Activity())}
           />
         ) : (
           'No sessions available :^('

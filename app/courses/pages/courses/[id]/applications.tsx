@@ -21,10 +21,13 @@ import Application from 'app/courses/components/Application'
 import getCourseApplications from 'app/courses/queries/getCourseApplications'
 import { PromiseReturnType } from 'next/dist/types/utils'
 import { paramToInt } from 'utils'
+import { useState } from 'react'
 
 const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course
 }) => {
+  const [applications, setapplications] = useState(course?.applications)
+
   return course ? (
     <Flex
       direction='column'
@@ -51,8 +54,13 @@ const Applications: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePr
         <Divider />
       </VStack>
       <VStack spacing={4}>
-        {course.applications.map((application, i) => (
-          <Application isAuthor={false} key={application.id || i} {...application} />
+        {applications?.map((application, i) => (
+          <Application
+            isAuthor={false}
+            key={application.id || i}
+            {...application}
+            onConclude={() => setapplications(applications?.filter((a) => a.id != application.id))}
+          />
         ))}
       </VStack>
     </Flex>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useMutation } from 'blitz'
 import {
   Flex,
@@ -26,6 +26,8 @@ import acceptApplication from 'app/courses/mutations/acceptApplication'
 import declineApplication from 'app/courses/mutations/declineApplication'
 import { ApplicationMessages } from 'app/courses/components/ApplicationMessages'
 import { dateToHourMinString } from 'utils'
+import cancelApplication from '../mutations/cancelApplication'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 
 type MessageProps = {
   content: string
@@ -47,6 +49,77 @@ type ApplicationProps = {
   applicantId: number
   courseId: number
   messages: MessageProps[]
+  onConclude?: () => void
+}
+
+const ApplicationActions = ({
+  isAuthor,
+  applicationId,
+  applicantId,
+  courseId,
+  onConclude,
+  setDialogState
+}) => {
+  const [cancelApplicationMutation] = useMutation(cancelApplication)
+  const [acceptApplicationMutation] = useMutation(acceptApplication)
+  const [declineApplicationMutation] = useMutation(declineApplication)
+
+  return isAuthor ? (
+    <HStack justifyContent='center' mb={6}>
+      <Button
+        colorScheme='red'
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to cancel the application?',
+            action: async () => {
+              await cancelApplicationMutation(applicationId)
+              onConclude?.()
+            }
+          })
+        }
+      >
+        Cancel
+      </Button>
+    </HStack>
+  ) : (
+    <HStack justifyContent='center' mb={6}>
+      <Button
+        colorScheme='teal'
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to accept the application?',
+            action: async () => {
+              await acceptApplicationMutation({
+                applicationId,
+                applicantId,
+                courseId
+              })
+              onConclude?.()
+            }
+          })
+        }
+      >
+        Accept
+      </Button>
+      <Button
+        colorScheme='red'
+        onClick={() =>
+          setDialogState({
+            open: true,
+            text: 'Are you sure you want to reject the application?',
+            action: async () => {
+              await declineApplicationMutation(applicationId)
+              onConclude?.()
+            }
+          })
+        }
+      >
+        Decline
+      </Button>
+    </HStack>
+  )
 }
 
 const Application = ({
@@ -57,10 +130,15 @@ const Application = ({
   applicant,
   applicantId,
   courseId,
-  messages: propsMessages
+  messages: propsMessages,
+  onConclude
 }: ApplicationProps) => {
-  const [acceptApplicationMutation] = useMutation(acceptApplication)
-  const [declineApplicationMutation] = useMutation(declineApplication)
+  const [dialogState, setDialogState] = useState<{
+    open: boolean
+    text: string
+    action: (() => void) | null
+  }>({ open: false, text: '', action: null })
+  const cancelRef = useRef(null)
 
   const [messages, setMessages] = useState(propsMessages)
   const [isOpen, setIsOpen] = useState(false)
@@ -100,25 +178,14 @@ const Application = ({
               ))}
             </UnorderedList>
           </VStack>
-          {!isAuthor && (
-            <HStack justifyContent='center' mb={6}>
-              <Button
-                colorScheme='teal'
-                onClick={async () => {
-                  await acceptApplicationMutation({
-                    applicationId: id,
-                    applicantId: applicantId,
-                    courseId: courseId
-                  })
-                }}
-              >
-                Accept
-              </Button>
-              <Button colorScheme='red' onClick={async () => await declineApplicationMutation(id)}>
-                Decline
-              </Button>
-            </HStack>
-          )}
+          <ApplicationActions
+            isAuthor={isAuthor}
+            applicationId={id}
+            applicantId={applicantId}
+            courseId={courseId}
+            setDialogState={setDialogState}
+            onConclude={onConclude}
+          />
           <HStack justifyContent='center' mb={2}>
             <Button
               leftIcon={<Icon as={AiFillMessage} />}
@@ -133,7 +200,7 @@ const Application = ({
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} scrollBehavior='inside' size='xl'>
         <ModalOverlay />
         <ModalContent maxW='80%' maxH='80%'>
-          <ModalHeader></ModalHeader>
+          <ModalHeader />
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
             <Flex direction='row' w='100%'>
@@ -171,26 +238,14 @@ const Application = ({
                     ))}
                   </UnorderedList>
                 </VStack>
-                <HStack justifyContent='center' mb={6}>
-                  <Button
-                    colorScheme='teal'
-                    onClick={async () => {
-                      await acceptApplicationMutation({
-                        applicationId: id,
-                        applicantId: applicantId,
-                        courseId: courseId
-                      })
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    colorScheme='red'
-                    onClick={async () => await declineApplicationMutation(id)}
-                  >
-                    Decline
-                  </Button>
-                </HStack>
+                <ApplicationActions
+                  isAuthor={isAuthor}
+                  applicationId={id}
+                  applicantId={applicantId}
+                  courseId={courseId}
+                  setDialogState={setDialogState}
+                  onConclude={onConclude}
+                />
               </Flex>
               <Divider orientation='vertical' mx={4} />
               <ApplicationMessages
@@ -202,6 +257,30 @@ const Application = ({
           </ModalBody>
         </ModalContent>
       </Modal>
+      <SimpleAlertDialog
+        header='Application Update'
+        body={dialogState.text}
+        isOpen={dialogState.open}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setDialogState({ open: false, text: '', action: null })}
+      >
+        <Button
+          colorScheme='teal'
+          onClick={() => {
+            dialogState.action?.()
+            setDialogState({ open: false, text: '', action: null })
+          }}
+        >
+          Confirm
+        </Button>
+        <Button
+          colorScheme='red'
+          ref={cancelRef}
+          onClick={() => setDialogState({ open: false, text: '', action: null })}
+        >
+          Close
+        </Button>
+      </SimpleAlertDialog>
     </VStack>
   )
 }

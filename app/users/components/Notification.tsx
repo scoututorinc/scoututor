@@ -6,6 +6,8 @@ const notificationTypeToReadable = (type) => {
   switch (type) {
     case 'APPLICATION_CREATE':
       return 'An application has been submitted'
+    case 'APPLICATION_CANCEL':
+      return 'An application has been canceled'
     case 'APPLICATION_ACCEPT':
       return 'Your application has been accepted'
     case 'APPLICATION_DECLINE':
