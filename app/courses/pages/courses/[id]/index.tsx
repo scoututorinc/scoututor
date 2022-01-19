@@ -39,6 +39,13 @@ import { CreateCourseReview } from 'app/courses/validations'
 import { paramToInt } from 'utils'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import cancelMembership from 'app/courses/mutations/cancelMembership'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
+
+const resultModalText = [
+  '✅ Your review was sucessfully submitted',
+  '❌ Something went wrong while submitting your review'
+]
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
@@ -51,12 +58,8 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   const [submittedReviewModal, setSubmittedReviewModal] = useState({ status: false, text: 0 })
   const onCloseSubmittedReviewModal = () => setSubmittedReviewModal({ status: false, text: 0 })
 
-  const resultModalText = [
-    '✅ Your review was sucessfully submitted',
-    '❌ Something went wrong while submitting your review'
-  ]
-
   const [createCourseReviewMutation] = useMutation(createCourseReview)
+  const [cancelMembershipMutation] = useMutation(cancelMembership)
 
   return course && permissions ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
@@ -141,6 +144,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
               <Button colorScheme='red' width='80%'>
                 Cancel subscription
               </Button>
+              <SimpleAlertDialog></SimpleAlertDialog>
               <Modal isOpen={submittedReviewModal.status} onClose={onCloseSubmittedReviewModal}>
                 <ModalOverlay />
                 <ModalContent>
