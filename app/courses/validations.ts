@@ -79,3 +79,8 @@ export const CreateCourseReview = z.object({
   comment: z.string().min(10),
   courseId: z.number().int().min(0)
 })
+
+export const CancelMembershipInput = z.object({
+  userId: z.number().int().min(0),
+  courseId: z.number().int().min(0)
+})
