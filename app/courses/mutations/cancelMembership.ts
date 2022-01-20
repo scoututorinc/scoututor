@@ -12,9 +12,6 @@ export default resolver.pipe(
       select: { id: true, userId: true, course: { select: { id: true, authorId: true } } }
     })
 
-    //Entity id does not exist anymore, doesn't make much sense,
-    //but maybe in the future we don't truly delete the membership
-
     try {
       await db.notification.create({
         data: {
