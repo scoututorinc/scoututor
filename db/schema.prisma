@@ -108,6 +108,8 @@ model CourseMembership {
   courseId       Int
   course         Course             @relation(fields: [courseId], references: [id])
   weeklySessions AvailableSession[]
+
+  @@unique([userId, courseId])
 }
 
 model CourseApplication {
@@ -331,4 +333,5 @@ enum NotificationType {
   APPLICATION_CANCEL
   APPLICATION_COMMENT
   MEMBERSHIP_CANCEL
+  MEMBERSHIP_LEAVE
 }
