@@ -37,7 +37,7 @@ const seed = async () => {
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
   const courseMemberships = await createCourseMemberships(users, courses)
-  const availableSessions = await createAvailableSessions(users, courseMemberships)
+  const availableSessions = await createAvailableSessions(users, courses, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
 }
@@ -220,16 +220,31 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
   return db.courseMembership.findMany({})
 }
 
-async function createAvailableSessions(users: User[], courseMemberships: CourseMembership[]) {
+async function createAvailableSessions(
+  users: User[],
+  courses: Course[],
+  courseMemberships: CourseMembership[]
+) {
   const availableSessions: Prisma.AvailableSessionCreateManyInput[] = []
 
-  for (const _ in range(200)) {
+  for (const courseMembership of courseMemberships) {
+    const course = courses.find((c) => c.id == courseMembership.courseId)!
     availableSessions.push({
       day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
       startTime: new Date(2021, 12, 12, 21, 0),
       endTime: new Date(2021, 12, 12, 22, 0),
-      userId: users[randomInt(0, 5)]?.id || 0,
-      courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
+      userId: course.authorId,
+      courseMembershipId: courseMembership.id
+    })
+  }
+
+  for (const user of users) {
+    availableSessions.push({
+      day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
+      startTime: new Date(2021, 12, 12, 21, 0),
+      endTime: new Date(2021, 12, 12, 22, 0),
+      userId: user.id,
+      courseMembershipId: null
     })
   }
 
