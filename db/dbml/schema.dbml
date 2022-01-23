@@ -1,0 +1,374 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  district String [not null]
+  municipality String
+  email String [unique, not null]
+  profilePicture String
+  hashedPassword String
+  role Role [not null, default: 'USER']
+  coursesCreated Course [not null]
+  courseMemberships CourseMembership [not null]
+  courseApplication CourseApplication [not null]
+  courseApplicationMessage CourseApplicationMessage [not null]
+  courseReview CourseReview [not null]
+  posts Post [not null]
+  comments Comment [not null]
+  replies Reply [not null]
+  chats Chat [not null]
+  messages Message [not null]
+  availableSessions AvailableSession [not null]
+  tokens Token [not null]
+  sessions Session [not null]
+  notifications Notification [not null]
+  notificationsCreated Notification [not null]
+}
+
+Table Course {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  title String [unique, not null]
+  description String [not null]
+  knowledgeLevels KnowledgeLevel [not null]
+  methods TeachingMethod [not null]
+  status CourseStatus [not null, default: 'HIDDEN']
+  previewImage String [not null]
+  hourlyRate Int [not null]
+  disciplineId Int [not null]
+  discipline Discipline [not null]
+  knowledgeAreas KnowledgeArea [not null]
+  author User [not null]
+  authorId Int [not null]
+  applications CourseApplication [not null]
+  usersEnrolled CourseMembership [not null]
+  posts Post [not null]
+  reviews CourseReview [not null]
+  notifications Notification [not null]
+}
+
+Table Discipline {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [unique, not null]
+  knowledgeAreas KnowledgeArea [not null]
+  courses Course [not null]
+}
+
+Table KnowledgeArea {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  disciplineId Int [not null]
+  discipline Discipline [not null]
+  courses Course [not null]
+
+  indexes {
+    (name, disciplineId) [unique]
+  }
+}
+
+Table CourseMembership {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  weeklyHours Int [not null]
+  userId Int [not null]
+  user User [not null]
+  courseId Int [not null]
+  course Course [not null]
+  weeklySessions AvailableSession [not null]
+
+  indexes {
+    (userId, courseId) [unique]
+  }
+}
+
+Table CourseApplication {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  description String [not null]
+  status CourseApplicationStatus [not null, default: 'PENDING']
+  messages CourseApplicationMessage [not null]
+  courseId Int [not null]
+  course Course [not null]
+  applicantId Int [not null]
+  applicant User [not null]
+  availableSessions AvailableSession [not null]
+}
+
+Table AvailableSession {
+  id Int [pk, increment]
+  day WeekDay [not null]
+  startTime DateTime [not null]
+  endTime DateTime [not null]
+  userId Int [not null]
+  user User [not null]
+  courseApplications CourseApplication [not null]
+  courseMembershipId Int
+  courseMembership CourseMembership
+}
+
+Table CourseApplicationMessage {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  content String [not null]
+  courseApplicationId Int [not null]
+  courseApplication CourseApplication [not null]
+  authorId Int [not null]
+  author User [not null]
+}
+
+Table CourseReview {
+  createdAt DateTime [default: `now()`, not null]
+  rating Int [not null]
+  content String [not null]
+  courseId Int [not null]
+  course Course [not null]
+  authorId Int [not null]
+  author User [not null]
+
+  indexes {
+    (courseId, authorId) [pk]
+  }
+}
+
+Table Chat {
+  id Int [pk, increment]
+  lastActive DateTime [not null]
+  users User [not null]
+  messages Message [not null]
+}
+
+Table Message {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  content String [not null]
+  chatId Int [not null]
+  chat Chat [not null]
+  authorId Int [not null]
+  author User [not null]
+}
+
+Table Post {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  title String [not null]
+  description String [not null]
+  files File [not null]
+  comments Comment [not null]
+  courseId Int [not null]
+  course Course [not null]
+  authorId Int [not null]
+  author User [not null]
+}
+
+Table Comment {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  content String [not null]
+  replies Reply [not null]
+  post Post [not null]
+  postId Int [not null]
+  author User [not null]
+  authorId Int [not null]
+}
+
+Table Reply {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  content String [not null]
+  comment Comment [not null]
+  commentId Int [not null]
+  author User [not null]
+  authorId Int [not null]
+}
+
+Table File {
+  id Int [pk, increment]
+  name String [not null]
+  url String [not null]
+  post Post [not null]
+  postId Int [not null]
+}
+
+Table Notification {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  type NotificationType [not null]
+  courseId Int [not null]
+  course Course [not null]
+  entityId Int [not null]
+  creatorId Int [not null]
+  creator User [not null]
+  ownerId Int [not null]
+  owner User [not null]
+
+  indexes {
+    (type, entityId) [unique]
+  }
+}
+
+Table Session {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  expiresAt DateTime
+  handle String [unique, not null]
+  hashedSessionToken String
+  antiCSRFToken String
+  publicData String
+  privateData String
+  user User
+  userId Int
+}
+
+Table Token {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  hashedToken String [not null]
+  type TokenType [not null]
+  expiresAt DateTime [not null]
+  sentTo String [not null]
+  user User [not null]
+  userId Int [not null]
+
+  indexes {
+    (hashedToken, type) [unique]
+  }
+}
+
+Table ChatToUser {
+  chatsId Int [ref: > Chat.id]
+  usersId Int [ref: > User.id]
+}
+
+Table CourseToKnowledgeArea {
+  knowledgeareasId Int [ref: > KnowledgeArea.id]
+  coursesId Int [ref: > Course.id]
+}
+
+Table AvailableSessionToCourseApplication {
+  availablesessionsId Int [ref: > AvailableSession.id]
+  courseapplicationsId Int [ref: > CourseApplication.id]
+}
+
+Enum Role {
+  USER
+  ADMIN
+}
+
+Enum TokenType {
+  RESET_PASSWORD
+}
+
+Enum WeekDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+Enum CourseApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
+Enum KnowledgeLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  FIRSTCYCLE
+  SECONDCYCLE
+  THIRDCYCLE
+  SECONDARY
+  BACHELOR
+  MASTER
+}
+
+Enum TeachingMethod {
+  ONLINE
+  PRESENTIAL
+}
+
+Enum CourseStatus {
+  HIDDEN
+  ACTIVE
+  INACTIVE
+}
+
+Enum NotificationType {
+  APPLICATION_CREATE
+  APPLICATION_ACCEPT
+  APPLICATION_DECLINE
+  APPLICATION_CANCEL
+  APPLICATION_COMMENT
+  MEMBERSHIP_CANCEL
+  MEMBERSHIP_LEAVE
+}
+
+Ref: Course.disciplineId > Discipline.id
+
+Ref: Course.authorId > User.id [delete: Cascade]
+
+Ref: KnowledgeArea.disciplineId > Discipline.id [delete: Cascade]
+
+Ref: CourseMembership.userId > User.id
+
+Ref: CourseMembership.courseId > Course.id
+
+Ref: CourseApplication.courseId > Course.id [delete: Cascade]
+
+Ref: CourseApplication.applicantId > User.id [delete: Cascade]
+
+Ref: AvailableSession.userId > User.id
+
+Ref: AvailableSession.courseMembershipId > CourseMembership.id
+
+Ref: CourseApplicationMessage.courseApplicationId > CourseApplication.id [delete: Cascade]
+
+Ref: CourseApplicationMessage.authorId > User.id
+
+Ref: CourseReview.courseId > Course.id [delete: Cascade]
+
+Ref: CourseReview.authorId > User.id
+
+Ref: Message.chatId > Chat.id [delete: Cascade]
+
+Ref: Message.authorId > User.id
+
+Ref: Post.courseId > Course.id [delete: Cascade]
+
+Ref: Post.authorId > User.id
+
+Ref: Comment.postId > Post.id [delete: Cascade]
+
+Ref: Comment.authorId > User.id
+
+Ref: Reply.commentId > Comment.id [delete: Cascade]
+
+Ref: Reply.authorId > User.id
+
+Ref: File.postId > Post.id [delete: Cascade]
+
+Ref: Notification.courseId > Course.id [delete: Cascade]
+
+Ref: Notification.creatorId > User.id [delete: Cascade]
+
+Ref: Notification.ownerId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Token.userId > User.id [delete: Cascade]
