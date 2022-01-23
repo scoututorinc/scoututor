@@ -6,24 +6,27 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseApplication),
   async ({ description, availableSessions, courseId }, ctx) => {
-    const courseApplication = await db.courseApplication.create({
-      data: {
-        description,
-        course: { connect: { id: courseId } },
-        applicant: { connect: { id: ctx.session.userId } },
-        availableSessions: { connect: availableSessions.map((s) => ({ id: s })) }
-      }
-    })
+    const course = await db.course.findUnique({ where: { id: courseId } })
+    if (course) {
+      const courseApplication = await db.courseApplication.create({
+        data: {
+          description,
+          course: { connect: { id: courseId } },
+          applicant: { connect: { id: ctx.session.userId } },
+          availableSessions: { connect: availableSessions.map((s) => ({ id: s })) }
+        }
+      })
 
-    await db.notification.create({
-      data: {
-        type: 'APPLICATION_CREATE',
-        courseId: courseId,
-        userId: ctx.session.userId,
-        entityId: courseApplication.id
-      }
-    })
-
-    return courseApplication
+      await db.notification.create({
+        data: {
+          type: 'APPLICATION_CREATE',
+          courseId: courseId,
+          ownerId: course.authorId,
+          creatorId: ctx.session.userId,
+          entityId: courseApplication.id
+        }
+      })
+      return courseApplication
+    } else throw new Error()
   }
 )

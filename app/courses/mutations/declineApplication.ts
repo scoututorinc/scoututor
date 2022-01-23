@@ -5,7 +5,7 @@ import { z } from 'zod'
 export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(z.number().int().min(0)),
-  async (id) => {
+  async (id, ctx) => {
     const courseApplication = await db.courseApplication.findFirst({ where: { id } })
     const courseId = courseApplication ? courseApplication.courseId : -1
     const userId = courseApplication ? courseApplication.applicantId : -1
@@ -15,7 +15,8 @@ export default resolver.pipe(
       data: {
         type: 'APPLICATION_DECLINE',
         courseId: courseId,
-        userId: userId,
+        ownerId: userId,
+        creatorId: ctx.session.userId,
         entityId: id
       }
     })

@@ -39,10 +39,12 @@ model User {
   messages Message[]
 
   availableSessions AvailableSession[]
-  notifications     Notification[]
-  tokens            Token[]
-  sessions          Session[]
 
+  tokens   Token[]
+  sessions Session[]
+
+  notifications        Notification[] @relation("NotificationsOwned")
+  notificationsCreated Notification[] @relation("NotificationsCreated")
 }
 
 model Course {
@@ -201,8 +203,6 @@ model Post {
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
-
-
 }
 
 model Comment {
@@ -234,6 +234,25 @@ model File {
   postId Int
 }
 
+model Notification {
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  type      NotificationType
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  entityId Int
+
+  creatorId Int
+  creator   User @relation("NotificationsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  ownerId Int
+  owner   User @relation(name: "NotificationsOwned", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([type, entityId])
+}
+
 model Session {
   id                 Int       @id @default(autoincrement())
   createdAt          DateTime  @default(now())
@@ -262,19 +281,6 @@ model Token {
   userId Int
 
   @@unique([hashedToken, type])
-}
-
-model Notification {
-  id        Int              @id @default(autoincrement())
-  createdAt DateTime         @default(now())
-  type      NotificationType
-  courseId  Int
-  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  entityId  Int
-  userId    Int
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([type, entityId])
 }
 
 enum Role {

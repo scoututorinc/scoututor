@@ -8,28 +8,26 @@ import { z } from 'zod'
 const chat_private_key = process.env.CHAT_ENGINE_PRIVATE_KEY
 axios.defaults.headers.common['PRIVATE-KEY'] = chat_private_key!
 
-const createChatUser = ({
+const createChatUser = async ({
   username,
   first_name,
   last_name,
   secret
 }: z.infer<typeof ChatSignUp>) => {
-  return axios
-    .post('https://api.chatengine.io/users/', {
+  try {
+    const response = await axios.post('https://api.chatengine.io/users/', {
       username: username,
       first_name: first_name,
       last_name: last_name,
       secret: secret
     })
-    .then((response) => {
-      if (response.status != 201) {
-        throw { statusCode: response.status, data: response.data }
-      }
-    })
-    .catch((error) => {
-      // TODO: there must be a better error handling mechanism
-      console.log(error)
-    })
+    if (response.status != 201) {
+      throw { statusCode: response.status, data: response.data }
+    }
+  } catch (error) {
+    // TODO: there must be a better error handling mechanism
+    console.log('Error creating chat user:', error)
+  }
 }
 
 export default resolver.pipe(

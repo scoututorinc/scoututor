@@ -28,7 +28,6 @@ import { StyledLink } from 'app/core/components/StyledLink'
 import { portugal } from 'app/auth/data/portugal'
 import { SelectField } from 'app/core/components/forms/SelectField'
 
-
 type SignupFormProps = {
   onSuccess?: () => void
 }
@@ -68,7 +67,7 @@ export const SignupForm = (props: SignupFormProps) => {
           onSubmit={async (values) => {
             try {
               console.log(values)
-              await signupMutation(values)
+              await signupMutation({ ...values, profilePicture })
               props.onSuccess?.()
             } catch (error: any) {
               if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
