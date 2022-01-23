@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   useMutation,
   Routes,
+  useRouter,
   BlitzPage,
   GetServerSideProps,
   invokeWithMiddleware,
@@ -39,24 +40,38 @@ import { CreateCourseReview } from 'app/courses/validations'
 import { paramToInt } from 'utils'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import cancelMembership from 'app/courses/mutations/cancelMembership'
+import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import { Router } from 'next/dist/client/router'
+
+const resultModalText = [
+  '✅ Your review was sucessfully submitted',
+  '❌ Something went wrong while submitting your review'
+]
 
 const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course,
   error,
   permissions
 }) => {
+  const router = useRouter()
+
+  const currentUser = useCurrentUser()
+
   const [commentModalIsOpen, setCommentModalIsOpen] = useState(false)
   const onCloseCommentModal = () => setCommentModalIsOpen(false)
 
   const [submittedReviewModal, setSubmittedReviewModal] = useState({ status: false, text: 0 })
   const onCloseSubmittedReviewModal = () => setSubmittedReviewModal({ status: false, text: 0 })
 
-  const resultModalText = [
-    '✅ Your review was sucessfully submitted',
-    '❌ Something went wrong while submitting your review'
-  ]
+  const [dialogState, setDialogState] = useState<{
+    open: boolean
+  }>({ open: false })
+  const cancelRef = useRef(null)
 
   const [createCourseReviewMutation] = useMutation(createCourseReview)
+  const [cancelMembershipMutation] = useMutation(cancelMembership)
 
   return course && permissions ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
@@ -138,9 +153,33 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
                   </ModalBody>
                 </ModalContent>
               </Modal>
-              <Button colorScheme='red' width='80%'>
+              <Button colorScheme='red' width='80%' onClick={() => setDialogState({ open: true })}>
                 Cancel subscription
               </Button>
+              <SimpleAlertDialog
+                header='Cancel membership'
+                body={'Are you sure you want to cancel this membership?'}
+                isOpen={dialogState.open}
+                leastDestructiveRef={cancelRef}
+                onClose={() => setDialogState({ open: false })}
+              >
+                <Button
+                  colorScheme='teal'
+                  onClick={() => {
+                    cancelMembershipMutation({ userId: currentUser?.id, courseId: course.id })
+                    router.push(Routes.MainFeed())
+                  }}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  colorScheme='red'
+                  ref={cancelRef}
+                  onClick={() => setDialogState({ open: false })}
+                >
+                  Close
+                </Button>
+              </SimpleAlertDialog>
               <Modal isOpen={submittedReviewModal.status} onClose={onCloseSubmittedReviewModal}>
                 <ModalOverlay />
                 <ModalContent>

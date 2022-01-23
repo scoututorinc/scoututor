@@ -20,7 +20,7 @@ const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideP
   notifications,
   error
 }) => {
-  const [currentNotifications, setNotifications]: Array<any> = useState(notifications)
+  const [currentNotifications, setNotifications] = useState(notifications)
   const [dismissAllNotificationsMutation] = useMutation(dismissAllNotifications)
   const [isDialogOpen, setDialogOpen] = useState(false)
   const onCloseDialog = () => setDialogOpen(false)
@@ -45,11 +45,11 @@ const Notifications: BlitzPage<InferGetServerSidePropsType<typeof getServerSideP
       </Flex>
       <Flex direction={{ base: 'column', sm: 'row' }} gap={4} mt={4} wrap='wrap'>
         <VStack w='100%' spacing={2}>
-          {currentNotifications.map((notif) => {
+          {currentNotifications?.map((notif) => {
             return (
               <Notification
                 key={notif.id}
-                notif={notif}
+                {...notif}
                 onDismiss={() =>
                   setNotifications(currentNotifications.filter((n) => n.id != notif.id))
                 }
