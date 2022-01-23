@@ -1,6 +1,5 @@
 import { resolver } from 'blitz'
 import db from 'db'
-import { z } from 'zod'
 import { CancelMembershipInput } from '../validations'
 
 export default resolver.pipe(
@@ -17,7 +16,8 @@ export default resolver.pipe(
         data: {
           type: 'MEMBERSHIP_LEAVE',
           courseId: courseMembership.course.id,
-          userId: courseMembership.course.authorId,
+          ownerId: courseMembership.course.authorId,
+          creatorId: ctx.session.userId,
           entityId: courseMembership.userId
         }
       })
