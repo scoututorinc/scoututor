@@ -5,7 +5,7 @@ export default async function getNotifications(_ = null, { session }: Ctx) {
   if (!session.userId) return null
 
   const notifications = await db.notification.findMany({
-    where: { userId: session.userId },
+    where: { ownerId: session.userId },
     select: {
       id: true,
       createdAt: true,
