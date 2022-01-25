@@ -52,7 +52,7 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
       <Flex direction='row' w='100%' h='100%' overflowX='hidden'>
         <VStack spacing={2} justifyContent='center' h='100%' overflowY='hidden' minW='15%'>
           <Img
-            src={currentUser?.profilePicture || '/image/profile.png'}
+            src={currentUser?.profilePicture || '/images/profile.png'}
             alt='profile_pic'
             maxW='75px'
             mb={2}

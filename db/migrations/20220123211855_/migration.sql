@@ -8,7 +8,7 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "WeekDay" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY');
 
 -- CreateEnum
-CREATE TYPE "CourseApplicationStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+CREATE TYPE "CourseApplicationStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELED');
 
 -- CreateEnum
 CREATE TYPE "KnowledgeLevel" AS ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'FIRSTCYCLE', 'SECONDCYCLE', 'THIRDCYCLE', 'SECONDARY', 'BACHELOR', 'MASTER');
@@ -18,6 +18,9 @@ CREATE TYPE "TeachingMethod" AS ENUM ('ONLINE', 'PRESENTIAL');
 
 -- CreateEnum
 CREATE TYPE "CourseStatus" AS ENUM ('HIDDEN', 'ACTIVE', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "NotificationType" AS ENUM ('APPLICATION_CREATE', 'APPLICATION_ACCEPT', 'APPLICATION_DECLINE', 'APPLICATION_CANCEL', 'APPLICATION_COMMENT', 'MEMBERSHIP_CANCEL', 'MEMBERSHIP_LEAVE');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -79,7 +82,6 @@ CREATE TABLE "CourseMembership" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "weeklyHours" INTEGER NOT NULL,
-    "weeklySchedule" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "courseId" INTEGER NOT NULL,
 
@@ -87,23 +89,10 @@ CREATE TABLE "CourseMembership" (
 );
 
 -- CreateTable
-CREATE TABLE "WeeklySession" (
-    "id" SERIAL NOT NULL,
-    "days" "WeekDay"[],
-    "startTime" TIME NOT NULL,
-    "endTime" TIME NOT NULL,
-    "availableSessionId" INTEGER NOT NULL,
-    "courseMembershipId" INTEGER NOT NULL,
-
-    CONSTRAINT "WeeklySession_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "CourseApplication" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "description" TEXT NOT NULL,
-    "availableSchedule" TEXT NOT NULL,
     "status" "CourseApplicationStatus" NOT NULL DEFAULT E'PENDING',
     "courseId" INTEGER NOT NULL,
     "applicantId" INTEGER NOT NULL,
@@ -118,7 +107,7 @@ CREATE TABLE "AvailableSession" (
     "startTime" TIME NOT NULL,
     "endTime" TIME NOT NULL,
     "userId" INTEGER NOT NULL,
-    "courseApplicationId" INTEGER,
+    "courseMembershipId" INTEGER,
 
     CONSTRAINT "AvailableSession_pkey" PRIMARY KEY ("id")
 );
@@ -210,6 +199,19 @@ CREATE TABLE "File" (
 );
 
 -- CreateTable
+CREATE TABLE "Notification" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "type" "NotificationType" NOT NULL,
+    "courseId" INTEGER NOT NULL,
+    "entityId" INTEGER NOT NULL,
+    "creatorId" INTEGER NOT NULL,
+    "ownerId" INTEGER NOT NULL,
+
+    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Session" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -251,6 +253,12 @@ CREATE TABLE "_CourseToKnowledgeArea" (
     "B" INTEGER NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "_AvailableSessionToCourseApplication" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -262,6 +270,12 @@ CREATE UNIQUE INDEX "Discipline_name_key" ON "Discipline"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "KnowledgeArea_name_disciplineId_key" ON "KnowledgeArea"("name", "disciplineId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CourseMembership_userId_courseId_key" ON "CourseMembership"("userId", "courseId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Notification_type_entityId_key" ON "Notification"("type", "entityId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_handle_key" ON "Session"("handle");
@@ -281,6 +295,12 @@ CREATE UNIQUE INDEX "_CourseToKnowledgeArea_AB_unique" ON "_CourseToKnowledgeAre
 -- CreateIndex
 CREATE INDEX "_CourseToKnowledgeArea_B_index" ON "_CourseToKnowledgeArea"("B");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "_AvailableSessionToCourseApplication_AB_unique" ON "_AvailableSessionToCourseApplication"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AvailableSessionToCourseApplication_B_index" ON "_AvailableSessionToCourseApplication"("B");
+
 -- AddForeignKey
 ALTER TABLE "Course" ADD CONSTRAINT "Course_disciplineId_fkey" FOREIGN KEY ("disciplineId") REFERENCES "Discipline"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -297,12 +317,6 @@ ALTER TABLE "CourseMembership" ADD CONSTRAINT "CourseMembership_userId_fkey" FOR
 ALTER TABLE "CourseMembership" ADD CONSTRAINT "CourseMembership_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WeeklySession" ADD CONSTRAINT "WeeklySession_availableSessionId_fkey" FOREIGN KEY ("availableSessionId") REFERENCES "AvailableSession"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "WeeklySession" ADD CONSTRAINT "WeeklySession_courseMembershipId_fkey" FOREIGN KEY ("courseMembershipId") REFERENCES "CourseMembership"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "CourseApplication" ADD CONSTRAINT "CourseApplication_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -312,7 +326,7 @@ ALTER TABLE "CourseApplication" ADD CONSTRAINT "CourseApplication_applicantId_fk
 ALTER TABLE "AvailableSession" ADD CONSTRAINT "AvailableSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AvailableSession" ADD CONSTRAINT "AvailableSession_courseApplicationId_fkey" FOREIGN KEY ("courseApplicationId") REFERENCES "CourseApplication"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "AvailableSession" ADD CONSTRAINT "AvailableSession_courseMembershipId_fkey" FOREIGN KEY ("courseMembershipId") REFERENCES "CourseMembership"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CourseApplicationMessage" ADD CONSTRAINT "CourseApplicationMessage_courseApplicationId_fkey" FOREIGN KEY ("courseApplicationId") REFERENCES "CourseApplication"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -354,6 +368,15 @@ ALTER TABLE "Reply" ADD CONSTRAINT "Reply_authorId_fkey" FOREIGN KEY ("authorId"
 ALTER TABLE "File" ADD CONSTRAINT "File_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -370,3 +393,9 @@ ALTER TABLE "_CourseToKnowledgeArea" ADD FOREIGN KEY ("A") REFERENCES "Course"("
 
 -- AddForeignKey
 ALTER TABLE "_CourseToKnowledgeArea" ADD FOREIGN KEY ("B") REFERENCES "KnowledgeArea"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AvailableSessionToCourseApplication" ADD FOREIGN KEY ("A") REFERENCES "AvailableSession"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AvailableSessionToCourseApplication" ADD FOREIGN KEY ("B") REFERENCES "CourseApplication"("id") ON DELETE CASCADE ON UPDATE CASCADE;

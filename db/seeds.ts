@@ -37,7 +37,7 @@ const seed = async () => {
   const users = await createUsers()
   const courses = await createCourses(users, disciplines, knowledgeAreas)
   const courseMemberships = await createCourseMemberships(users, courses)
-  const availableSessions = await createAvailableSessions(users, courseMemberships)
+  const availableSessions = await createAvailableSessions(users, courses, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
 }
@@ -193,17 +193,20 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
   const notifications: Prisma.NotificationCreateManyInput[] = []
 
   for (const _ in range(20)) {
-    const course_index = randomInt(0, 14)
+    const randomCourse = courses[randomInt(0, 14)]
+    const randomUser = users[randomInt(0, 5)]
+
     courseMemberships.push({
       weeklyHours: randomInt(4, 8),
-      userId: users[randomInt(0, 5)]?.id || 0,
-      courseId: courses[course_index]?.id || 0
+      userId: randomUser?.id || 0,
+      courseId: randomCourse?.id || 0
     })
     notifications.push({
       type: 'APPLICATION_ACCEPT',
-      courseId: courses[course_index]?.id || 0,
+      courseId: randomCourse?.id || 0,
       entityId: -1,
-      userId: courses[course_index]?.authorId || 0
+      ownerId: randomUser?.id || 0,
+      creatorId: randomCourse?.authorId || 0
     })
   }
 
@@ -220,16 +223,31 @@ async function createCourseMemberships(users: User[], courses: Course[]) {
   return db.courseMembership.findMany({})
 }
 
-async function createAvailableSessions(users: User[], courseMemberships: CourseMembership[]) {
+async function createAvailableSessions(
+  users: User[],
+  courses: Course[],
+  courseMemberships: CourseMembership[]
+) {
   const availableSessions: Prisma.AvailableSessionCreateManyInput[] = []
 
-  for (const _ in range(200)) {
+  for (const courseMembership of courseMemberships) {
+    const course = courses.find((c) => c.id == courseMembership.courseId)!
     availableSessions.push({
       day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
       startTime: new Date(2021, 12, 12, 21, 0),
       endTime: new Date(2021, 12, 12, 22, 0),
-      userId: users[randomInt(0, 5)]?.id || 0,
-      courseMembershipId: courseMemberships[randomInt(0, courseMemberships.length)]?.id || 0
+      userId: course.authorId,
+      courseMembershipId: courseMembership.id
+    })
+  }
+
+  for (const user of users) {
+    availableSessions.push({
+      day: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].at(randomInt(0, 4)) as WeekDay,
+      startTime: new Date(2021, 12, 12, 21, 0),
+      endTime: new Date(2021, 12, 12, 22, 0),
+      userId: user.id,
+      courseMembershipId: null
     })
   }
 
@@ -246,29 +264,29 @@ async function createCourseApplications(users: User[], courses: Course[]) {
   const notifications: Prisma.NotificationCreateManyInput[] = []
 
   for (const _ in range(20)) {
-    const courseId = courses[randomInt(15, 19)]?.id || 0
-    const courseAuthorId = courses.find((c) => c.id == courseId)?.authorId || 0
+    const randomCourse = courses[randomInt(15, 19)]
     const applicantId = users[randomInt(5, 10)]?.id || 0
 
     courseApplications.push({
       description: faker.lorem.paragraphs(2),
       //TODO: Add available sessions
       // availableSchedule: faker.lorem.paragraph(randomInt(1, 3)),
-      courseId,
+      courseId: randomCourse?.id || 0,
       applicantId,
       messages: {
         create: range(5).map((_) => ({
           content: faker.lorem.paragraphs(1),
-          authorId: pickOne(applicantId, courseAuthorId)
+          authorId: pickOne(applicantId, randomCourse?.authorId || 0)
         }))
       }
     })
 
     notifications.push({
       type: 'APPLICATION_CREATE',
-      courseId: courseId,
+      courseId: randomCourse?.id || 0,
       entityId: -1,
-      userId: courseAuthorId
+      ownerId: randomCourse?.authorId || 0,
+      creatorId: applicantId
     })
   }
 

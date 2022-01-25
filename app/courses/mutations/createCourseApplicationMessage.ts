@@ -23,20 +23,32 @@ export default resolver.pipe(
       }
     })
 
-    const couseApplication = await db.courseApplication.update({
+    const courseApplication = await db.courseApplication.update({
       where: { id: applicationId },
       data: {
         messages: {
           connect: { id: applicationMessage.id }
         }
-      }
+      },
+      select: { applicantId: true, courseId: true, course: { select: { authorId: true } } }
     })
+
+    let [ownerId, creatorId]: [number | null, number | null] = [null, null]
+
+    if (ctx.session.userId == courseApplication.applicantId) {
+      ownerId = courseApplication.course.authorId
+      creatorId = courseApplication.applicantId
+    } else {
+      creatorId = courseApplication.course.authorId
+      ownerId = courseApplication.applicantId
+    }
 
     await db.notification.create({
       data: {
         type: 'APPLICATION_COMMENT',
-        courseId: couseApplication.courseId,
-        userId: couseApplication.applicantId,
+        courseId: courseApplication.courseId,
+        ownerId,
+        creatorId,
         entityId: applicationMessage.id
       }
     })

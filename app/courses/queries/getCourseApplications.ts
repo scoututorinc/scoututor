@@ -18,6 +18,7 @@ export default resolver.pipe(
             applicantId: true,
             applicant: { select: { id: true, name: true, profilePicture: true } },
             courseId: true,
+            course: true,
             messages: {
               select: {
                 content: true,

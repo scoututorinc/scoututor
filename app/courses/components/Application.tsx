@@ -48,6 +48,7 @@ type ApplicationProps = {
   }
   applicantId: number
   courseId: number
+  course: { title: string }
   messages: MessageProps[]
   onConclude?: () => void
 }
@@ -130,6 +131,7 @@ const Application = ({
   applicant,
   applicantId,
   courseId,
+  course,
   messages: propsMessages,
   onConclude
 }: ApplicationProps) => {
@@ -155,7 +157,7 @@ const Application = ({
               maxWidth='80px'
             />
             <Heading as='h5' size='md'>
-              {applicant.name}
+              {isAuthor ? course.title : applicant.name}
             </Heading>
           </HStack>
           <VStack spacing={2} alignItems='start' mb={4}>

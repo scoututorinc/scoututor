@@ -5,7 +5,7 @@ import { CourseAcceptance } from 'app/courses/validations'
 export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CourseAcceptance),
-  async ({ applicationId, applicantId, courseId }) => {
+  async ({ applicationId, applicantId, courseId }, ctx) => {
     //TODO: Checkar colisões de horário
     const application = await db.courseApplication.update({
       where: { id: applicationId },
@@ -26,7 +26,8 @@ export default resolver.pipe(
       data: {
         type: 'APPLICATION_ACCEPT',
         courseId: courseId,
-        userId: applicantId,
+        ownerId: applicantId,
+        creatorId: ctx.session.userId,
         entityId: membership.id
       }
     })

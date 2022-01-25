@@ -22,7 +22,7 @@ import {
 import { PromiseReturnType } from 'next/dist/types/utils'
 
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
-import getCourses from 'app/courses/queries/getCourses'
+import getJoinableCourses from 'app/courses/queries/getJoinableCourses'
 import CourseShortDisplay from 'app/courses/components/CourseShortDisplay'
 
 import { StyledLink } from 'app/core/components/StyledLink'
@@ -111,12 +111,12 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
 }
 
 export const getServerSideProps: GetServerSideProps<{
-  courses?: PromiseReturnType<typeof getCourses>
+  courses?: PromiseReturnType<typeof getJoinableCourses>
   coursesSuggested?: PromiseReturnType<typeof getUserCourseSuggestions>
   error?: any
 }> = async (context) => {
   try {
-    const courses = await invokeWithMiddleware(getCourses, null, context)
+    const courses = await invokeWithMiddleware(getJoinableCourses, null, context)
     const coursesSuggested = await invokeWithMiddleware(getUserCourseSuggestions, null, context)
     return {
       props: { courses, coursesSuggested }
