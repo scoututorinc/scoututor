@@ -82,7 +82,7 @@ export const PostCreationForm = () => {
                 <FormLabel fontWeight='bold'>Files</FormLabel>
                 <Grid templateColumns='repeat(4, 1fr)' gap={2} mb={5}>
                   {files.map((file) => (
-                    <Button key={file.name} leftIcon={<AiFillFilePdf />}>
+                    <Button key={file.name} leftIcon={<AiFillFilePdf />} minW=''>
                       <StyledLink href={file.url} rel='noopener noreferrer' target='_blank'>
                         {file.name}
                       </StyledLink>

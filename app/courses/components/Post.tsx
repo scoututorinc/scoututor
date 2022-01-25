@@ -123,12 +123,12 @@ const Post = (props: PostProps) => {
       </Box>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} scrollBehavior='inside' size='xl'>
         <ModalOverlay />
-        <ModalContent maxW='80%' maxH='80%'>
+        <ModalContent maxW='80%' h='80%'>
           <ModalHeader>{props.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
-            <Flex direction='row' maxH='100%'>
-              <Flex direction='column' mb={4} w='65%'>
+            <Flex direction='row' w='100%' maxH='100%'>
+              <Flex direction='column' mb={4} w='70%'>
                 <Flex direction='row' mb={4}>
                   {/* //TODO: Link to post page */}
                   <Stack direction='row' spacing={4} alignItems='center'>
