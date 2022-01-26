@@ -11,6 +11,7 @@ type CourseDescriptionProps = {
   id: number
   description: string
   hourlyRate: number
+  discipline: { name: string }
   knowledgeAreas: string[]
   permissions: {
     canUpdateCourse: boolean
@@ -22,6 +23,7 @@ const CourseDescription = ({
   id,
   description,
   knowledgeAreas,
+  discipline,
   hourlyRate,
   permissions
 }: CourseDescriptionProps) => {
@@ -39,7 +41,7 @@ const CourseDescription = ({
   return (
     <Flex direction='column' width={{ md: '75%' }}>
       <VStack alignItems='start' pb={5}>
-        <Heading size='lg'>Knowledge the tutor can provide</Heading>
+        <Heading size='lg'>Knowledge the tutor can provide in {discipline.name}</Heading>
         <Divider />
       </VStack>
       <Grid

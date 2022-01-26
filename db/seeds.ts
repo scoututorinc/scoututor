@@ -77,11 +77,20 @@ async function createUsers() {
 async function createDisciplines() {
   const disciplines: Prisma.DisciplineCreateManyInput[] = []
 
-  for (const _ in range(20)) {
-    disciplines.push({
-      name: faker.commerce.department()
-    })
-  }
+  // for (const _ in range(20)) {
+  //   disciplines.push({
+  //     name: faker.commerce.department()
+  //   })
+  // }
+
+  disciplines.push({
+    id: 1,
+    name: 'English'
+  })
+  disciplines.push({
+    id: 2,
+    name: 'Math'
+  })
 
   await db.discipline.createMany({
     data: disciplines,
@@ -94,13 +103,30 @@ async function createDisciplines() {
 async function createKnowledgeAreas(disciplines: Discipline[]) {
   const knowledgeAreas: Prisma.KnowledgeAreaCreateManyInput[] = []
 
-  disciplines.forEach((d) => {
-    for (const _ in range(20)) {
-      knowledgeAreas.push({
-        name: faker.commerce.productMaterial(),
-        disciplineId: d.id
-      })
-    }
+  // disciplines.forEach((d) => {
+  //   for (const _ in range(20)) {
+  //     knowledgeAreas.push({
+  //       name: faker.commerce.productMaterial(),
+  //       disciplineId: d.id
+  //     })
+  //   }
+  // })
+
+  knowledgeAreas.push({
+    name: 'Grammar',
+    disciplineId: 1
+  })
+  knowledgeAreas.push({
+    name: 'Verbal Skills',
+    disciplineId: 1
+  })
+  knowledgeAreas.push({
+    name: 'Trigonometry',
+    disciplineId: 2
+  })
+  knowledgeAreas.push({
+    name: 'Fractions',
+    disciplineId: 2
   })
 
   await db.knowledgeArea.createMany({
