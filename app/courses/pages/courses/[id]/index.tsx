@@ -43,7 +43,6 @@ import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import cancelMembership from 'app/courses/mutations/cancelMembership'
 import { SimpleAlertDialog } from 'app/core/components/SimpleAlertDialog'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import { Router } from 'next/dist/client/router'
 
 const resultModalText = [
   '✅ Your review was sucessfully submitted',
@@ -97,100 +96,109 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
               <CourseReview key={review.content} version='small' {...review} />
             ))}
           </VStack>
-          <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })}>
-            <Button colorScheme='teal' mt={4}>
-              See all reviews in detail
-            </Button>
-          </StyledLink>
 
-          {/* Can't enroll, is not owner => Enrolled */}
-          {!permissions.canJoinCourse && !permissions.canUpdateCourse && (
-            <VStack spacing={4} width='90%'>
-              {/* <StyledLink href={Routes.CoursePosts({ id: course.id })}>
-                <Button colorScheme='teal' width='80%'>
-                  See all course posts
-                </Button>
-              </StyledLink> */}
-              <Button colorScheme='teal' width='80%' onClick={() => setCommentModalIsOpen(true)}>
-                Comment on course
+          <VStack spacing={4} width='90%'>
+            <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })} width='80%' p='0'>
+              <Button colorScheme='teal' mt={4} mx={'auto'} width={'100%'}>
+                See all reviews in detail
               </Button>
-              <Modal isOpen={commentModalIsOpen} onClose={onCloseCommentModal}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>
-                    <HStack w='100%' justifyContent='center'>
-                      <Img src='/images/commentary.png' maxW='100px' />
-                      <Heading as='h3' size='md'>
-                        Comment on the course tutor
-                      </Heading>
-                    </HStack>
-                  </ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <Form
-                      schema={CreateCourseReview}
-                      initialValues={{ classification: 1, comment: '', courseId: course.id }}
-                      onSubmit={async (values) => {
-                        try {
-                          await createCourseReviewMutation(values)
-                          setCommentModalIsOpen(false)
-                          setSubmittedReviewModal({ status: true, text: 0 })
-                        } catch (e) {
-                          console.log(e)
-                          setSubmittedReviewModal({ status: true, text: 1 })
-                        }
-                      }}
-                    >
-                      <VStack spacing={2}>
-                        <LabeledTextField type='number' label='Rating' name='classification' />
-                        <LabeledTextAreaField label='Comment' name='comment' mb={2} />
+            </StyledLink>
+            {/* Can't enroll => Enrolled or Owner */}
+            {!permissions.canJoinCourse && (
+              <StyledLink href={Routes.CoursePosts({ id: course.id })} width='80%'>
+                <Button colorScheme='teal' width={'100%'}>
+                  See all posts
+                </Button>
+              </StyledLink>
+            )}
+            {/* Can't enroll, is not owner => Enrolled */}
+            {!permissions.canJoinCourse && !permissions.canUpdateCourse && (
+              <>
+                <Button colorScheme='teal' width='80%' onClick={() => setCommentModalIsOpen(true)}>
+                  Comment on course
+                </Button>
+                <Modal isOpen={commentModalIsOpen} onClose={onCloseCommentModal}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>
+                      <HStack w='100%' justifyContent='center'>
+                        <Img src='/images/commentary.png' maxW='100px' />
+                        <Heading as='h3' size='md'>
+                          Comment on the course tutor
+                        </Heading>
+                      </HStack>
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <Form
+                        schema={CreateCourseReview}
+                        initialValues={{ classification: 1, comment: '', courseId: course.id }}
+                        onSubmit={async (values) => {
+                          try {
+                            await createCourseReviewMutation(values)
+                            setCommentModalIsOpen(false)
+                            setSubmittedReviewModal({ status: true, text: 0 })
+                          } catch (e) {
+                            console.log(e)
+                            setSubmittedReviewModal({ status: true, text: 1 })
+                          }
+                        }}
+                      >
+                        <VStack spacing={2}>
+                          <LabeledTextField type='number' label='Rating' name='classification' />
+                          <LabeledTextAreaField label='Comment' name='comment' mb={2} />
 
-                        <Button colorScheme='teal' type='submit'>
-                          Submit
-                        </Button>
-                      </VStack>
-                    </Form>
-                  </ModalBody>
-                </ModalContent>
-              </Modal>
-              <Button colorScheme='red' width='80%' onClick={() => setDialogState({ open: true })}>
-                Cancel subscription
-              </Button>
-              <SimpleAlertDialog
-                header='Cancel membership'
-                body={'Are you sure you want to cancel this membership?'}
-                isOpen={dialogState.open}
-                leastDestructiveRef={cancelRef}
-                onClose={() => setDialogState({ open: false })}
-              >
-                <Button
-                  colorScheme='teal'
-                  onClick={() => {
-                    cancelMembershipMutation({ userId: currentUser?.id, courseId: course.id })
-                    router.push(Routes.MainFeed())
-                  }}
-                >
-                  Confirm
-                </Button>
+                          <Button colorScheme='teal' type='submit'>
+                            Submit
+                          </Button>
+                        </VStack>
+                      </Form>
+                    </ModalBody>
+                  </ModalContent>
+                </Modal>
                 <Button
                   colorScheme='red'
-                  ref={cancelRef}
-                  onClick={() => setDialogState({ open: false })}
+                  width='80%'
+                  onClick={() => setDialogState({ open: true })}
                 >
-                  Close
+                  Cancel subscription
                 </Button>
-              </SimpleAlertDialog>
-              <Modal isOpen={submittedReviewModal.status} onClose={onCloseSubmittedReviewModal}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalBody>
-                    <Heading size='md'>{resultModalText[submittedReviewModal.text]}</Heading>
-                  </ModalBody>
-                  <ModalCloseButton />
-                </ModalContent>
-              </Modal>
-            </VStack>
-          )}
+                <SimpleAlertDialog
+                  header='Cancel membership'
+                  body={'Are you sure you want to cancel this membership?'}
+                  isOpen={dialogState.open}
+                  leastDestructiveRef={cancelRef}
+                  onClose={() => setDialogState({ open: false })}
+                >
+                  <Button
+                    colorScheme='teal'
+                    onClick={() => {
+                      cancelMembershipMutation({ userId: currentUser?.id, courseId: course.id })
+                      router.push(Routes.MainFeed())
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    colorScheme='red'
+                    ref={cancelRef}
+                    onClick={() => setDialogState({ open: false })}
+                  >
+                    Close
+                  </Button>
+                </SimpleAlertDialog>
+                <Modal isOpen={submittedReviewModal.status} onClose={onCloseSubmittedReviewModal}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalBody>
+                      <Heading size='md'>{resultModalText[submittedReviewModal.text]}</Heading>
+                    </ModalBody>
+                    <ModalCloseButton />
+                  </ModalContent>
+                </Modal>
+              </>
+            )}
+          </VStack>
         </Flex>
         <CourseDescription
           {...course}

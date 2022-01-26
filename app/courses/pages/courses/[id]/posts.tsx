@@ -9,18 +9,25 @@ import {
   VStack
 } from '@chakra-ui/react'
 import getCourse from 'app/courses/queries/getCourse'
-import { BlitzPage, useRouter, useParam, useQuery, Routes } from 'blitz'
+import {
+  BlitzPage,
+  useRouter,
+  useParam,
+  useQuery,
+  Routes,
+  invokeWithMiddleware,
+  GetServerSideProps,
+  PromiseReturnType,
+  InferGetServerSidePropsType
+} from 'blitz'
 import Post from 'app/courses/components/Post'
 import LoggedInLayout from 'app/core/layouts/LoggedInLayout'
+import { paramToInt } from 'utils'
 
-const CoursePosts: BlitzPage = () => {
-  const router = useRouter()
-  const courseId = useParam('id', 'number')
-  const [course, status] = useQuery(getCourse, courseId, {
-    suspense: false
-  })
-
-  return status.isError == false && course ? (
+const CoursePosts: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  course
+}) => {
+  return course ? (
     <Flex direction='column' w='100%' overflowY='scroll' overflowX='hidden' p={{ base: 4, lg: 10 }}>
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
@@ -45,6 +52,40 @@ const CoursePosts: BlitzPage = () => {
   ) : (
     <p>Error</p>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  course?: PromiseReturnType<typeof getCourse>
+  permissions?: {
+    canUpdateCourse: boolean
+    canJoinCourse: boolean
+  }
+  error?: any
+  redirect?: any
+}> = async (context) => {
+  try {
+    const courseId = paramToInt(context?.params?.id)
+    const course = await invokeWithMiddleware(getCourse, courseId, context)
+
+    if (!course)
+      return {
+        redirect: {
+          destination: Routes.CoursesView(),
+          permanent: false
+        }
+      }
+    else
+      return {
+        props: {
+          course
+        }
+      }
+  } catch (e) {
+    console.log(e)
+    return {
+      props: { error: e }
+    }
+  }
 }
 
 CoursePosts.suppressFirstRenderFlicker = true
