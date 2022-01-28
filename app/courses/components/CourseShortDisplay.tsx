@@ -36,7 +36,7 @@ const CourseShortDisplay = ({
         <Heading fontSize='lg'>{title}</Heading>
         <HStack spacing={4}>
           <Icon as={SiGoogleclassroom} />
-          <Text fontSize='sm'>{methods}</Text>
+          <Text fontSize='sm'>{methods.join(' ')}</Text>
         </HStack>
         <Text size='sm'>
           {description.length > 200 ? description.substring(0, 200) + '...' : description}

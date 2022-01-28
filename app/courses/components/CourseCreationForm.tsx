@@ -143,42 +143,42 @@ export const CourseCreationForm = ({
                   <Grid templateColumns='repeat(3, 1fr)' gap={6}>
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='BEGINNER'
+                      label='Beginner'
                       value='BEGINNER'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='INTERMEDIATE'
+                      label='Intermediate'
                       value='INTERMEDIATE'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='ADVANCED'
+                      label='Advanced'
                       value='ADVANCED'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='FIRSTCYCLE'
+                      label='First cycle'
                       value='FIRSTCYCLE'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='SECONDCYCLE'
+                      label='Second cycle'
                       value='SECONDCYCLE'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='THIRDCYCLE'
+                      label='Thrid Cycle'
                       value='THIRDCYCLE'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='SECONDARY'
+                      label='Secondary'
                       value='SECONDARY'
                     />
                     <CheckboxArrayControl
                       name='knowledgeLevels'
-                      label='BACHELOR'
+                      label='Bachelor'
                       value='BACHELOR'
                     />
                     <CheckboxArrayControl name='knowledgeLevels' label='MASTER' value='MASTER' />
@@ -229,10 +229,10 @@ export const CourseCreationForm = ({
                   {submitError}
                 </div>
               )}
-              {JSON.stringify({
+              {/* {JSON.stringify({
                 discipline: values.discipline,
                 k: values.knowledgeAreas
-              })}
+              })} */}
             </Box>
           )}
         />

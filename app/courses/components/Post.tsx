@@ -15,7 +15,6 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
   ModalContent,
   Divider
 } from '@chakra-ui/react'
@@ -86,7 +85,7 @@ const Post = (props: PostProps) => {
                 maxWidth='60px'
               />
               <Heading size='sm'>
-                {props.author.name} - {props.courseTitle}
+                {`${props.author.name} - ${props.courseTitle} - ` + `${props.title}`}
               </Heading>
             </Stack>
           </Button>
