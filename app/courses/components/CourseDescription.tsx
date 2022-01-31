@@ -83,24 +83,26 @@ const CourseDescription = ({
         </StyledLink>
       )}
       {permissions.canUpdateCourse && (
-        <HStack spacing={4}>
-          <StyledLink href={Routes.Applications({ id })}>
+        <HStack wrap={'wrap'}>
+          <StyledLink href={Routes.Applications({ id })} mx={2} mb={2}>
             <Button colorScheme='teal'>Manage Applications</Button>
           </StyledLink>
 
-          <StyledLink href={Routes.EditCourse({ id })}>
+          <StyledLink href={Routes.EditCourse({ id })} mx={2} mb={2}>
             <Button colorScheme='teal'>Edit information</Button>
           </StyledLink>
+
           <Button
             type='submit'
             colorScheme='red'
             onClick={() => {
               setIsOpenCancelMemberships(true)
             }}
+            mx={2}
+            mb={2}
           >
             Cancel Memberships
           </Button>
-
           <SimpleAlertDialog
             header='Cancel Memberships'
             body='Are you sure? You cannot undo this action afterwards.'
@@ -128,10 +130,11 @@ const CourseDescription = ({
             onClick={() => {
               setIsOpenDeleteCourse(true)
             }}
+            mx={2}
+            mb={2}
           >
             Delete Course
           </Button>
-
           <SimpleAlertDialog
             header='Delete Course'
             body='Are you sure? You cannot undo this action afterwards.'

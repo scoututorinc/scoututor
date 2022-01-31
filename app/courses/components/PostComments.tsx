@@ -84,7 +84,7 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
     }
   }
   return (
-    <Flex direction='column' w='30%' h='100%'>
+    <>
       <Flex direction='column' height='calc(100%-1.75rem)' overflowY='auto'>
         {comments.map((comment) => (
           <Comment
@@ -124,7 +124,7 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
           </InputRightElement>
         </InputGroup>
       </form>
-    </Flex>
+    </>
   )
 }
 
