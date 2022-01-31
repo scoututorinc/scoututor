@@ -6,7 +6,8 @@ import {
   BlitzPage,
   GetServerSideProps,
   invokeWithMiddleware,
-  InferGetServerSidePropsType
+  InferGetServerSidePropsType,
+  useQuery
 } from 'blitz'
 import {
   Flex,
@@ -72,6 +73,10 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   const [createCourseReviewMutation] = useMutation(createCourseReview)
   const [cancelMembershipMutation] = useMutation(cancelMembership)
 
+  const [updatedCourse, { refetch: refetchCourse }] = useQuery(getCourse, course?.id, {
+    suspense: false
+  })
+
   return course && permissions ? (
     <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={5}>
       <VStack spacing={2} pb={8} px={5} alignItems='start'>
@@ -94,20 +99,20 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             </StyledLink>
           )}
           <VStack maxH='40vh' overflowY='hidden'>
-            {course.reviews.map((review) => (
+            {(updatedCourse?.reviews || course.reviews).map((review) => (
               <CourseReview key={review.content} version='small' {...review} />
             ))}
           </VStack>
 
           <VStack spacing={4} width='90%'>
-            <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })} width='100%' p='0'>
+            <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })} width='90%' p='0'>
               <Button colorScheme='teal' mt={4} mx={'auto'} width={'100%'}>
                 See all reviews in detail
               </Button>
             </StyledLink>
             {/* Can't enroll => Enrolled or Owner */}
             {!permissions.canJoinCourse && (
-              <StyledLink href={Routes.CoursePosts({ id: course.id })} width='100%'>
+              <StyledLink href={Routes.CoursePosts({ id: course.id })} width='90%'>
                 <Button colorScheme='teal' width={'100%'}>
                   See all posts
                 </Button>
@@ -116,7 +121,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
             {/* Can't enroll, is not owner => Enrolled */}
             {!permissions.canJoinCourse && !permissions.canUpdateCourse && (
               <>
-                <Button colorScheme='teal' width='80%' onClick={() => setCommentModalIsOpen(true)}>
+                <Button colorScheme='teal' width='90%' onClick={() => setCommentModalIsOpen(true)}>
                   Comment on course
                 </Button>
                 <Modal isOpen={commentModalIsOpen} onClose={onCloseCommentModal}>
@@ -140,6 +145,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
                             await createCourseReviewMutation(values)
                             setCommentModalIsOpen(false)
                             setSubmittedReviewModal({ status: true, text: 0 })
+                            await refetchCourse()
                           } catch (e) {
                             console.log(e)
                             setSubmittedReviewModal({ status: true, text: 1 })
@@ -160,7 +166,7 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
                 </Modal>
                 <Button
                   colorScheme='red'
-                  width='80%'
+                  width='90%'
                   onClick={() => setDialogState({ open: true })}
                 >
                   Cancel subscription

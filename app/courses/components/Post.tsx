@@ -90,9 +90,7 @@ const Post = (props: PostProps) => {
                 height={'2.5rem'}
                 maxWidth='60px'
               />
-              <Heading size='sm'>
-                {`${props.author.name} - ${props.courseTitle} - ` + `${props.title}`}
-              </Heading>
+              <Heading size='sm'>{`${props.author.name} - ${props.courseTitle}`}</Heading>
             </Stack>
           </Button>
           <Spacer />
@@ -106,6 +104,9 @@ const Post = (props: PostProps) => {
             <Heading size='sm'>{props.createdAt.toUTCString()}</Heading>
           </Stack>
         </Flex>
+        <Heading size='md' mb={4}>
+          {props.title}
+        </Heading>
         <Text>{props.description}</Text>
         <Stack direction={{ base: 'column', md: 'row' }} spacing={4} mt={4}>
           {props.files.map((file) => (
