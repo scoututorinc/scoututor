@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { Routes } from 'blitz'
 import {
   Flex,
@@ -22,7 +23,6 @@ import { useBreakpointValue } from '@chakra-ui/react'
 import { CalendarIcon } from '@chakra-ui/icons'
 import { AiFillFilePdf } from 'react-icons/ai'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
-import React, { useState } from 'react'
 import { StyledLink } from 'app/core/components/StyledLink'
 import { PostComments } from 'app/courses/components/PostComments'
 
