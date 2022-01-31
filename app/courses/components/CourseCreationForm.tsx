@@ -181,7 +181,7 @@ export const CourseCreationForm = ({
                       label='Bachelor'
                       value='BACHELOR'
                     />
-                    <CheckboxArrayControl name='knowledgeLevels' label='MASTER' value='MASTER' />
+                    <CheckboxArrayControl name='knowledgeLevels' label='Master' value='MASTER' />
                   </Grid>
                 </LabeledCheckboxArray>
                 {disciplines ? (

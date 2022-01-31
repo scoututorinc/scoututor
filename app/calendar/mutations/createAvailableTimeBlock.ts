@@ -10,7 +10,7 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(TimeBlock),
   async ({ day, startTime, endTime }, ctx) => {
-    await db.availableSession.create({
+    return await db.availableSession.create({
       data: {
         day: day,
         startTime: stringToDate(startTime),

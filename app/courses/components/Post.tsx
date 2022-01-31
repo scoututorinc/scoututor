@@ -18,6 +18,7 @@ import {
   ModalContent,
   Divider
 } from '@chakra-ui/react'
+import { useBreakpointValue } from '@chakra-ui/react'
 import { CalendarIcon } from '@chakra-ui/icons'
 import { AiFillFilePdf } from 'react-icons/ai'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
@@ -69,6 +70,11 @@ const Post = (props: PostProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const { comments: commentsFromProps, ...post } = props
   const [comments, setcomments] = useState(commentsFromProps)
+
+  const dividerOrientation = useBreakpointValue<'horizontal' | 'vertical'>({
+    base: 'horizontal',
+    xl: 'vertical'
+  })
 
   return (
     <VStack spacing={4} mt={4}>
@@ -126,8 +132,8 @@ const Post = (props: PostProps) => {
           <ModalHeader>{props.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody maxH='100%' display='flex'>
-            <Flex direction='row' w='100%' maxH='100%'>
-              <Flex direction='column' mb={4} w='70%'>
+            <Flex direction={{ base: 'column', xl: 'row' }} w='100%' maxH='100%'>
+              <Flex direction='column' mb={4} w={{ base: '100%', xl: '70%' }}>
                 <Flex direction='row' mb={4}>
                   {/* //TODO: Link to post page */}
                   <Stack direction='row' spacing={4} alignItems='center'>
@@ -164,12 +170,18 @@ const Post = (props: PostProps) => {
                   ))}
                 </Stack>
               </Flex>
-              <Divider orientation='vertical' mx={4} />
-              <PostComments
-                postId={props.id}
-                updateComments={(newComments) => setcomments(newComments)}
-                comments={comments}
+              <Divider
+                orientation={dividerOrientation}
+                mx={{ base: '0', xl: '4' }}
+                my={{ base: '4', xl: '0' }}
               />
+              <Flex direction='column' w={{ base: '100%', xl: '30%' }} h='100%'>
+                <PostComments
+                  postId={props.id}
+                  updateComments={(newComments) => setcomments(newComments)}
+                  comments={comments}
+                />
+              </Flex>
             </Flex>
           </ModalBody>
         </ModalContent>

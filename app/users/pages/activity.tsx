@@ -50,7 +50,7 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
       </Breadcrumb>
 
       <Flex direction='row' w='100%' h='100%' overflowX='hidden'>
-        <VStack spacing={2} justifyContent='center' h='100%' overflowY='hidden' minW='15%'>
+        <VStack spacing={2} justifyContent='center' h='100%' overflowY='hidden' minW='200px'>
           <Img
             src={currentUser?.profilePicture || '/images/profile.png'}
             alt='profile_pic'
@@ -97,7 +97,7 @@ const Activity: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>
           </SimpleAlertDialog>
         </VStack>
         <Divider orientation='vertical' mx={6} />
-        <VStack alignItems='start' w='100%' h='100%' overflowY='scroll'>
+        <VStack alignItems='start' w='100%' h='100%' overflowY='auto'>
           <VStack spacing={2} alignItems='start' w='100%' mb={10}>
             <Heading>Activity</Heading>
             <Divider />

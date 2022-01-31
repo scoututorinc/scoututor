@@ -28,7 +28,7 @@ const Chat: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = 
   const [chatReady, setChatReady] = useState(false)
   useEffect(() => setChatReady(true), [])
   return (
-    <Box w='100%' p={10} overflowY='scroll'>
+    <Box w='100%' py={10} px={5} overflowY='scroll'>
       <VStack spacing={2} justifyContent='start' alignItems='start' pb={6}>
         <Heading>Chat with your colleagues and tutors</Heading>
         <Divider />

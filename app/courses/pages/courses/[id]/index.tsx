@@ -73,12 +73,12 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
   const [cancelMembershipMutation] = useMutation(cancelMembership)
 
   return course && permissions ? (
-    <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
-      <VStack spacing={2} pb={8} alignItems='start'>
+    <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={5}>
+      <VStack spacing={2} pb={8} px={5} alignItems='start'>
         <Heading>{course.title}</Heading>
         <Divider />
       </VStack>
-      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between'>
+      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between' width='100%'>
         <Flex
           direction='column'
           justifyContent='center'
@@ -87,8 +87,10 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
         >
           <CourseTeacher {...course.author} />
           {permissions.canUpdateCourse && (
-            <StyledLink pb={4} href={Routes.NewPost({ id: course.id })}>
-              <Button colorScheme='teal'>Create post</Button>
+            <StyledLink pb={4} href={Routes.NewPost({ id: course.id })} width='90%'>
+              <Button colorScheme='teal' width='100%'>
+                Create post
+              </Button>
             </StyledLink>
           )}
           <VStack maxH='40vh' overflowY='hidden'>
@@ -98,14 +100,14 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
           </VStack>
 
           <VStack spacing={4} width='90%'>
-            <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })} width='80%' p='0'>
+            <StyledLink pb={4} href={Routes.CourseReviews({ id: course.id })} width='100%' p='0'>
               <Button colorScheme='teal' mt={4} mx={'auto'} width={'100%'}>
                 See all reviews in detail
               </Button>
             </StyledLink>
             {/* Can't enroll => Enrolled or Owner */}
             {!permissions.canJoinCourse && (
-              <StyledLink href={Routes.CoursePosts({ id: course.id })} width='80%'>
+              <StyledLink href={Routes.CoursePosts({ id: course.id })} width='100%'>
                 <Button colorScheme='teal' width={'100%'}>
                   See all posts
                 </Button>
