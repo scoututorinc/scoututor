@@ -56,7 +56,10 @@ export default resolver.pipe(
       secret: email.trim()
     }
     await createChatUser(chatEngineData)
+
+    console.log('Request Context:', ctx)
     await ctx.session.$create({ userId: user.id, role: user.role as Role })
+
     return user
   }
 )
