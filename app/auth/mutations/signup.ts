@@ -36,6 +36,7 @@ export default resolver.pipe(
     { email, first_name, last_name, district, municipality, profilePicture, password },
     ctx
   ) => {
+    console.log('Request Context 1:', ctx)
     const hashedPassword = await SecurePassword.hash(password.trim())
     const user = await db.user.create({
       data: {
@@ -55,11 +56,11 @@ export default resolver.pipe(
       last_name: last_name.trim(),
       secret: email.trim()
     }
-    console.log('Request Context:', ctx)
+    console.log('Request Context 2:', ctx)
 
     await createChatUser(chatEngineData)
 
-    console.log('Request Context:', ctx)
+    console.log('Request Context 3:', ctx)
     await ctx.session.$create({ userId: user.id, role: user.role as Role })
 
     return user
