@@ -1,6 +1,36 @@
-import { passportAuth, VerifyCallbackResult } from 'blitz'
+import { passportAuth, VerifyCallbackResult, resolver, SecurePassword } from 'blitz'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import db from 'db'
+
+import axios from 'axios'
+import { Signup, ChatSignUp } from 'app/auth/validations'
+import { Role } from 'types'
+import { z } from 'zod'
+
+const chat_private_key = process.env.CHAT_ENGINE_PRIVATE_KEY
+axios.defaults.headers.common['PRIVATE-KEY'] = chat_private_key!
+
+const createChatUser = async ({
+  username,
+  first_name,
+  last_name,
+  secret
+}: z.infer<typeof ChatSignUp>) => {
+  try {
+    const response = await axios.post('https://api.chatengine.io/users/', {
+      username: username,
+      first_name: first_name,
+      last_name: last_name,
+      secret: secret
+    })
+    if (response.status != 201) {
+      throw { statusCode: response.status, data: response.data }
+    }
+  } catch (error) {
+    // TODO: there must be a better error handling mechanism
+    console.log('Error creating chat user:', error)
+  }
+}
 
 export default passportAuth({
   successRedirectUrl: '/main_feed',
@@ -34,6 +64,15 @@ export default passportAuth({
             userId: user.id,
             role: user.role
           }
+
+          const chatEngineData = {
+            username: profile.name?.givenName?.trim() + ' ' + profile.name?.familyName?.trim(),
+            first_name: profile.name?.givenName?.trim(),
+            last_name: profile.name?.familyName?.trim(),
+            secret: email.trim()
+          }
+
+          await createChatUser(chatEngineData)
 
           done(undefined, { publicData })
         }
