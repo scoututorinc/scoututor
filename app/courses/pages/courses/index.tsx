@@ -38,12 +38,11 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
   return courses ? (
-    <Flex direction='column' w='100%' h='100%' overflowY='scroll' overflowX='hidden' p={10}>
-      <Heading size='lg' ps={4}>
+    <Flex direction='column' w='100%' h='100%' overflowY='auto' overflowX='hidden' p={10}>
+      <Heading size='lg' w={'100%'} textAlign={'start'} ps={4}>
         Suggested Courses
       </Heading>
-      <Divider mt={4} />
-      <Spacer />
+      <Divider my={4} />
       <Grid
         templateColumns={{
           base: 'repeat(2, 1fr)',
@@ -56,29 +55,26 @@ const CoursesView: BlitzPage<InferGetServerSidePropsType<typeof getServerSidePro
           <CourseShortDisplay key={c.id} {...c} />
         ))}
       </Grid>
-      <VStack mb={4}>
-        <Divider my={4} />
-        <Flex direction={{ base: 'column', md: 'row' }} w={'100%'}>
-          <Heading ps={4}>Courses</Heading>
-          <Spacer></Spacer>
-          <HStack width={{ base: '100%', md: 'auto' }} spacing={4} pe={4}>
-            <Input
-              focusBorderColor='teal.400'
-              type='text'
-              placeholder='What are you looking for?'
-              onChange={(e) => {
-                setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : '')
-                console.log(courses.map((c) => c.discipline.name))
-              }}
-            />
-            <Button colorScheme='teal'>
-              <SearchIcon color='gray.700' />
-            </Button>
-          </HStack>
-        </Flex>
-        <Divider />
-      </VStack>
-      <Spacer />
+
+      <Flex direction={{ base: 'column', md: 'row' }} w={'100%'} mt={4}>
+        <Heading ps={4}>Courses</Heading>
+        <Spacer></Spacer>
+        <HStack width={{ base: '100%', md: 'auto' }} spacing={4} pe={4}>
+          <Input
+            focusBorderColor='teal.400'
+            type='text'
+            placeholder='What are you looking for?'
+            onChange={(e) => {
+              setSearchTerm(e.target.value.length >= 3 ? e.target.value.toLowerCase() : '')
+              console.log(courses.map((c) => c.discipline.name))
+            }}
+          />
+          <Button colorScheme='teal'>
+            <SearchIcon color='gray.700' />
+          </Button>
+        </HStack>
+      </Flex>
+      <Divider my={4} />
       <Grid
         templateColumns={{
           base: 'repeat(1, 1fr)',
