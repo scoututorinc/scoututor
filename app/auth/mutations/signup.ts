@@ -55,6 +55,8 @@ export default resolver.pipe(
       last_name: last_name.trim(),
       secret: email.trim()
     }
+    console.log('Request Context:', ctx)
+
     await createChatUser(chatEngineData)
 
     console.log('Request Context:', ctx)
