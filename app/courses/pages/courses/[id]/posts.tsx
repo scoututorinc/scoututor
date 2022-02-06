@@ -27,6 +27,10 @@ import { paramToInt } from 'utils'
 const CoursePosts: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   course
 }) => {
+  console.log(
+    'course.posts.map(p=>p.id',
+    course?.posts.map((p) => p.id)
+  )
   return course ? (
     <Flex direction='column' w='100%' overflowY='scroll' overflowX='hidden' p={{ base: 4, lg: 10 }}>
       <Breadcrumb spacing={4} pb={8} separator={<ChevronRightIcon />}>

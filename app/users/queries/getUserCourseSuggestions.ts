@@ -31,8 +31,9 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
       }
     },
     include: {
-      author: { select: { name: true, profilePicture: true } },
-      usersEnrolled: true
+      author: { select: { name: true, district: true, municipality: true, profilePicture: true } },
+      usersEnrolled: true,
+      discipline: { select: { name: true, knowledgeAreas: { select: { name: true } } } }
     }
   })
 
