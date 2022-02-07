@@ -4,7 +4,7 @@ import { CreateCourseInput } from 'app/courses/validations'
 
 export default resolver.pipe(
   resolver.authorize(),
-  resolver.zod(CreateCourseInput),
+  resolver.zod(CreateCourseInput.required()),
   async ({ discipline, knowledgeAreas, ...props }, ctx) => {
     const disciplineId = (
       await db.discipline.findFirst({

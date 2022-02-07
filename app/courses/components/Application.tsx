@@ -165,7 +165,9 @@ const Application = ({
               Interest manifestation and questions
             </Heading>
             <Divider />
-            <Text fontWeight='bold'>{description}</Text>
+            <Text fontWeight='bold' wordBreak={'break-word'}>
+              {description}
+            </Text>
           </VStack>
           <VStack spacing={2} alignItems='start' mb={6}>
             <Heading as='h6' size='md'>
@@ -223,7 +225,9 @@ const Application = ({
                     Interest manifestation and questions
                   </Heading>
                   <Divider />
-                  <Text fontWeight='bold'>{description}</Text>
+                  <Text fontWeight='bold' wordBreak={'break-word'}>
+                    {description}
+                  </Text>
                 </VStack>
                 <VStack spacing={2} alignItems='start' mb={6}>
                   <Heading as='h6' size='md'>

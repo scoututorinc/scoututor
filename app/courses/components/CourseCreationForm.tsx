@@ -11,13 +11,18 @@ import {
   Icon,
   Text,
   Button,
-  Grid
+  Grid,
+  FormControl,
+  FormLabel,
+  Spacer
 } from '@chakra-ui/react'
 import { RiErrorWarningFill } from 'react-icons/ri'
 
 import { Form as FinalForm } from 'react-final-form'
 import { FORM_ERROR } from 'final-form'
 import { z } from 'zod'
+
+import { PickerOverlay } from 'filestack-react'
 
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { LabeledTextAreaField } from 'app/core/components/forms/LabeledTextAreaField'
@@ -65,6 +70,12 @@ export const CourseCreationForm = ({
   onSuccess
 }: CourseCreationFormProps) => {
   const [values, setValues] = useState(defaultValues)
+
+  const [previewImage, setPreviewImage] = useState(
+    values?.previewImage || '/images/sidebar/courses.png'
+  )
+  const [isUploading, setIsUploading] = useState(false)
+
   return (
     <Box borderWidth='2px' borderColor='teal.400' rounded={6} w={{ base: '90%', lg: '70%' }}>
       <Flex alignItems='center' justifyContent='center' direction='column' w='100%'>
@@ -80,21 +91,13 @@ export const CourseCreationForm = ({
         </Stack>
         <FinalForm
           validate={validateZodSchema(CreateCourseInput)}
-          initialValues={
-            values || {
-              title: '',
-              description: '',
-              hourlyRate: 0,
-              previewImage:
-                'https://cdn.britannica.com/q:60/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg'
-            }
-          }
+          initialValues={values}
           onSubmit={async (values) => {
             try {
               console.log(values)
               console.log('Tried to create course')
               setValues(values)
-              const course = await submit(values)
+              const course = await submit({ ...values, previewImage: previewImage })
               onSuccess?.(course.id)
             } catch (error: any) {
               if (error instanceof AuthenticationError) {
@@ -116,12 +119,26 @@ export const CourseCreationForm = ({
                   name='title'
                   placeholder='Give your course a title'
                 />
-                <HStack spacing={4} mb={2}>
-                  <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
-                  <Text fontSize='md'>
-                    {"If you don't find the subject you're looking for, please suggest it"}
-                  </Text>
-                </HStack>
+                <FormControl>
+                  <FormLabel fontWeight='bold'>Profile Picture</FormLabel>
+                  <HStack>
+                    <Img src={previewImage} width='50px' height='50px' objectFit={'cover'} />
+                    <Spacer />
+                    <Button onClick={() => setIsUploading(true)}>Upload</Button>
+                  </HStack>
+                  {isUploading && (
+                    <PickerOverlay
+                      apikey='AzwEASTdfQ5OYbBHxlAxrz'
+                      onSuccess={(res) => {
+                        setIsUploading(false)
+                        setPreviewImage(res.filesUploaded[0].url)
+                      }}
+                      onUploadDone={(res) => res}
+                      pickerOptions={{ accept: 'image/*', imageDim: [300, 300] }}
+                    />
+                  )}
+                </FormControl>
+
                 <LabeledTextAreaField
                   label='Detailed description'
                   placeholder='Tell your students about your course'
@@ -184,6 +201,12 @@ export const CourseCreationForm = ({
                     <CheckboxArrayControl name='knowledgeLevels' label='Master' value='MASTER' />
                   </Grid>
                 </LabeledCheckboxArray>
+                <HStack spacing={4} mb={2}>
+                  <Icon w={8} h={8} as={RiErrorWarningFill}></Icon>
+                  <Text fontSize='md'>
+                    {"If you don't find the subject you're looking for, please suggest it"}
+                  </Text>
+                </HStack>
                 {disciplines ? (
                   <SelectField
                     name='discipline'

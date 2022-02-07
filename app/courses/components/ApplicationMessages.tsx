@@ -8,7 +8,8 @@ import {
   Divider,
   InputGroup,
   InputRightElement,
-  Input
+  Input,
+  Spacer
 } from '@chakra-ui/react'
 import createCourseApplicationMessage from '../mutations/createCourseApplicationMessage'
 import { useMutation } from 'blitz'
@@ -49,7 +50,7 @@ export const ApplicationMessages = ({
 
   return (
     <Flex direction='column' flexGrow={1} height='100%'>
-      <Flex direction='column' height='calc(100%-1.75rem)' overflowY='auto'>
+      <Flex direction='column' height='calc(100% - 1.75rem)' overflowY='auto'>
         {messages.map((message) => (
           <Message key={message.content} {...message} />
         ))}

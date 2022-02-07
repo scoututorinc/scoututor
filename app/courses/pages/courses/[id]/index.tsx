@@ -83,13 +83,22 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
         <Heading>{course.title}</Heading>
         <Divider />
       </VStack>
-      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-between' width='100%'>
+      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-around' width='100%'>
         <Flex
           direction='column'
           justifyContent='center'
           alignItems='center'
           maxWidth={{ base: '100%', lg: '25%' }}
         >
+          <Img
+            src={course.previewImage}
+            alt='teacher_picture'
+            borderRadius='full'
+            height='150px'
+            width='150px'
+            objectFit={'cover'}
+            my={5}
+          />
           <CourseTeacher {...course.author} />
           {permissions.canUpdateCourse && (
             <StyledLink pb={4} href={Routes.NewPost({ id: course.id })} width='90%'>

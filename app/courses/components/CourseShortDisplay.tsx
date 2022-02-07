@@ -1,6 +1,8 @@
 import { Link as BlitzLink, Routes } from 'blitz'
-import { Box, Stack, HStack, Heading, Text, Icon, Img, Button } from '@chakra-ui/react'
+import { Box, Stack, HStack, Heading, Text, Icon, Img, Button, VStack } from '@chakra-ui/react'
 import { SiGoogleclassroom } from 'react-icons/si'
+import { GrMapLocation } from 'react-icons/gr'
+import { FaUniversity } from 'react-icons/fa'
 import { StyledLink } from 'app/core/components/StyledLink'
 
 type CourseShortDisplayProps = {
@@ -10,10 +12,13 @@ type CourseShortDisplayProps = {
   authorId: number
   author: {
     name: string
+    district: string | null
+    municipality: string | null
     profilePicture: string | null
   }
   previewImage: string
   methods: string[]
+  discipline: { name: string }
 }
 
 const CourseShortDisplay = ({
@@ -22,7 +27,8 @@ const CourseShortDisplay = ({
   description,
   author,
   previewImage,
-  methods
+  methods,
+  discipline
 }: CourseShortDisplayProps) => {
   return (
     <Box rounded={6} borderWidth='2px' alignItems='center' justifyContent='center' p={2}>
@@ -34,10 +40,19 @@ const CourseShortDisplay = ({
         m={{ base: 2, lg: 4 }}
       >
         <Heading fontSize='lg'>{title}</Heading>
-        <HStack spacing={4}>
-          <Icon as={SiGoogleclassroom} />
-          <Text fontSize='sm'>{methods.join(' ')}</Text>
-        </HStack>
+        <VStack mt={4} align={'center'}>
+          <HStack width={'100%'}>
+            <Icon as={FaUniversity} />
+            <Text fontSize='sm'>{discipline.name}</Text>
+            <Icon as={GrMapLocation} />
+            <Text fontSize='sm'>{`${author.district} - ${author.municipality}`}</Text>
+          </HStack>
+
+          <HStack>
+            <Icon as={SiGoogleclassroom} />
+            <Text fontSize='sm'>{methods.join(' ')}</Text>
+          </HStack>
+        </VStack>
         <Text size='sm'>
           {description.length > 200 ? description.substring(0, 200) + '...' : description}
         </Text>

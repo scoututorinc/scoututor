@@ -40,14 +40,35 @@ const seed = async () => {
   const availableSessions = await createAvailableSessions(users, courses, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
+
+  await db.user.create({
+    data: {
+      name: 'Maria Soares',
+      email: 'maria@gmail.com',
+      district: 'Braga',
+      municipality: 'Amares',
+      profilePicture: faker.image.animals(),
+      hashedPassword: await SecurePassword.hash('passpass123')
+    }
+  })
+  await db.user.create({
+    data: {
+      name: 'Jose Loureiro',
+      email: 'jose@gmail.com',
+      district: 'Braga',
+      municipality: 'Amares',
+      profilePicture: faker.image.animals(),
+      hashedPassword: await SecurePassword.hash('passpass123')
+    }
+  })
 }
 
 async function createUsers() {
   const users: Prisma.UserCreateInput[] = []
 
   users.push({
-    name: 'Jose Cardoso',
-    email: 'jose@gmail.com',
+    name: 'Joao Cardoso',
+    email: 'joao@gmail.com',
     district: 'Braga',
     municipality: 'Amares',
     profilePicture: faker.image.animals(),

@@ -14,16 +14,16 @@ const CourseTeacher = ({ name, profilePicture }: CourseTeacherProps) => {
 
   return (
     <Flex direction='column' alignItems='center'>
-      <Img
-        src={profilePicture || '/images/sidebar/profile.png'}
-        alt='teacher_picture'
-        borderRadius='full'
-        maxWidth='150px'
-        my={5}
-      />
       <VStack spacing={4} alignItems='start' pb={5}>
         <HStack spacing={4}>
           <Icon as={FaLinkedin}></Icon>
+          {/* <Img
+            src={profilePicture || '/images/sidebar/profile.png'}
+            alt='teacher_picture'
+            borderRadius='full'
+            maxWidth='2em'
+            maxHeight='2em'
+          /> */}
           <Heading as='h6' size='xs'>
             {name}
           </Heading>

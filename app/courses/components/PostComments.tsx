@@ -20,7 +20,7 @@ import createPostCommentReply from '../mutations/createPostCommentReply'
 
 type PostCommentsProps = {
   postId: number
-  updateComments: (newComments: Omit<CommentProps, 'setReplying'>[]) => void
+  updateComments: () => void
   comments: Omit<CommentProps, 'setReplying'>[]
 }
 
@@ -54,38 +54,31 @@ type ReplyProps = {
 export const PostComments = ({ postId, updateComments, comments }: PostCommentsProps) => {
   const [commentContent, setcommentContent] = useState('')
   const [replyingTo, setreplyingTo] = useState<{ commentId: number; name: string } | null>(null)
+
   const [createComment] = useMutation(createPostComment)
   const [createCommentReply] = useMutation(createPostCommentReply)
   const submitComment = async () => {
     try {
       if (replyingTo) {
-        const newReply = await createCommentReply({
+        await createCommentReply({
           commentId: replyingTo.commentId,
           content: commentContent
         })
-        updateComments(
-          comments.map((comment) =>
-            comment.id == replyingTo.commentId
-              ? {
-                  ...comment,
-                  replies: [...comment.replies, newReply]
-                }
-              : comment
-          )
-        )
+        updateComments()
         setreplyingTo(null)
       } else {
-        const newComment = await createComment({ postId, content: commentContent })
-        updateComments([newComment, ...comments])
+        await createComment({ postId, content: commentContent })
+        updateComments()
       }
       setcommentContent('')
     } catch (e) {
       console.error('Error: ' + e)
     }
   }
+
   return (
     <>
-      <Flex direction='column' height='calc(100%-1.75rem)' overflowY='auto'>
+      <Flex direction='column' height='calc(100% - 1.75rem)' overflowY='auto'>
         {comments.map((comment) => (
           <Comment
             key={comment.id}
@@ -96,7 +89,6 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
           />
         ))}
       </Flex>
-      <Spacer />
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -151,9 +143,13 @@ const Comment = ({ setReplying, ...props }: CommentProps) => {
         >
           Reply
         </Button>
-        <Button onClick={() => setRepliesOpen((isOpen) => !isOpen)} fontSize='xs' variant='ghost'>
-          {areRepliesOpen ? 'Close replies' : 'View replies'}
-        </Button>
+        {props.replies.length > 0 && (
+          <Button onClick={() => setRepliesOpen((isOpen) => !isOpen)} fontSize='xs' variant='ghost'>
+            {areRepliesOpen
+              ? 'Close replies'
+              : `${props.replies.length} ${props.replies.length == 1 ? ' Reply' : ' Replies'}`}
+          </Button>
+        )}
       </HStack>
       <Divider mb={4} />
       {areRepliesOpen && props.replies.map((reply) => <Reply key={reply.id} {...reply} />)}
