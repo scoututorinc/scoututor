@@ -83,12 +83,13 @@ const CourseView: BlitzPage<InferGetServerSidePropsType<typeof getServerSideProp
         <Heading>{course.title}</Heading>
         <Divider />
       </VStack>
-      <Flex direction={{ base: 'column', md: 'row' }} justifyContent='space-around' width='100%'>
+      <Flex direction={{ base: 'column', lg: 'row' }} justifyContent='space-around' width='100%'>
         <Flex
           direction='column'
           justifyContent='center'
           alignItems='center'
           maxWidth={{ base: '100%', lg: '25%' }}
+          pb={4}
         >
           <Img
             src={course.previewImage}

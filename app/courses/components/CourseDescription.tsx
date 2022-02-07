@@ -39,7 +39,7 @@ const CourseDescription = ({
   const cancelRef = useRef(null)
 
   return (
-    <Flex direction='column' width={{ md: '75%' }}>
+    <Flex direction='column' width={{ lg: '75%' }} p={4}>
       <VStack alignItems='start' pb={5}>
         <Heading size='lg'>Knowledge the tutor can provide in {discipline.name}</Heading>
         <Divider />
@@ -77,9 +77,7 @@ const CourseDescription = ({
       </HStack>
       {permissions.canJoinCourse && (
         <StyledLink href={Routes.CourseApplication({ id })}>
-          <Button colorScheme='teal' maxWidth={{ base: '90%', md: '30%', lg: '20%' }}>
-            Apply for a vacancy
-          </Button>
+          <Button colorScheme='teal'>Apply for a vacancy</Button>
         </StyledLink>
       )}
       {permissions.canUpdateCourse && (

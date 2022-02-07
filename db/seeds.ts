@@ -3,13 +3,15 @@ import { AvailableSession, CourseMembership, WeekDay } from '@prisma/client'
 import { SecurePassword } from 'blitz'
 import db, { Course, Discipline, KnowledgeArea, Prisma, User } from 'db'
 
+import { portugal } from 'app/auth/data/portugal'
+
 import faker, { random } from 'faker'
 faker.locale = 'pt_PT'
 
 const range = (n: number) => [...new Array(n).keys()]
 const randomInt = (s: number, b: number) => Math.round(Math.random() * (b - s - 1)) + s
 
-const pickOne = (...values: any) => values[Math.floor(Math.random() * values.length)]
+const pickOne = <T>(...values: T[]) => values[Math.floor(Math.random() * values.length)]
 const pickN = (values: any[], count: number) => {
   if (count <= 0) return []
   const chosen = pickOne(...values)
@@ -40,27 +42,6 @@ const seed = async () => {
   const availableSessions = await createAvailableSessions(users, courses, courseMemberships)
   await createCourseApplications(users, courses)
   await createCourseReviews(users, courses)
-
-  await db.user.create({
-    data: {
-      name: 'Maria Soares',
-      email: 'maria@gmail.com',
-      district: 'Braga',
-      municipality: 'Amares',
-      profilePicture: faker.image.animals(),
-      hashedPassword: await SecurePassword.hash('passpass123')
-    }
-  })
-  await db.user.create({
-    data: {
-      name: 'Jose Loureiro',
-      email: 'jose@gmail.com',
-      district: 'Braga',
-      municipality: 'Amares',
-      profilePicture: faker.image.animals(),
-      hashedPassword: await SecurePassword.hash('passpass123')
-    }
-  })
 }
 
 async function createUsers() {
@@ -78,11 +59,16 @@ async function createUsers() {
   for (const _ in range(10)) {
     const firstName = faker.name.firstName(1)
     const lastName = faker.name.lastName(1)
+    const randDistrict = pickOne(...portugal)?.name
+    const randConselho = pickOne(
+      ...(portugal.find((d) => d.name == randDistrict)?.conselhos || [])
+    )?.name
+
     users.push({
       name: `${firstName} ${lastName}`,
       email: faker.internet.email(firstName, lastName).toLowerCase(),
-      district: 'Braga',
-      municipality: 'Amares',
+      district: randDistrict || 'Braga',
+      municipality: randConselho || 'Amares',
       profilePicture: faker.image.animals(),
       hashedPassword: await SecurePassword.hash('passpass123')
     })
@@ -166,7 +152,7 @@ async function createCourses(
   const courses: Prisma.CourseCreateInput[] = []
   for (const _ in range(20)) {
     const authorId = users[randomInt(1, 5)]?.id || 0
-    const disciplineId = disciplines[randomInt(1, disciplines.length)]?.id || 0
+    const disciplineId = pickOne(disciplines[0]?.id, disciplines[1]?.id)
     const knowledgeAreaIdsForDiscipline = knowledgeAreas
       .filter((k) => k.disciplineId == disciplineId)
       .map((k) => ({ id: k.id }))
@@ -323,7 +309,7 @@ async function createCourseApplications(users: User[], courses: Course[]) {
       messages: {
         create: range(5).map((_) => ({
           content: faker.lorem.paragraphs(1),
-          authorId: pickOne(applicantId, randomCourse?.authorId || 0)
+          authorId: pickOne(applicantId, randomCourse?.authorId) || 0
         }))
       }
     })
