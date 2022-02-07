@@ -27,17 +27,6 @@ const overlappingTimeBlocks = (block_1, block_2) => {
   let end2 =
     parseInt(block_2.endTime.split(':').at(0)) * 60 + parseInt(block_2.endTime.split(':').at(1))
 
-  console.log(
-    'Before',
-    beg1 <= beg2 && end1 <= beg2,
-    'After',
-    beg1 >= end2 && end1 >= end2,
-    beg1,
-    end1,
-    beg2,
-    end2
-  )
-
   const isBefore = beg1 <= beg2 && end1 <= beg2
   const isAfter = beg1 >= end2 && end1 >= end2
 

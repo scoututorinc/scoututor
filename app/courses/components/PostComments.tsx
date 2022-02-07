@@ -76,10 +76,9 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
     }
   }
 
-  console.log('comments', comments)
   return (
     <>
-      <Flex direction='column' height='calc(100%-1.75rem)' overflowY='auto'>
+      <Flex direction='column' height='calc(100% - 1.75rem)' overflowY='auto'>
         {comments.map((comment) => (
           <Comment
             key={comment.id}
@@ -90,7 +89,6 @@ export const PostComments = ({ postId, updateComments, comments }: PostCommentsP
           />
         ))}
       </Flex>
-      <Spacer />
       <form
         onSubmit={(e) => {
           e.preventDefault()
