@@ -42,7 +42,7 @@
     "@fullcalendar/timegrid": "5.10.1",
     "@prisma/client": "3.8.0",
     "axios": "0.24.0",
-    "blitz": "0.44.3",
+    "blitz": "0.45.3",
     "chakra-react-select": "1.3.4",
     "filestack-react": "4.0.1",
     "final-form": "4.20.6",
